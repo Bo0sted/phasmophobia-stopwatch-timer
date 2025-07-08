@@ -38,6 +38,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         qsettingsmanager.h qsettingsmanager.cpp
         qhotkeymanager.h qhotkeymanager.cpp
         stopwatchmanager.h stopwatchmanager.cpp
+
+
+        stylesheetgenerator.h stylesheetgenerator.cpp
+        stopwatchinteractiveeditor.h stopwatchinteractiveeditor.cpp stopwatchinteractiveeditor.ui
+
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET CrossPlatformStopwatch APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

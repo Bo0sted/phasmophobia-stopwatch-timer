@@ -22,15 +22,9 @@ StopwatchManager::~StopwatchManager()
 
 void StopwatchManager::ResetStopwatch()
 {
-    if (pauseStopwatch) {
-        elapsedSeconds = 0;
-        mw->SetStopwatchValue("0:00");
-    }
-    else {
-        pauseStopwatch = true;
-        elapsedSeconds = 0;
-        pauseStopwatch = false;
-    }
+    pauseStopwatch = true;
+    elapsedSeconds = 0;
+    mw->SetStopwatchValue("0:00");
 
 }
 
@@ -38,9 +32,10 @@ void StopwatchManager::StopwatchThread()
 {
     qDebug() << "Stopwatch Thread initialized";
     while (!isDeconstructing) {
-            QThread::msleep(500);
         while (!pauseStopwatch && !isDeconstructing) {
             QThread::msleep(1000);
+            if (pauseStopwatch)
+                break;
             elapsedSeconds += 1;
             emit updateElapsedTime(elapsedSeconds);
     }}

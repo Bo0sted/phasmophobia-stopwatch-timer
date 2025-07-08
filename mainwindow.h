@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QSettings>
 #include <QMouseEvent>
+#include <QLabel>
+#include <QTimer>
 
 #include "qsettingsmanager.h"
 #include "stopwatchmanager.h"
@@ -31,6 +33,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     void SetStopwatchValue(QString text);
     ~MainWindow();
+    void setFetchStopwatchFontColor(const QString &newFetchStopwatchFontColor);
+    void UpdateStopwatchFont(QString fontName, int fontSize);
+    QFont GetCurrentFont();
+
 public slots:
     void updateElapsedTime(const int &time);
 private:
@@ -40,7 +46,11 @@ private:
 
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     void ResizeWindowToFitStopwatch();
     QString FormatTime(int totalSeconds);
+    void showEvent(QShowEvent *event);
+
+
 };
 #endif // MAINWINDOW_H

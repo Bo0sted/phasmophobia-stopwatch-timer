@@ -1,10 +1,14 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "qsettingsmanager.h"
+#include "stopwatchinteractiveeditor.h"
+#include "stylesheetgenerator.h"
 
 #include <QHotkey>
 #include <QMouseEvent>
 #include <QtConcurrent>
+#include <QDebug>
+#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -14,12 +18,12 @@ MainWindow::MainWindow(QWidget *parent)
     qhm{this}
 {
     ui->setupUi(this);
+
     ui->StopwatchLabel->setStyleSheet("QLabel { background-color : black; color : blue; }");
     connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
-
-    SetStopwatchValue(QString("Press %1 to begin Stopwatch\n"\
-                              "Don't forget pressing %2 will reset "\
-                              "your stopwatch").arg(qhm.FetchToggleStopwatchHotkey(), qhm.FetchResetStopwatchHotkey()));
+    UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
+    QDir dir;
+    SetStopwatchValue(QString("Welcome, %1. Stopwatch ready...").arg(dir.home().dirName()));
 }
 
 void MainWindow::SetStopwatchValue(QString text)
@@ -32,16 +36,42 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::UpdateStopwatchFont(QString fontName, int fontSize)
+{
+    ui->StopwatchLabel->setFont(QFont(fontName, fontSize));
+}
+
+QFont MainWindow::GetCurrentFont()
+{
+    return ui->StopwatchLabel->font();
+}
+
+
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
+    if (!event->buttons().testFlag(Qt::MouseButton::RightButton)) {
     const QPointF delta = event->globalPosition() - oldPosition;
     move(x()+delta.x(), y()+delta.y());
     oldPosition = event->globalPosition();
+    }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    oldPosition = event->globalPosition();
+    if (event->button() != Qt::MouseButton::RightButton)
+        oldPosition = event->globalPosition();
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::MouseButton::RightButton && StopwatchInteractiveEditor::instances < 1) {
+        auto *sie = new StopwatchInteractiveEditor(nullptr, this);
+        sie->setAttribute(Qt::WA_DeleteOnClose);
+        sie->setWindowFlags(sie->windowFlags()
+                             | Qt::WindowStaysOnTopHint
+                             );
+        sie->show();
+    }
 }
 
 void MainWindow::ResizeWindowToFitStopwatch()
@@ -78,6 +108,12 @@ QString MainWindow::FormatTime(int totalSeconds)
             .arg(minutes)
             .arg(seconds, 2, 10, QChar('0'));
     }
+}
+
+void MainWindow::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+    UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
 }
 
 void MainWindow::updateElapsedTime(const int &time) {

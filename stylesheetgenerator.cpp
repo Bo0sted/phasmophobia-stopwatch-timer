@@ -26,9 +26,9 @@ const QString StylesheetGenerator::DefaultLabel(int fontSize)
                    "font-size: %1pt;"
                    "}").arg(fontSize);
 }
-const QString StylesheetGenerator::DefaultDialogueBackground(QString hex)
+const QString StylesheetGenerator::DefaultWidgetBackground(QString hex)
 {
-    return QString("QDialog {"
+    return QString("QWidget {"
                     "background-color: '%1'"
                    "}").arg(hex);
 }

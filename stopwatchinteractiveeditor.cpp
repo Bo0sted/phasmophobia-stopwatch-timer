@@ -33,7 +33,7 @@ void StopwatchInteractiveEditor::showEvent(QShowEvent *event)
                                 " %2"
                                 " %3").arg(
                                 StylesheetGenerator::DefaultLabel(),
-                                StylesheetGenerator::DefaultDialogueBackground(),
+                                StylesheetGenerator::DefaultWidgetBackground(),
                                 StylesheetGenerator::DefaultButtonStyle()));
     ui->FontPickerCombo->setCurrentText(mw->GetCurrentFont().family());
     ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());

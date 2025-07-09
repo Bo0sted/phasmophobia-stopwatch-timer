@@ -29,7 +29,12 @@ StopwatchInteractiveEditor::~StopwatchInteractiveEditor()
 void StopwatchInteractiveEditor::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-    this->setStyleSheet(QString("%1 %2").arg(StylesheetGenerator::DefaultLabel(), StylesheetGenerator::DefaultButtonStyle()));
+    this->setStyleSheet(QString("%1"
+                                " %2"
+                                " %3").arg(
+                                StylesheetGenerator::DefaultLabel(),
+                                StylesheetGenerator::DefaultDialogueBackground(),
+                                StylesheetGenerator::DefaultButtonStyle()));
     ui->FontPickerCombo->setCurrentText(mw->GetCurrentFont().family());
     ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
     ui->EditorHotkeyHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());

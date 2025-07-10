@@ -73,7 +73,6 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
         auto *sie = new StopwatchInteractiveEditor(nullptr, this);
         sie->setAttribute(Qt::WA_DeleteOnClose);
         sie->setWindowFlags(sie->windowFlags()
-                             | Qt::WindowStaysOnTopHint
                             | Qt::FramelessWindowHint
                              );
         sie->show();

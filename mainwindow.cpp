@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->StopwatchLabel->setStyleSheet("QLabel { background-color : black; color : blue; }");
+    ui->StopwatchLabel->setStyleSheet(QString("QLabel { background-color : black; color : %1; }").arg(StylesheetGenerator::DefaultFontHexColor));
     connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
     UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
     QDir dir;
@@ -34,6 +34,11 @@ void MainWindow::SetStopwatchValue(QString text)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+QString MainWindow::FetchStopwatchFontColorAsHex()
+{
+    return ui->StopwatchLabel->palette().color(QPalette::WindowText).name();
 }
 
 void MainWindow::UpdateStopwatchFont(QString fontName, int fontSize)
@@ -69,6 +74,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
         sie->setAttribute(Qt::WA_DeleteOnClose);
         sie->setWindowFlags(sie->windowFlags()
                              | Qt::WindowStaysOnTopHint
+                            | Qt::FramelessWindowHint
                              );
         sie->show();
     }

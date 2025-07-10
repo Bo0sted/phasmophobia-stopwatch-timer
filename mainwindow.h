@@ -33,7 +33,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     void SetStopwatchValue(QString text);
     ~MainWindow();
-    void setFetchStopwatchFontColor(const QString &newFetchStopwatchFontColor);
+    QString FetchStopwatchFontColorAsHex();
     void UpdateStopwatchFont(QString fontName, int fontSize);
     QFont GetCurrentFont();
 

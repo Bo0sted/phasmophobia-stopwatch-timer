@@ -31,22 +31,40 @@ void StopwatchInteractiveEditor::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     this->setStyleSheet(QString("%1"
                                 " %2"
-                                " %3").arg(
+                                " %3"
+                                " %4").arg(
                                 StylesheetGenerator::DefaultLabel(),
                                 StylesheetGenerator::DefaultWidgetBackground(),
-                                StylesheetGenerator::DefaultButtonStyle()));
+                                StylesheetGenerator::DefaultQKeySequenceEditStyle(12, mw->FetchStopwatchFontColorAsHex()),
+                                StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex())));
     ui->FontPickerCombo->setCurrentText(mw->GetCurrentFont().family());
     ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
     ui->EditorHotkeyHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
     ui->ToggleTabActiveAssignmentLabel->setText(mw->qhm.FetchToggleStopwatchHotkey());
     ui->ResetTabActiveAssignmentLabel->setText(mw->qhm.FetchResetStopwatchHotkey());
     ui->BringToForegroundTabActiveAssignmentLabel->setText(mw->qhm.FetchBringToForegroundHotkey());
+    ui->horizontalLayout->setAlignment(ui->closeWindow, Qt::AlignRight);
 }
 
 void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
 {
     mw->qsm.setValue(QSettingsManager::Font,ui->FontPickerCombo->currentText());
     event->accept();
+}
+
+void StopwatchInteractiveEditor::mouseMoveEvent(QMouseEvent *event)
+{
+    if (!event->buttons().testFlag(Qt::MouseButton::RightButton)) {
+        const QPointF delta = event->globalPosition() - oldPosition;
+        move(x()+delta.x(), y()+delta.y());
+        oldPosition = event->globalPosition();
+    }
+}
+
+void StopwatchInteractiveEditor::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() != Qt::MouseButton::RightButton)
+        oldPosition = event->globalPosition();
 }
 
 void StopwatchInteractiveEditor::on_FontPickerCombo_currentFontChanged(const QFont &f)
@@ -93,5 +111,11 @@ void StopwatchInteractiveEditor::on_BringToForegroundTabApplyNewHotkey_clicked()
         ui->BringToForegroundTabActiveAssignmentLabel->setText(hotkeyName);
         mw->qsm.setValue(QSettingsManager::BringToForeground,hotkeyName);
     }
+}
+
+
+void StopwatchInteractiveEditor::on_closeWindow_clicked()
+{
+    this->close();
 }
 

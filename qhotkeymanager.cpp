@@ -125,6 +125,14 @@ void QHotkeyManager::ReassignHotkey(AvailableHotkeys ah, bool shouldUnassign)
 
 bool QHotkeyManager::IsHotkeyAvailable(QString hotkey, bool shouldAlertUser)
 {
+    if (hotkey == "") {
+        if (shouldAlertUser) {
+            QMessageBox msgBox;
+            msgBox.setText(QString("No hotkey was inputted in the box. Please try again."));
+            msgBox.exec();
+        }
+        return false;
+    }
     if (hotkey == ToggleStopwatchHotkey) {
         if (shouldAlertUser) {
             QMessageBox msgBox;

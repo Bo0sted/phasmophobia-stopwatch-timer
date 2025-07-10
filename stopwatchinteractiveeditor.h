@@ -19,6 +19,7 @@ public:
     ~StopwatchInteractiveEditor();
     inline static int instances = 0;
 
+
 private slots:
     void on_FontPickerCombo_currentFontChanged(const QFont &f);
 
@@ -30,12 +31,17 @@ private slots:
 
     void on_BringToForegroundTabApplyNewHotkey_clicked();
 
+    void on_closeWindow_clicked();
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;
+    QPointF oldPosition;
 
     void showEvent(QShowEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 
 };
 

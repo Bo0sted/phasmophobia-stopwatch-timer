@@ -39,11 +39,13 @@ void StopwatchInteractiveEditor::showEvent(QShowEvent *event)
                                 StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex())));
     ui->FontPickerCombo->setCurrentText(mw->GetCurrentFont().family());
     ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
+    ui->ColorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
     ui->EditorHotkeyHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
     ui->ToggleTabActiveAssignmentLabel->setText(mw->qhm.FetchToggleStopwatchHotkey());
     ui->ResetTabActiveAssignmentLabel->setText(mw->qhm.FetchResetStopwatchHotkey());
     ui->BringToForegroundTabActiveAssignmentLabel->setText(mw->qhm.FetchBringToForegroundHotkey());
     ui->horizontalLayout->setAlignment(ui->closeWindow, Qt::AlignRight);
+    ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerHexColor());
 }
 
 void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
@@ -117,5 +119,11 @@ void StopwatchInteractiveEditor::on_BringToForegroundTabApplyNewHotkey_clicked()
 void StopwatchInteractiveEditor::on_closeWindow_clicked()
 {
     this->close();
+}
+
+
+void StopwatchInteractiveEditor::on_quitStopwatch_clicked()
+{
+    QApplication::quit();
 }
 

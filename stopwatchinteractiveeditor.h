@@ -33,6 +33,8 @@ private slots:
 
     void on_closeWindow_clicked();
 
+    void on_quitStopwatch_clicked();
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;

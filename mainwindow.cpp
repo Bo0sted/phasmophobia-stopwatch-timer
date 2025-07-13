@@ -3,6 +3,7 @@
 #include "qsettingsmanager.h"
 #include "stopwatchinteractiveeditor.h"
 #include "stylesheetgenerator.h"
+#include "systemtimemodule.h"
 
 #include <QHotkey>
 #include <QMouseEvent>
@@ -76,6 +77,15 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
                             | Qt::FramelessWindowHint
                              );
         sie->show();
+
+        auto *stmodule = new SystemTimeModule(nullptr, this);
+        stmodule->setAttribute(Qt::WA_DeleteOnClose);
+        stmodule->setAttribute(Qt::WA_TranslucentBackground);
+        stmodule->setWindowFlags(stmodule->windowFlags()
+                            | Qt::FramelessWindowHint
+                            | Qt::WindowStaysOnTopHint
+                            );
+        stmodule->show();
     }
 }
 

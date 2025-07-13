@@ -42,6 +42,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
         stylesheetgenerator.h stylesheetgenerator.cpp
         stopwatchinteractiveeditor.h stopwatchinteractiveeditor.cpp stopwatchinteractiveeditor.ui
+        systemtimemodule.h systemtimemodule.cpp systemtimemodule.ui
 
 
     )

@@ -9,14 +9,15 @@ StylesheetGenerator::StylesheetGenerator()
 {
 }
 
-const QString StylesheetGenerator::DefaultHeaderTextDejaVu(int fontSize)
+const QString StylesheetGenerator::DefaultHeaderTextDejaVu(int fontSize, QString color, QString background)
 {
     return QString("QLabel { "
-                   "font-family: DejaVu Sans Bold; "
-                   "color: White;"
+                   "font-family: DejaVu Sans Bold;"
                    "font-size: %1pt;"
                    "font-weight: bold;"
-                   "}").arg(fontSize);
+                   "color: %2;"
+                   "background: %3;"
+                   "}").arg(fontSize).arg(color, background);
 }
 
 const QString StylesheetGenerator::DefaultLabel(int fontSize)
@@ -31,7 +32,6 @@ const QString StylesheetGenerator::DefaultWidgetBackground(QString hex)
     //hex = "Red";
     return QString("QWidget {"
                     "background-color: %1;"
-                   "color: White;"
                    "}"
                    "QSplitter {"
                    "background-color: %1;"
@@ -69,4 +69,14 @@ const QString StylesheetGenerator::DefaultQKeySequenceEditStyle(int fontSize, QS
                    "border-width: 2px;"
                    "border-color: %3;"
                    "}").arg(fontSize).arg(backgroundColor, borderColor);
+}
+
+const QString StylesheetGenerator::DefaultDangerHexColor()
+{
+    return QString("QPushButton { "
+                   "color: White;"
+                   "background-color: #EE2C2C;"
+                   "border-width: 2px;"
+                   "border-color: #BE2625;}");
+
 }

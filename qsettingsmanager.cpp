@@ -13,10 +13,12 @@ QSettingsManager::QSettingsManager()
     , SettingsForStopwatchGroup{
           "Stopwatch/Font",
           "Stopwatch/FontColor",
-          "Stopwatch/Background"}
+          "Stopwatch/Background",
+          "Stopwatch/LastWindowPosition",
+          "Stopwatch/LastSystemClockPosition"}
 
 {
-    setValue("Application", "Version", "0.3-alpha");
+    setValue("Application", "Version", "0.4-alpha");
 }
 
 void QSettingsManager::setValue(QString groupName, QString valueName, QString value)
@@ -63,4 +65,29 @@ QString QSettingsManager::FetchStopwatchFont()
 
     if (val == false) return StylesheetGenerator::DefaultFont.toString();
     else return val.toString();
+}
+
+QPair<float,float> QSettingsManager::FetchStopwatchLastPosition()
+{
+    QVariant val = getValue(LastWindowPosition);
+
+    if (val == false) return QPair<float,float>(0,0);
+
+    QStringList pos = val.toString().split(",");
+    float x = pos[0].toFloat();
+    float y = pos[1].toFloat();
+
+    return QPair<float,float>(x,y);
+}
+
+QPair<float,float> QSettingsManager::FetchSystemClockLastPosition()
+{
+    QVariant val = getValue(LastSystemClockPosition);
+
+    if (val == false) return QPair<float,float>(0,100);
+
+    QStringList pos = val.toString().split(",");
+    float x = pos[0].toFloat();
+    float y = pos[1].toFloat();
+    return QPair<float,float>(x,y);
 }

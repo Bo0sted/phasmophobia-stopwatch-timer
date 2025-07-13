@@ -52,6 +52,16 @@ QFont MainWindow::GetCurrentFont()
     return ui->StopwatchLabel->font();
 }
 
+QString MainWindow::GetActiveStopwatchStyleSheet()
+{
+    return ui->StopwatchLabel->styleSheet();
+}
+
+int MainWindow::GetCurrentStopwatchFontSize()
+{
+    return ui->StopwatchLabel->font().pointSize();
+}
+
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
@@ -78,6 +88,13 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
                              );
         sie->show();
     }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QString spos = QString("%1,%2").arg(this->pos().x()).arg(this->pos().y());
+    qsm.setValue(QSettingsManager::LastWindowPosition, spos);
+    event->accept();
 }
 
 void MainWindow::ResizeWindowToFitStopwatch()
@@ -120,6 +137,23 @@ void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
     UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
+
+    {
+    QPair<float, float> lastKnown = qsm.FetchStopwatchLastPosition();
+    this->move(lastKnown.first,lastKnown.second);
+    // This forces Qt to update the window. Otherwise move() wont have any effect
+    this->raise();
+    }
+    stm = new SystemTimeModule(nullptr, this);
+    stm->setAttribute(Qt::WA_DeleteOnClose);
+    stm->setAttribute(Qt::WA_TranslucentBackground);
+    stm->setWindowFlags(stm->windowFlags()
+                             | Qt::FramelessWindowHint
+                             | Qt::WindowStaysOnTopHint
+                             );
+    QPair<float, float> lastKnown = qsm.FetchSystemClockLastPosition();
+    stm->move(lastKnown.first,lastKnown.second);
+    stm->show();
 }
 
 void MainWindow::updateElapsedTime(const int &time) {

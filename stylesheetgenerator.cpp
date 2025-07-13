@@ -32,6 +32,7 @@ const QString StylesheetGenerator::DefaultWidgetBackground(QString hex)
     //hex = "Red";
     return QString("QWidget {"
                     "background-color: %1;"
+                    "color: White;"
                    "}"
                    "QSplitter {"
                    "background-color: %1;"
@@ -80,3 +81,4 @@ const QString StylesheetGenerator::DefaultDangerHexColor()
                    "border-color: #BE2625;}");
 
 }
+

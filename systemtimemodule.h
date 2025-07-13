@@ -17,6 +17,7 @@ public:
     explicit SystemTimeModule(QWidget *parent = nullptr, MainWindow *mwr=nullptr);
     ~SystemTimeModule();
     void RefreshClockThread();
+    void ReflectStopwatchFont();
 signals:
     void signalRefreshClock(const QString &time); // Signal to update elapsed time
 public slots:
@@ -32,6 +33,7 @@ private:
     void closeEvent(QCloseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+    void ResizeClockToFitWindow();
 };
 
 #endif // SYSTEMTIMEMODULE_H

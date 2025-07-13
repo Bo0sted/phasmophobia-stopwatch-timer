@@ -15,7 +15,9 @@ public:
     enum SettingsForStopwatchGroupIndex {
         Font,
         FontColor,
-        BackgroundColor
+        BackgroundColor,
+        LastWindowPosition,
+        LastSystemClockPosition
     };
 
     const QList<QString> SettingsForHotkeyGroup;
@@ -31,6 +33,8 @@ public:
 
     QString FetchStopwatchFontColor();
     QString FetchStopwatchFont();
+    QPair<float,float> FetchStopwatchLastPosition();
+    QPair<float,float> FetchSystemClockLastPosition();
 private:
     QSettings settings;
 };

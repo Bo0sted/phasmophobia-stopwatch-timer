@@ -72,6 +72,7 @@ void StopwatchInteractiveEditor::mousePressEvent(QMouseEvent *event)
 void StopwatchInteractiveEditor::on_FontPickerCombo_currentFontChanged(const QFont &f)
 {
     mw->UpdateStopwatchFont(f.family(),mw->GetCurrentFont().pointSize());
+    mw->stm->ReflectStopwatchFont();
 }
 
 

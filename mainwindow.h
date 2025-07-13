@@ -10,10 +10,12 @@
 #include "qsettingsmanager.h"
 #include "stopwatchmanager.h"
 #include "qhotkeymanager.h"
+#include "systemtimemodule.h"
 
 // Forward declaration
 class StopwatchManager;
 class HotkeyManager;
+class SystemTimeModule;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -29,6 +31,7 @@ public:
     QSettingsManager qsm;
     StopwatchManager swm;
     QHotkeyManager qhm;
+    SystemTimeModule *stm;
 
     MainWindow(QWidget *parent = nullptr);
     void SetStopwatchValue(QString text);
@@ -36,6 +39,8 @@ public:
     QString FetchStopwatchFontColorAsHex();
     void UpdateStopwatchFont(QString fontName, int fontSize);
     QFont GetCurrentFont();
+    QString GetActiveStopwatchStyleSheet();
+    int GetCurrentStopwatchFontSize();
 
 public slots:
     void updateElapsedTime(const int &time);
@@ -43,13 +48,14 @@ private:
     Ui::MainWindow *ui;
     QPointF oldPosition;
     QFuture<void> stopwatchUpdateRespondThread;
-
-    void mouseMoveEvent(QMouseEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
     void ResizeWindowToFitStopwatch();
     QString FormatTime(int totalSeconds);
-    void showEvent(QShowEvent *event);
+protected:
+    void mouseMoveEvent(QMouseEvent *event)override;
+    void mousePressEvent(QMouseEvent *event)override;
+    void mouseReleaseEvent(QMouseEvent *event)override;
+    void closeEvent(QCloseEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 
 };

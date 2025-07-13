@@ -29,7 +29,7 @@ void SystemTimeModule::showEvent(QShowEvent *event)
 {
     ui->SystemTimeLabel->setStyleSheet(QString(
                                 " %1").arg(
-                                StylesheetGenerator::DefaultHeaderTextDejaVu(25, mw->FetchStopwatchFontColorAsHex(), "black")
+                                StylesheetGenerator::DefaultHeaderTextDejaVu(25, "#EE2C2C", "black")
                                                ));
 }
 

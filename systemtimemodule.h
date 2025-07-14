@@ -17,17 +17,22 @@ public:
     explicit SystemTimeModule(QWidget *parent = nullptr, MainWindow *mwr=nullptr);
     ~SystemTimeModule();
     void RefreshClockThread();
-    void ReflectStopwatchFont();
+    void UpdateClockFont(QString fontName, int fontSize);
+    QFont GetCurrentFont();
+    bool CheckIfModuleIsEnabled();
+    void RefreshModuleState();
 signals:
     void signalRefreshClock(const QString &time); // Signal to update elapsed time
 public slots:
     void updateClock(const QString &time);
+    void setLoadModule(bool shouldEnable); // Declare the slot
 private:
     Ui::SystemTimeModule *ui;
     MainWindow *mw;
     QPointF oldPosition;
     bool isDeconstructing;
     QFuture<void> refreshClockThread;
+    bool enabled;
 
     void showEvent(QShowEvent *event) override;
     void closeEvent(QCloseEvent *event) override;

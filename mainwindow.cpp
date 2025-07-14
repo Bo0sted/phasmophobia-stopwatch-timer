@@ -94,6 +94,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     QString spos = QString("%1,%2").arg(this->pos().x()).arg(this->pos().y());
     qsm.setValue(QSettingsManager::LastWindowPosition, spos);
+    stm->close();
     event->accept();
 }
 
@@ -144,6 +145,7 @@ void MainWindow::showEvent(QShowEvent *event)
     // This forces Qt to update the window. Otherwise move() wont have any effect
     this->raise();
     }
+
     stm = new SystemTimeModule(nullptr, this);
     stm->setAttribute(Qt::WA_DeleteOnClose);
     stm->setAttribute(Qt::WA_TranslucentBackground);
@@ -152,8 +154,15 @@ void MainWindow::showEvent(QShowEvent *event)
                              | Qt::WindowStaysOnTopHint
                              );
     QPair<float, float> lastKnown = qsm.FetchSystemClockLastPosition();
-    stm->move(lastKnown.first,lastKnown.second);
     stm->show();
+    stm->move(lastKnown.first,lastKnown.second);
+    connect(this, &MainWindow::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
+
+    if (!qsm.CheckIfClockEnabled())
+        emit toggleModuleSignal(false);
+    else
+        emit toggleModuleSignal(true);
+
 }
 
 void MainWindow::updateElapsedTime(const int &time) {

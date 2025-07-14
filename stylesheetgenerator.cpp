@@ -33,6 +33,7 @@ const QString StylesheetGenerator::DefaultWidgetBackground(QString hex)
     return QString("QWidget {"
                     "background-color: %1;"
                     "color: White;"
+                   "font-size: 12pt;"
                    "}"
                    "QSplitter {"
                    "background-color: %1;"

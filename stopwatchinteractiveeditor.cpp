@@ -17,6 +17,7 @@ StopwatchInteractiveEditor::StopwatchInteractiveEditor(QWidget *parent, MainWind
     ui->setupUi(this);
     instances++;
     mw->qhm.UpdateHotkeySignalBlock(true);
+    connect(this, &StopwatchInteractiveEditor::toggleModuleSignal, mw->stm, &SystemTimeModule::setLoadModule);
 }
 
 StopwatchInteractiveEditor::~StopwatchInteractiveEditor()
@@ -38,19 +39,21 @@ void StopwatchInteractiveEditor::showEvent(QShowEvent *event)
                                 StylesheetGenerator::DefaultQKeySequenceEditStyle(12, mw->FetchStopwatchFontColorAsHex()),
                                 StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex())));
     ui->FontPickerCombo->setCurrentText(mw->GetCurrentFont().family());
+    ui->FontPickerComboClock->setCurrentText(mw->stm->GetCurrentFont().family());
     ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
-    ui->ColorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
     ui->EditorHotkeyHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
     ui->ToggleTabActiveAssignmentLabel->setText(mw->qhm.FetchToggleStopwatchHotkey());
     ui->ResetTabActiveAssignmentLabel->setText(mw->qhm.FetchResetStopwatchHotkey());
     ui->BringToForegroundTabActiveAssignmentLabel->setText(mw->qhm.FetchBringToForegroundHotkey());
     ui->horizontalLayout->setAlignment(ui->closeWindow, Qt::AlignRight);
     ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerHexColor());
+    UpdateSystemModuleTogglePushButton();
 }
 
 void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
 {
     mw->qsm.setValue(QSettingsManager::Font,ui->FontPickerCombo->currentText());
+    mw->qsm.setValue(QSettingsManager::ClockFont,ui->FontPickerComboClock->currentText());
     event->accept();
 }
 
@@ -69,10 +72,22 @@ void StopwatchInteractiveEditor::mousePressEvent(QMouseEvent *event)
         oldPosition = event->globalPosition();
 }
 
+void StopwatchInteractiveEditor::UpdateSystemModuleTogglePushButton()
+{
+    bool check = mw->stm->CheckIfModuleIsEnabled();
+    ui->ToggleSystemModulePushButton->setText(check ? "Disable Module": "Enable Module");
+
+    if (check)
+        ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultDangerHexColor());
+    else
+        ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex()));
+
+    ui->ToggleSystemModulePushButton->repaint();
+}
+
 void StopwatchInteractiveEditor::on_FontPickerCombo_currentFontChanged(const QFont &f)
 {
     mw->UpdateStopwatchFont(f.family(),mw->GetCurrentFont().pointSize());
-    mw->stm->ReflectStopwatchFont();
 }
 
 
@@ -126,5 +141,31 @@ void StopwatchInteractiveEditor::on_closeWindow_clicked()
 void StopwatchInteractiveEditor::on_quitStopwatch_clicked()
 {
     QApplication::quit();
+}
+
+
+
+
+void StopwatchInteractiveEditor::on_FontPickerComboClock_currentFontChanged(const QFont &f)
+{
+    mw->stm->UpdateClockFont(f.family(),mw->GetCurrentFont().pointSize());
+}
+
+
+void StopwatchInteractiveEditor::on_FontSyncWithStopwatchPushbutton_clicked()
+{
+    ui->FontPickerComboClock->setCurrentFont(mw->GetCurrentFont());
+}
+
+
+void StopwatchInteractiveEditor::on_ToggleSystemModulePushButton_clicked()
+{
+    bool clockState = mw->stm->CheckIfModuleIsEnabled();
+
+    // Set the module as the opposite of whatever state it currently is
+
+    emit toggleModuleSignal(!clockState);
+    UpdateSystemModuleTogglePushButton();
+
 }
 

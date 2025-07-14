@@ -10,9 +10,10 @@
 SystemTimeModule::SystemTimeModule(QWidget *parent, MainWindow *mwr)
     : QWidget(parent)
     , ui(new Ui::SystemTimeModule)
-    , mw(mwr),
-    isDeconstructing{false},
-    refreshClockThread(QtConcurrent::run(&SystemTimeModule::RefreshClockThread, this))
+    , mw(mwr)
+    , isDeconstructing{false}
+    , enabled{mw->qsm.CheckIfClockEnabled()}
+    , refreshClockThread(QtConcurrent::run(&SystemTimeModule::RefreshClockThread, this))
 {
     ui->setupUi(this);
     connect(this, &SystemTimeModule::signalRefreshClock, this, &SystemTimeModule::updateClock);
@@ -28,17 +29,18 @@ SystemTimeModule::~SystemTimeModule()
 
 void SystemTimeModule::showEvent(QShowEvent *event)
 {
-    // ui->SystemTimeLabel->setStyleSheet(QString(
-    //                             " %1").arg(
-    //                             StylesheetGenerator::DefaultHeaderTextDejaVu(25, "#EE2C2C", "black")
-    //                                            ));
-    ReflectStopwatchFont();
+    event->accept();
+    QString style = mw->GetActiveStopwatchStyleSheet();
+    ui->SystemTimeLabel->setStyleSheet(style);
+    UpdateClockFont(mw->qsm.FetchClockFont(), 25);
+
 }
 
 void SystemTimeModule::closeEvent(QCloseEvent *event)
 {
     QString spos = QString("%1,%2").arg(this->pos().x()).arg(this->pos().y());
     mw->qsm.setValue(QSettingsManager::LastSystemClockPosition, spos);
+    mw->qsm.setValue(QSettingsManager::IsClockEnabled, QString("%1").arg(enabled));
     event->accept();
 }
 
@@ -73,12 +75,6 @@ void SystemTimeModule::ResizeClockToFitWindow()
                  centralSize.height() + frameHeight);
 }
 
-void SystemTimeModule::ReflectStopwatchFont()
-{
-    ui->SystemTimeLabel->setStyleSheet(mw->GetActiveStopwatchStyleSheet());
-    ui->SystemTimeLabel->setFont(QFont(mw->GetCurrentFont().family(), mw->GetCurrentStopwatchFontSize()));
-}
-
 void SystemTimeModule::RefreshClockThread()
 {
     qDebug() << "System Time Module initialized";
@@ -89,8 +85,35 @@ void SystemTimeModule::RefreshClockThread()
         }
 }
 
+void SystemTimeModule::UpdateClockFont(QString fontName, int fontSize)
+{
+    ui->SystemTimeLabel->setFont(QFont(fontName, fontSize));
+}
+
+QFont SystemTimeModule::GetCurrentFont()
+{
+    return ui->SystemTimeLabel->font();
+}
+
+
+bool SystemTimeModule::CheckIfModuleIsEnabled()
+{
+    return enabled;
+}
+
+void SystemTimeModule::RefreshModuleState()
+{
+    this->setVisible(enabled);
+}
+
 void SystemTimeModule::updateClock(const QString &time)
 {
     ui->SystemTimeLabel->setText(time);
     ResizeClockToFitWindow();
+}
+
+void SystemTimeModule::setLoadModule(bool shouldEnable)
+{
+    enabled = shouldEnable;
+    RefreshModuleState();
 }

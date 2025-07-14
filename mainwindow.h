@@ -44,6 +44,8 @@ public:
 
 public slots:
     void updateElapsedTime(const int &time);
+signals:
+    void toggleModuleSignal(bool shouldEnable);
 private:
     Ui::MainWindow *ui;
     QPointF oldPosition;

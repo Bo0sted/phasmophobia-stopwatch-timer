@@ -15,7 +15,9 @@ QSettingsManager::QSettingsManager()
           "Stopwatch/FontColor",
           "Stopwatch/Background",
           "Stopwatch/LastWindowPosition",
-          "Stopwatch/LastSystemClockPosition"}
+          "Stopwatch/LastSystemClockPosition",
+          "Stopwatch/ClockFont",
+          "Stopwatch/IsClockEnabled"}
 
 {
     setValue("Application", "Version", "0.4-alpha");
@@ -41,8 +43,10 @@ const QVariant QSettingsManager::getValue(enum SettingsForHotkeyGroupIndex e)
     return settings.value(SettingsForHotkeyGroup[e], false);
 }
 
-const QVariant QSettingsManager::getValue(enum SettingsForStopwatchGroupIndex e)
+const QVariant QSettingsManager::getValue(enum SettingsForStopwatchGroupIndex e, bool shouldDefaultBeInteger)
 {
+    if (shouldDefaultBeInteger)
+        return settings.value(SettingsForStopwatchGroup[e], -1);
     return settings.value(SettingsForStopwatchGroup[e], false);
 }
 
@@ -62,6 +66,14 @@ QString QSettingsManager::FetchStopwatchFontColor()
 QString QSettingsManager::FetchStopwatchFont()
 {
     QVariant val = getValue(Font);
+
+    if (val == false) return StylesheetGenerator::DefaultFont.toString();
+    else return val.toString();
+}
+
+QString QSettingsManager::FetchClockFont()
+{
+    QVariant val = getValue(ClockFont);
 
     if (val == false) return StylesheetGenerator::DefaultFont.toString();
     else return val.toString();
@@ -90,4 +102,12 @@ QPair<float,float> QSettingsManager::FetchSystemClockLastPosition()
     float x = pos[0].toFloat();
     float y = pos[1].toFloat();
     return QPair<float,float>(x,y);
+}
+
+bool QSettingsManager::CheckIfClockEnabled()
+{
+    QVariant val = getValue(IsClockEnabled, true);
+
+    if (val == -1) return true;
+    else return val.toBool();
 }

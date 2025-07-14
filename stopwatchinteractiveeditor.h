@@ -19,7 +19,9 @@ public:
     ~StopwatchInteractiveEditor();
     inline static int instances = 0;
 
-
+    void UpdateSystemModuleTogglePushButton();
+signals:
+    void toggleModuleSignal(bool shouldEnable);
 private slots:
     void on_FontPickerCombo_currentFontChanged(const QFont &f);
 
@@ -34,6 +36,12 @@ private slots:
     void on_closeWindow_clicked();
 
     void on_quitStopwatch_clicked();
+
+    void on_FontPickerComboClock_currentFontChanged(const QFont &f);
+
+    void on_FontSyncWithStopwatchPushbutton_clicked();
+
+    void on_ToggleSystemModulePushButton_clicked();
 
 private:
     Ui::StopwatchInteractiveEditor *ui;

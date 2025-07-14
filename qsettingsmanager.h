@@ -17,7 +17,9 @@ public:
         FontColor,
         BackgroundColor,
         LastWindowPosition,
-        LastSystemClockPosition
+        LastSystemClockPosition,
+        ClockFont,
+        IsClockEnabled
     };
 
     const QList<QString> SettingsForHotkeyGroup;
@@ -28,13 +30,15 @@ public:
     void setValue(enum SettingsForStopwatchGroupIndex e, QString value);
     void setValue(enum SettingsForHotkeyGroupIndex e, QString value);
     const QVariant getValue(enum SettingsForHotkeyGroupIndex e);
-    const QVariant getValue(enum SettingsForStopwatchGroupIndex e);
+    const QVariant getValue(enum SettingsForStopwatchGroupIndex e, bool shouldDefaultBeInteger=false);
     const QVariant getValue(QString groupName, QString valueName);
 
     QString FetchStopwatchFontColor();
     QString FetchStopwatchFont();
+    QString FetchClockFont();
     QPair<float,float> FetchStopwatchLastPosition();
     QPair<float,float> FetchSystemClockLastPosition();
+    bool CheckIfClockEnabled();
 private:
     QSettings settings;
 };

@@ -10,17 +10,18 @@
 #include <QtConcurrent>
 #include <QDebug>
 #include <QDir>
+#include <QDateTime>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     qsm{},
     swm{this},
-    qhm{this}
+    qhm{this},
+    stopwatchFontColor(qsm.FetchStopwatchFontColor()),
+    Uptime(QDateTime::currentMSecsSinceEpoch())
 {
     ui->setupUi(this);
-
-    ui->StopwatchLabel->setStyleSheet(QString("QLabel { background-color : black; color : %1; }").arg(StylesheetGenerator::DefaultFontHexColor));
     connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
     UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
     QDir dir;
@@ -45,6 +46,12 @@ QString MainWindow::FetchStopwatchFontColorAsHex()
 void MainWindow::UpdateStopwatchFont(QString fontName, int fontSize)
 {
     ui->StopwatchLabel->setFont(QFont(fontName, fontSize));
+}
+
+void MainWindow::UpdateStopwatchColor(QColor color)
+{
+    stopwatchFontColor = color;
+    ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(stopwatchFontColor));
 }
 
 QFont MainWindow::GetCurrentFont()
@@ -93,7 +100,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     QString spos = QString("%1,%2").arg(this->pos().x()).arg(this->pos().y());
-    qsm.setValue(QSettingsManager::LastWindowPosition, spos);
+    qsm.setValue(QSettingsManager::LastStopwatchPosition, spos);
     stm->close();
     event->accept();
 }
@@ -138,7 +145,7 @@ void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
     UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
-
+    ui->StopwatchLabel->setStyleSheet(QString("QLabel { background-color : black; color : %1; }").arg(stopwatchFontColor.name()));
     {
     QPair<float, float> lastKnown = qsm.FetchStopwatchLastPosition();
     this->move(lastKnown.first,lastKnown.second);

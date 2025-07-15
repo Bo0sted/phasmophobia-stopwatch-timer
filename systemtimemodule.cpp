@@ -30,7 +30,7 @@ SystemTimeModule::~SystemTimeModule()
 void SystemTimeModule::showEvent(QShowEvent *event)
 {
     event->accept();
-    QString style = mw->GetActiveStopwatchStyleSheet();
+    QString style = StylesheetGenerator::NewModuleOutputStylesheet(mw->qsm.FetchClockFontColor());
     ui->SystemTimeLabel->setStyleSheet(style);
     UpdateClockFont(mw->qsm.FetchClockFont(), 25);
 
@@ -39,7 +39,7 @@ void SystemTimeModule::showEvent(QShowEvent *event)
 void SystemTimeModule::closeEvent(QCloseEvent *event)
 {
     QString spos = QString("%1,%2").arg(this->pos().x()).arg(this->pos().y());
-    mw->qsm.setValue(QSettingsManager::LastSystemClockPosition, spos);
+    mw->qsm.setValue(QSettingsManager::LastClockPosition, spos);
     mw->qsm.setValue(QSettingsManager::IsClockEnabled, QString("%1").arg(enabled));
     event->accept();
 }
@@ -88,6 +88,12 @@ void SystemTimeModule::RefreshClockThread()
 void SystemTimeModule::UpdateClockFont(QString fontName, int fontSize)
 {
     ui->SystemTimeLabel->setFont(QFont(fontName, fontSize));
+}
+
+void SystemTimeModule::UpdateClockFontColor(QColor color)
+{
+    systemClockFontColor = color;
+    ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(color));
 }
 
 QFont SystemTimeModule::GetCurrentFont()

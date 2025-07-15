@@ -8,34 +8,43 @@ class QSettingsManager
 {
 public:
     enum SettingsForHotkeyGroupIndex {
-        ToggleKey,
+        BringToForeground,
         ResetKey,
-        BringToForeground
+        ToggleKey,
     };
     enum SettingsForStopwatchGroupIndex {
-        Font,
-        FontColor,
-        BackgroundColor,
-        LastWindowPosition,
-        LastSystemClockPosition,
+        LastStopwatchPosition,
+        StopwatchBackgroundColor,
+        StopwatchFont,
+        StopwatchFontColor,
+    };
+    enum SettingsForClockGroupIndex {
         ClockFont,
-        IsClockEnabled
+        ClockFontColor,
+        ClockBackgroundColor,
+        IsClockEnabled,
+        LastClockPosition,
+
     };
 
     const QList<QString> SettingsForHotkeyGroup;
     const QList<QString> SettingsForStopwatchGroup;
+    const QList<QString> SettingsForClockGroup;
 
     QSettingsManager();
     void setValue(QString groupName, QString valueName, QString value);
     void setValue(enum SettingsForStopwatchGroupIndex e, QString value);
     void setValue(enum SettingsForHotkeyGroupIndex e, QString value);
+    void setValue(enum SettingsForClockGroupIndex e, QString value);
     const QVariant getValue(enum SettingsForHotkeyGroupIndex e);
     const QVariant getValue(enum SettingsForStopwatchGroupIndex e, bool shouldDefaultBeInteger=false);
+    const QVariant getValue(enum SettingsForClockGroupIndex e, bool shouldDefaultBeInteger=false);
     const QVariant getValue(QString groupName, QString valueName);
 
     QString FetchStopwatchFontColor();
     QString FetchStopwatchFont();
     QString FetchClockFont();
+    QString FetchClockFontColor();
     QPair<float,float> FetchStopwatchLastPosition();
     QPair<float,float> FetchSystemClockLastPosition();
     bool CheckIfClockEnabled();

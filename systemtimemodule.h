@@ -18,6 +18,7 @@ public:
     ~SystemTimeModule();
     void RefreshClockThread();
     void UpdateClockFont(QString fontName, int fontSize);
+    void UpdateClockFontColor(QColor color);
     QFont GetCurrentFont();
     bool CheckIfModuleIsEnabled();
     void RefreshModuleState();
@@ -33,6 +34,7 @@ private:
     bool isDeconstructing;
     QFuture<void> refreshClockThread;
     bool enabled;
+    QColor systemClockFontColor;
 
     void showEvent(QShowEvent *event) override;
     void closeEvent(QCloseEvent *event) override;

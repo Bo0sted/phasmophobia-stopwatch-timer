@@ -3,9 +3,13 @@
 #include "mainwindow.h"
 #include "stylesheetgenerator.h"
 #include "qsettingsmanager.h"
+#include "colorpickerdialog.h"
 
 #include <QCloseEvent>
 #include <QPushButton>
+#include <QMessageBox>
+#include <QDateTime>
+#include <QString>
 
 
 
@@ -40,19 +44,30 @@ void StopwatchInteractiveEditor::showEvent(QShowEvent *event)
                                 StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex())));
     ui->FontPickerCombo->setCurrentText(mw->GetCurrentFont().family());
     ui->FontPickerComboClock->setCurrentText(mw->stm->GetCurrentFont().family());
-    ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
-    ui->EditorHotkeyHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeaderTextDejaVu());
+    ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeader());
+    ui->EditorHotkeyHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeader());
+    ui->CustomizationClockHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
+    ui->CustomizationModulesHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
+    ui->CustomizationStopwatchHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
     ui->ToggleTabActiveAssignmentLabel->setText(mw->qhm.FetchToggleStopwatchHotkey());
     ui->ResetTabActiveAssignmentLabel->setText(mw->qhm.FetchResetStopwatchHotkey());
     ui->BringToForegroundTabActiveAssignmentLabel->setText(mw->qhm.FetchBringToForegroundHotkey());
-    ui->horizontalLayout->setAlignment(ui->closeWindow, Qt::AlignRight);
-    ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerHexColor());
+    //ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
     UpdateSystemModuleTogglePushButton();
+
+    qint64 now = QDateTime::currentMSecsSinceEpoch();
+    qint64 elapsedMs = now - mw->Uptime;
+
+    double elapsedHours = elapsedMs / 3600000.0;
+    int elapsedMinutes = elapsedMs / 60000;
+
+    ui->UptimeLabel->setText(QString("Uptime ~ %1 hours (%2 minutes)").arg(QString::number(elapsedHours, 'f', 2)).arg(elapsedMinutes));
+
 }
 
 void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
 {
-    mw->qsm.setValue(QSettingsManager::Font,ui->FontPickerCombo->currentText());
+    mw->qsm.setValue(QSettingsManager::StopwatchFont,ui->FontPickerCombo->currentText());
     mw->qsm.setValue(QSettingsManager::ClockFont,ui->FontPickerComboClock->currentText());
     event->accept();
 }
@@ -75,12 +90,12 @@ void StopwatchInteractiveEditor::mousePressEvent(QMouseEvent *event)
 void StopwatchInteractiveEditor::UpdateSystemModuleTogglePushButton()
 {
     bool check = mw->stm->CheckIfModuleIsEnabled();
-    ui->ToggleSystemModulePushButton->setText(check ? "Disable Module": "Enable Module");
+    ui->ToggleSystemModulePushButton->setText(check ? "Disable System Clock Module": "Enable System Clock Module");
 
-    if (check)
-        ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultDangerHexColor());
-    else
-        ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex()));
+    // if (check)
+    //     ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
+    // else
+    //     ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex()));
 
     ui->ToggleSystemModulePushButton->repaint();
 }
@@ -167,5 +182,51 @@ void StopwatchInteractiveEditor::on_ToggleSystemModulePushButton_clicked()
     emit toggleModuleSignal(!clockState);
     UpdateSystemModuleTogglePushButton();
 
+}
+
+
+void StopwatchInteractiveEditor::on_pushButton_clicked()
+{
+    auto cpd = new ColorPickerDialog();
+    auto val = cpd->exec();
+
+    if (val == QDialog::Accepted) {
+        auto color = cpd->FetchColorSelection();
+        mw->UpdateStopwatchColor(color);
+        mw->qsm.setValue(QSettingsManager::StopwatchFontColor,color.name());
+
+        this->setStyleSheet(this->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color.name()));
+    }
+
+}
+
+
+void StopwatchInteractiveEditor::on_pushButton_2_clicked()
+{
+    auto cpd = new ColorPickerDialog();
+    auto val = cpd->exec();
+
+    if (val == QDialog::Accepted) {
+        auto color = cpd->FetchColorSelection();
+        mw->stm->UpdateClockFontColor(color);
+        mw->qsm.setValue(QSettingsManager::ClockFontColor,color.name());
+    }
+}
+
+
+void StopwatchInteractiveEditor::on_pushButton_3_clicked()
+{
+    auto color = StylesheetGenerator::DefaultFontHexColor;
+    mw->UpdateStopwatchColor(color);
+    mw->qsm.setValue(QSettingsManager::StopwatchFontColor,color);
+    this->setStyleSheet(this->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color));
+}
+
+
+void StopwatchInteractiveEditor::on_pushButton_4_clicked()
+{
+    auto color = StylesheetGenerator::DefaultFontHexColor;
+    mw->stm->UpdateClockFontColor(color);
+    mw->qsm.setValue(QSettingsManager::ClockFontColor,color);
 }
 

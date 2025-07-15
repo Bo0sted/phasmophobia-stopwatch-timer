@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QTimer>
 
+
 #include "qsettingsmanager.h"
 #include "stopwatchmanager.h"
 #include "qhotkeymanager.h"
@@ -38,9 +39,11 @@ public:
     ~MainWindow();
     QString FetchStopwatchFontColorAsHex();
     void UpdateStopwatchFont(QString fontName, int fontSize);
+    void UpdateStopwatchColor(QColor color);
     QFont GetCurrentFont();
     QString GetActiveStopwatchStyleSheet();
     int GetCurrentStopwatchFontSize();
+    const qint64 Uptime;
 
 public slots:
     void updateElapsedTime(const int &time);
@@ -52,6 +55,7 @@ private:
     QFuture<void> stopwatchUpdateRespondThread;
     void ResizeWindowToFitStopwatch();
     QString FormatTime(int totalSeconds);
+    QColor stopwatchFontColor;
 protected:
     void mouseMoveEvent(QMouseEvent *event)override;
     void mousePressEvent(QMouseEvent *event)override;

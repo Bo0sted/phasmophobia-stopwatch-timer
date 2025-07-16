@@ -31,6 +31,11 @@ set(PROJECT_SOURCES
         mainwindow.ui
 )
 
+if(WIN32)
+    set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/assets/appicon.rc")
+    target_sources(CrossPlatformStopwatch PRIVATE ${APP_ICON_RESOURCE_WINDOWS})
+endif()
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(CrossPlatformStopwatch
         MANUAL_FINALIZATION
@@ -39,13 +44,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         qhotkeymanager.h qhotkeymanager.cpp
         stopwatchmanager.h stopwatchmanager.cpp
 
-
         stylesheetgenerator.h stylesheetgenerator.cpp
         stopwatchinteractiveeditor.h stopwatchinteractiveeditor.cpp stopwatchinteractiveeditor.ui
         systemtimemodule.h systemtimemodule.cpp systemtimemodule.ui
         colorpickerdialog.h colorpickerdialog.cpp colorpickerdialog.ui
-
-
+        assets.qrc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET CrossPlatformStopwatch APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

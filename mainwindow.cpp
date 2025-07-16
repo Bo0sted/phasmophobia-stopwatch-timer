@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
     UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
     QDir dir;
-    SetStopwatchValue(QString("Welcome, %1. Stopwatch ready...").arg(dir.home().dirName()));
+    SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(qhm.FetchToggleStopwatchHotkey()));
 }
 
 void MainWindow::SetStopwatchValue(QString text)

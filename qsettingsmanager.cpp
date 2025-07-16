@@ -3,9 +3,10 @@
 
 #include <QSettings>
 #include <QCoreApplication>
+#include <QStandardPaths>
 
 QSettingsManager::QSettingsManager()
-    : settings(QString("%1/%2").arg(QCoreApplication::applicationDirPath(),"StopwatchSettings.ini"), QSettings::Format::IniFormat)
+    : settings(QString("%1/%2").arg(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),"StopwatchSettings.ini"), QSettings::Format::IniFormat)
     , SettingsForHotkeyGroup{
         "Hotkeys/BringToForeground",
         "Hotkeys/Reset",

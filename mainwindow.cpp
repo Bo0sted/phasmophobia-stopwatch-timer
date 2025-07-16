@@ -4,6 +4,7 @@
 #include "stopwatchinteractiveeditor.h"
 #include "stylesheetgenerator.h"
 #include "systemtimemodule.h"
+#include "stopwatchinteractiveeditor.h"
 
 #include <QHotkey>
 #include <QMouseEvent>
@@ -22,10 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     Uptime(QDateTime::currentMSecsSinceEpoch())
 {
     ui->setupUi(this);
-    connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
-    UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
-    QDir dir;
-    SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(qhm.FetchToggleStopwatchHotkey()));
 }
 
 void MainWindow::SetStopwatchValue(QString text)
@@ -52,6 +49,8 @@ void MainWindow::UpdateStopwatchColor(QColor color)
 {
     stopwatchFontColor = color;
     ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(stopwatchFontColor));
+    // qDebug() << "Applying color to StopwatchLabel:" << color.name()
+    //          << "Valid?" << color.isValid();
 }
 
 QFont MainWindow::GetCurrentFont()
@@ -67,6 +66,11 @@ QString MainWindow::GetActiveStopwatchStyleSheet()
 int MainWindow::GetCurrentStopwatchFontSize()
 {
     return ui->StopwatchLabel->font().pointSize();
+}
+
+void MainWindow::BeginShutdown()
+{
+    QApplication::quit();
 }
 
 
@@ -87,13 +91,9 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::MouseButton::RightButton && StopwatchInteractiveEditor::instances < 1) {
-        auto *sie = new StopwatchInteractiveEditor(nullptr, this);
-        sie->setAttribute(Qt::WA_DeleteOnClose);
-        sie->setWindowFlags(sie->windowFlags()
-                            | Qt::FramelessWindowHint
-                             );
-        sie->show();
+    if (event->button() == Qt::MouseButton::RightButton) {
+        sie->setVisible(true);
+        qhm.UpdateHotkeySignalBlock(true);
     }
 }
 
@@ -102,6 +102,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     QString spos = QString("%1,%2").arg(this->pos().x()).arg(this->pos().y());
     qsm.setValue(QSettingsManager::LastStopwatchPosition, spos);
     stm->close();
+    sie->close();
     event->accept();
 }
 
@@ -144,32 +145,55 @@ QString MainWindow::FormatTime(int totalSeconds)
 void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
-    UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
-    ui->StopwatchLabel->setStyleSheet(QString("QLabel { background-color : black; color : %1; }").arg(stopwatchFontColor.name()));
-    {
-    QPair<float, float> lastKnown = qsm.FetchStopwatchLastPosition();
-    this->move(lastKnown.first,lastKnown.second);
-    // This forces Qt to update the window. Otherwise move() wont have any effect
-    this->raise();
+
+}
+
+bool MainWindow::event(QEvent *event)
+{
+    if (event->type() == QEvent::Polish) {
+        UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
+        SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(qhm.FetchToggleStopwatchHotkey()));
+        UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
+
+        ui->StopwatchLabel->setStyleSheet(QString("QLabel { background-color : black; color : %1; }").arg(stopwatchFontColor.name()));
+        {
+            QPair<float, float> lastKnown = qsm.FetchStopwatchLastPosition();
+            this->move(lastKnown.first,lastKnown.second);
+            // This forces Qt to update the window. Otherwise move() wont have any effect
+            this->raise();
+        }
+
+        stm = new SystemTimeModule(nullptr, this);
+        stm->setAttribute(Qt::WA_DeleteOnClose);
+        stm->setAttribute(Qt::WA_TranslucentBackground);
+        stm->setWindowFlags(stm->windowFlags()
+                            | Qt::FramelessWindowHint
+                            | Qt::WindowStaysOnTopHint
+                            );
+        QPair<float, float> lastKnown = qsm.FetchSystemClockLastPosition();
+        stm->show();
+        stm->move(lastKnown.first,lastKnown.second);
+
+        sie = new StopwatchInteractiveEditor(nullptr, this);
+        sie->setAttribute(Qt::WA_DeleteOnClose);
+        sie->setWindowFlags(sie->windowFlags()
+                            | Qt::FramelessWindowHint
+                            );
+        sie->show();
+
+        connect(this, &MainWindow::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
+        if (!qsm.CheckIfClockEnabled())
+            emit toggleModuleSignal(false);
+        else
+            emit toggleModuleSignal(true);
+
+        connect(this, &MainWindow::toggleEditorSignal, sie, &StopwatchInteractiveEditor::setEditorOpen);
+        emit toggleEditorSignal(false);
+
+        connect(sie, &StopwatchInteractiveEditor::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
+        connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
     }
-
-    stm = new SystemTimeModule(nullptr, this);
-    stm->setAttribute(Qt::WA_DeleteOnClose);
-    stm->setAttribute(Qt::WA_TranslucentBackground);
-    stm->setWindowFlags(stm->windowFlags()
-                             | Qt::FramelessWindowHint
-                             | Qt::WindowStaysOnTopHint
-                             );
-    QPair<float, float> lastKnown = qsm.FetchSystemClockLastPosition();
-    stm->show();
-    stm->move(lastKnown.first,lastKnown.second);
-    connect(this, &MainWindow::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
-
-    if (!qsm.CheckIfClockEnabled())
-        emit toggleModuleSignal(false);
-    else
-        emit toggleModuleSignal(true);
-
+    return QWidget::event(event);
 }
 
 void MainWindow::updateElapsedTime(const int &time) {

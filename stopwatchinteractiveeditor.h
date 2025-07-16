@@ -17,11 +17,13 @@ class StopwatchInteractiveEditor : public QWidget
 public:
     explicit StopwatchInteractiveEditor(QWidget *parent = nullptr, MainWindow *mwr=nullptr);
     ~StopwatchInteractiveEditor();
-    inline static int instances = 0;
 
     void UpdateSystemModuleTogglePushButton();
+    void RefreshOpenState();
 signals:
     void toggleModuleSignal(bool shouldEnable);
+public slots:
+    void setEditorOpen(bool shouldOpen);
 private slots:
     void on_FontPickerCombo_currentFontChanged(const QFont &f);
 
@@ -55,11 +57,13 @@ private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;
     QPointF oldPosition;
+    bool open;
 
     void showEvent(QShowEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+    bool event(QEvent *event) override;
 
 };
 

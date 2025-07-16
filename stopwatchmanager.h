@@ -2,6 +2,7 @@
 #define STOPWATCHMANAGER_H
 
 #include <QFuture>
+#include <atomic>
 
 // Forward declaration
 class MainWindow;
@@ -10,7 +11,7 @@ class StopwatchManager : public QObject
 {
     Q_OBJECT
 public:
-    bool pauseStopwatch;
+    std::atomic<bool> pauseStopwatch;
 
     StopwatchManager(MainWindow *mwr);
     ~StopwatchManager();
@@ -21,7 +22,7 @@ signals:
     void updateElapsedTime(const int &time); // Signal to update elapsed time
 private:
     MainWindow *mw;
-    bool isDeconstructing;
+    std::atomic<bool> isDeconstructing;
     QFuture<void> stopwatchThread;
 };
 

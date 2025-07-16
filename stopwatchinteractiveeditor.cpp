@@ -4,6 +4,8 @@
 #include "stylesheetgenerator.h"
 #include "qsettingsmanager.h"
 #include "colorpickerdialog.h"
+#include "stopwatchinteractiveeditor.h"
+#include "systemtimemodule.h"
 
 #include <QCloseEvent>
 #include <QPushButton>
@@ -11,65 +13,32 @@
 #include <QDateTime>
 #include <QString>
 
-
-
 StopwatchInteractiveEditor::StopwatchInteractiveEditor(QWidget *parent, MainWindow *mwr)
     : QWidget(parent)
     , ui(new Ui::StopwatchInteractiveEditor)
     , mw{mwr}
+    , open{false}
 {
     ui->setupUi(this);
-    instances++;
-    mw->qhm.UpdateHotkeySignalBlock(true);
-    connect(this, &StopwatchInteractiveEditor::toggleModuleSignal, mw->stm, &SystemTimeModule::setLoadModule);
 }
 
 StopwatchInteractiveEditor::~StopwatchInteractiveEditor()
 {
     delete ui;
-    instances--;
-    mw->qhm.UpdateHotkeySignalBlock(false);
 }
 
 void StopwatchInteractiveEditor::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-    this->setStyleSheet(QString("%1"
-                                " %2"
-                                " %3"
-                                " %4").arg(
-                                StylesheetGenerator::DefaultLabel(),
-                                StylesheetGenerator::DefaultWidgetBackground(),
-                                StylesheetGenerator::DefaultQKeySequenceEditStyle(12, mw->FetchStopwatchFontColorAsHex()),
-                                StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex())));
-    ui->FontPickerCombo->setCurrentText(mw->GetCurrentFont().family());
-    ui->FontPickerComboClock->setCurrentText(mw->stm->GetCurrentFont().family());
-    ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeader());
-    ui->EditorHotkeyHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeader());
-    ui->CustomizationClockHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
-    ui->CustomizationModulesHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
-    ui->CustomizationStopwatchHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
-    ui->ToggleTabActiveAssignmentLabel->setText(mw->qhm.FetchToggleStopwatchHotkey());
-    ui->ResetTabActiveAssignmentLabel->setText(mw->qhm.FetchResetStopwatchHotkey());
-    ui->BringToForegroundTabActiveAssignmentLabel->setText(mw->qhm.FetchBringToForegroundHotkey());
-    //ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
-    UpdateSystemModuleTogglePushButton();
-
-    qint64 now = QDateTime::currentMSecsSinceEpoch();
-    qint64 elapsedMs = now - mw->Uptime;
-
-    double elapsedHours = elapsedMs / 3600000.0;
-    int elapsedMinutes = elapsedMs / 60000;
-
-    ui->UptimeLabel->setText(QString("Uptime ~ %1 hours (%2 minutes)").arg(QString::number(elapsedHours, 'f', 2)).arg(elapsedMinutes));
 
 }
 
 void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
 {
+    event->accept();
     mw->qsm.setValue(QSettingsManager::StopwatchFont,ui->FontPickerCombo->currentText());
     mw->qsm.setValue(QSettingsManager::ClockFont,ui->FontPickerComboClock->currentText());
-    event->accept();
+    mw->qsm.setValue(QSettingsManager::IsClockEnabled,QString("%1").arg(mw->stm->CheckIfModuleIsEnabled()));
 }
 
 void StopwatchInteractiveEditor::mouseMoveEvent(QMouseEvent *event)
@@ -87,6 +56,43 @@ void StopwatchInteractiveEditor::mousePressEvent(QMouseEvent *event)
         oldPosition = event->globalPosition();
 }
 
+bool StopwatchInteractiveEditor::event(QEvent *event)
+{
+    if (event->type() == QEvent::Polish) {
+        this->setStyleSheet(QString("%1"
+                                    " %2"
+                                    " %3"
+                                    " %4").arg(
+                                    StylesheetGenerator::DefaultLabel(),
+                                    StylesheetGenerator::DefaultWidgetBackground(),
+                                    StylesheetGenerator::DefaultQKeySequenceEditStyle(12, mw->qsm.FetchStopwatchFontColor()),
+                                    StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchFontColor())));
+        ui->FontPickerCombo->setCurrentText(mw->GetCurrentFont().family());
+        ui->FontPickerComboClock->setCurrentText(mw->stm->GetCurrentFont().family());
+        ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeader());
+        ui->EditorHotkeyHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeader());
+        ui->CustomizationClockHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
+        ui->CustomizationModulesHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
+        ui->CustomizationStopwatchHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
+        ui->ToggleTabActiveAssignmentLabel->setText(mw->qhm.FetchToggleStopwatchHotkey());
+        ui->ResetTabActiveAssignmentLabel->setText(mw->qhm.FetchResetStopwatchHotkey());
+        ui->BringToForegroundTabActiveAssignmentLabel->setText(mw->qhm.FetchBringToForegroundHotkey());
+        //ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
+        UpdateSystemModuleTogglePushButton();
+
+        qint64 now = QDateTime::currentMSecsSinceEpoch();
+        qint64 elapsedMs = now - mw->Uptime;
+
+        double elapsedHours = elapsedMs / 3600000.0;
+        int elapsedMinutes = elapsedMs / 60000;
+
+        ui->UptimeLabel->setText(QString("Uptime ~ %1 hours (%2 minutes)").arg(QString::number(elapsedHours, 'f', 2)).arg(elapsedMinutes));
+    }
+
+    return QWidget::event(event);
+
+}
+
 void StopwatchInteractiveEditor::UpdateSystemModuleTogglePushButton()
 {
     bool check = mw->stm->CheckIfModuleIsEnabled();
@@ -98,6 +104,24 @@ void StopwatchInteractiveEditor::UpdateSystemModuleTogglePushButton()
     //     ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex()));
 
     ui->ToggleSystemModulePushButton->repaint();
+}
+
+void StopwatchInteractiveEditor::RefreshOpenState()
+{
+    this->setVisible(open);
+
+    if (open) {
+        mw->qhm.UpdateHotkeySignalBlock(true);
+    }
+    else {
+        mw->qhm.UpdateHotkeySignalBlock(false);
+    }
+}
+
+void StopwatchInteractiveEditor::setEditorOpen(bool shouldOpen)
+{
+    open = shouldOpen;
+    RefreshOpenState();
 }
 
 void StopwatchInteractiveEditor::on_FontPickerCombo_currentFontChanged(const QFont &f)
@@ -118,7 +142,7 @@ void StopwatchInteractiveEditor::on_ToggleTabApplyNewHotkey_clicked()
 {
     if (mw->qhm.IsHotkeyAvailable(ui->ToggleTabHotkeyInput->keySequence().toString(),true)) {
         QString hotkeyName = ui->ToggleTabHotkeyInput->keySequence().toString();
-        mw->qhm.ReassignHotkey(QHotkeyManager::AvailableHotkeys::ToggleKey,hotkeyName);
+        mw->qhm.AssignHotkey(QHotkeyManager::AvailableHotkeys::ToggleKey,hotkeyName);
         ui->ToggleTabActiveAssignmentLabel->setText(hotkeyName);
         mw->qsm.setValue(QSettingsManager::ToggleKey,hotkeyName);
     }
@@ -129,7 +153,7 @@ void StopwatchInteractiveEditor::on_ResetTabApplyNewHotkey_clicked()
 {
     if (mw->qhm.IsHotkeyAvailable(ui->ResetTabHotkeyInput->keySequence().toString(),true)) {
         QString hotkeyName = ui->ResetTabHotkeyInput->keySequence().toString();
-        mw->qhm.ReassignHotkey(QHotkeyManager::AvailableHotkeys::ResetKey,hotkeyName);
+        mw->qhm.AssignHotkey(QHotkeyManager::AvailableHotkeys::ResetKey,hotkeyName);
         ui->ResetTabActiveAssignmentLabel->setText(hotkeyName);
         mw->qsm.setValue(QSettingsManager::ResetKey,hotkeyName);
     }
@@ -140,7 +164,7 @@ void StopwatchInteractiveEditor::on_BringToForegroundTabApplyNewHotkey_clicked()
 {
     if (mw->qhm.IsHotkeyAvailable(ui->BringToForegroundTabHotkeyInput->keySequence().toString(),true)) {
         QString hotkeyName = ui->BringToForegroundTabHotkeyInput->keySequence().toString();
-        mw->qhm.ReassignHotkey(QHotkeyManager::AvailableHotkeys::BringToForeground,hotkeyName);
+        mw->qhm.AssignHotkey(QHotkeyManager::AvailableHotkeys::BringToForeground,hotkeyName);
         ui->BringToForegroundTabActiveAssignmentLabel->setText(hotkeyName);
         mw->qsm.setValue(QSettingsManager::BringToForeground,hotkeyName);
     }
@@ -149,13 +173,13 @@ void StopwatchInteractiveEditor::on_BringToForegroundTabApplyNewHotkey_clicked()
 
 void StopwatchInteractiveEditor::on_closeWindow_clicked()
 {
-    this->close();
+    setEditorOpen(false);
 }
 
 
 void StopwatchInteractiveEditor::on_quitStopwatch_clicked()
 {
-    QApplication::quit();
+    mw->BeginShutdown();
 }
 
 

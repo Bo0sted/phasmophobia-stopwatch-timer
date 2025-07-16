@@ -20,6 +20,7 @@ QHotkeyManager::QHotkeyManager(MainWindow *mwr)
     resetStopwatchHotkey = new QHotkey(QKeySequence(ResetStopwatchHotkey), true, qApp);
     bringToForegroundStopwatchHotkey = new QHotkey(QKeySequence(BringToForegroundStopwatchHotkey), true,qApp);
 
+
     QObject::connect(toggleStopwatchHotkey, &QHotkey::activated, qApp, [&](){
         ToggleStopwatch();
     });
@@ -31,6 +32,10 @@ QHotkeyManager::QHotkeyManager(MainWindow *mwr)
     QObject::connect(bringToForegroundStopwatchHotkey, &QHotkey::activated, qApp, [&](){
         BringToForegroundStopwatch();
     });
+
+    qDebug() << "Toggle hotkey registered:" << toggleStopwatchHotkey->isRegistered();
+    qDebug() << "Reset hotkey registered:" << resetStopwatchHotkey->isRegistered();
+    qDebug() << "Foreground hotkey registered:" << bringToForegroundStopwatchHotkey->isRegistered();
 }
 
 QString QHotkeyManager::FetchToggleStopwatchHotkey()
@@ -60,65 +65,96 @@ QString QHotkeyManager::FetchBringToForegroundHotkey()
     else return hotkey.toString();
 }
 
-bool QHotkeyManager::ReassignHotkey(AvailableHotkeys ah, QString hotkey)
+void QHotkeyManager::DeleteHotkey(AvailableHotkeys ah)
 {
     switch(ah) {
     case ToggleKey: {
-        ToggleStopwatchHotkey = hotkey;
-        return true;
+        if (toggleStopwatchHotkey->isRegistered()) {
+            toggleStopwatchHotkey->disconnect();
+            delete toggleStopwatchHotkey;
+        }
+        ToggleStopwatchHotkey = DefaultToggleStopwatchHotkey;
+        return;
     }
     case ResetKey: {
-        ResetStopwatchHotkey = hotkey;
-        return true;
+        if (resetStopwatchHotkey->isRegistered()) {
+            resetStopwatchHotkey->disconnect();
+            delete resetStopwatchHotkey;
+        }
+        ResetStopwatchHotkey = DefaultResetStopwatchHotkey;
+        return;
     }
     case BringToForeground: {
-        BringToForegroundStopwatchHotkey = hotkey;
-        return true;
+        if (bringToForegroundStopwatchHotkey->isRegistered()) {
+            bringToForegroundStopwatchHotkey->disconnect();
+            delete bringToForegroundStopwatchHotkey;
+        }
+        BringToForegroundStopwatchHotkey = DefaultBringToForegroundHotkey;
+        return;
     }
     }
 }
 
-void QHotkeyManager::ReassignHotkey(AvailableHotkeys ah, bool shouldUnassign)
+void QHotkeyManager::FetchAndAssignHotkey(AvailableHotkeys ah)
 {
+    DeleteHotkey(ah);
+
     switch(ah) {
-    case ToggleKey: {
-        if (shouldUnassign) {
-            toggleStopwatchHotkey->disconnect();
-            delete toggleStopwatchHotkey;
-        }
-        else {
+        case ToggleKey: {
+            ToggleStopwatchHotkey = FetchToggleStopwatchHotkey();
             toggleStopwatchHotkey = new QHotkey(QKeySequence(ToggleStopwatchHotkey), true, qApp);
             QObject::connect(toggleStopwatchHotkey, &QHotkey::activated, qApp, [&](){
                 ToggleStopwatch();
             });
-        }
-        return;
+            return;
     }
-    case ResetKey: {
-        if (shouldUnassign) {
-            resetStopwatchHotkey->disconnect();
-            delete resetStopwatchHotkey;
-        }
-        else {
+        case ResetKey: {
+            ResetStopwatchHotkey = FetchResetStopwatchHotkey();
             resetStopwatchHotkey = new QHotkey(QKeySequence(ResetStopwatchHotkey), true, qApp);
             QObject::connect(resetStopwatchHotkey, &QHotkey::activated, qApp, [&](){
                 ResetStopwatch();
             });
-        }
-        return;
+            return;
     }
-    case BringToForeground: {
-        if (shouldUnassign) {
-            bringToForegroundStopwatchHotkey->disconnect();
-            delete bringToForegroundStopwatchHotkey;
-        }
-        else {
+        case BringToForeground: {
+            BringToForegroundStopwatchHotkey = FetchBringToForegroundHotkey();
             bringToForegroundStopwatchHotkey = new QHotkey(QKeySequence(BringToForegroundStopwatchHotkey), true, qApp);
             QObject::connect(bringToForegroundStopwatchHotkey, &QHotkey::activated, qApp, [&](){
                 BringToForegroundStopwatch();
             });
-        }
-        return;
+            return;
+    }
+    }
+}
+
+void QHotkeyManager::AssignHotkey(AvailableHotkeys ah, QString hotkey)
+{
+    DeleteHotkey(ah);
+
+    switch(ah) {
+        case ToggleKey: {
+            ToggleStopwatchHotkey = hotkey;
+            toggleStopwatchHotkey = new QHotkey(QKeySequence(ToggleStopwatchHotkey), true, qApp);
+            QObject::connect(toggleStopwatchHotkey, &QHotkey::activated, qApp, [&](){
+                ToggleStopwatch();
+            });
+            return;
+    }
+        case ResetKey: {
+            ResetStopwatchHotkey = hotkey;
+            resetStopwatchHotkey = new QHotkey(QKeySequence(ResetStopwatchHotkey), true, qApp);
+            QObject::connect(resetStopwatchHotkey, &QHotkey::activated, qApp, [&](){
+                ResetStopwatch();
+            });
+            return;
+    }
+        case BringToForeground: {
+            BringToForegroundStopwatchHotkey = hotkey;
+            bringToForegroundStopwatchHotkey = new QHotkey(QKeySequence(BringToForegroundStopwatchHotkey), true, qApp);
+            QObject::connect(bringToForegroundStopwatchHotkey, &QHotkey::activated, qApp, [&](){
+                BringToForegroundStopwatch();
+            });
+            return;
     }
     }
 }
@@ -163,16 +199,15 @@ bool QHotkeyManager::IsHotkeyAvailable(QString hotkey, bool shouldAlertUser)
 
 void QHotkeyManager::UpdateHotkeySignalBlock(bool shouldBlockSignal)
 {
-    if (shouldBlockSignal) {
-        ReassignHotkey(ToggleKey);
-        ReassignHotkey(ResetKey);
-        ReassignHotkey(BringToForeground);
-    }
-    else {
-        ReassignHotkey(ToggleKey, false);
-        ReassignHotkey(ResetKey, false);
-        ReassignHotkey(BringToForeground, false);
-    }
+    SetHotkeyBlocked(ToggleKey,shouldBlockSignal);
+    SetHotkeyBlocked(ResetKey,shouldBlockSignal);
+    SetHotkeyBlocked(BringToForeground,shouldBlockSignal);
+
+}
+
+void QHotkeyManager::SetHotkeyBlocked(AvailableHotkeys hotkey, bool block)
+{
+    GetQHotkeyFromAvailableHotkeysEnum(hotkey)->blockSignals(block);
 }
 
 void QHotkeyManager::ToggleStopwatch()
@@ -190,6 +225,21 @@ void QHotkeyManager::BringToForegroundStopwatch()
     mw->show();
     mw->activateWindow();
     mw->raise();
+}
+
+QHotkey* QHotkeyManager::GetQHotkeyFromAvailableHotkeysEnum(AvailableHotkeys ah)
+{
+    switch(ah) {
+    case ToggleKey: {
+        return toggleStopwatchHotkey;
+    }
+    case ResetKey: {
+        return resetStopwatchHotkey;
+    }
+    case BringToForeground: {
+        return bringToForegroundStopwatchHotkey;
+    }
+}
 }
 
 

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/win.ico</file>
+        <file>assets/other.png</file>
+    </qresource>
+</RCC>

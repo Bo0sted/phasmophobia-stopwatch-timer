@@ -64,8 +64,13 @@ else()
 endif()
 
 if(WIN32)
-    set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/assets/appicon.rc")
-    target_sources(CrossPlatformStopwatch PRIVATE ${APP_ICON_RESOURCE_WINDOWS})
+    set(ICON_PATH "${CMAKE_CURRENT_SOURCE_DIR}/assets/win.ico")
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets/appicon.rc.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/appicon.rc"
+        @ONLY
+    )
+    target_sources(CrossPlatformStopwatch PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/appicon.rc")
 endif()
 
 target_link_libraries(CrossPlatformStopwatch PRIVATE Qt${QT_VERSION_MAJOR}::Widgets qhotkey)

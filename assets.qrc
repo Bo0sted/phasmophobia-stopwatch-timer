@@ -3,5 +3,6 @@
         <file>assets/win.ico</file>
         <file>assets/CrossPlatformStopwatch.desktop.in</file>
         <file>assets/512x512/stopwatchpicture.png</file>
+        <file>assets/appicon.rc.in</file>
     </qresource>
 </RCC>

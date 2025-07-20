@@ -11,19 +11,15 @@ class QHotkeyManager
 public:
     enum AvailableHotkeys {
         ToggleKey,
-        ResetKey,
-        BringToForeground
+        ResetKey
     };
 
     QHotkeyManager(MainWindow *mwr);
     static const QString DefaultToggleStopwatchHotkey;
     static const QString DefaultResetStopwatchHotkey;
-    static const QString DefaultBringToForegroundHotkey;
-
 
     QString FetchToggleStopwatchHotkey();
     QString FetchResetStopwatchHotkey();
-    QString FetchBringToForegroundHotkey();
     void DeleteHotkey(AvailableHotkeys ah);
     void FetchAndAssignHotkey(AvailableHotkeys ah);
     void AssignHotkey(AvailableHotkeys ah, QString hotkey);
@@ -34,11 +30,9 @@ private:
     MainWindow *mw;
     QString ToggleStopwatchHotkey;
     QString ResetStopwatchHotkey;
-    QString BringToForegroundStopwatchHotkey;
 
     QHotkey *toggleStopwatchHotkey;
     QHotkey *resetStopwatchHotkey;
-    QHotkey *bringToForegroundStopwatchHotkey;
     void ToggleStopwatch();
     void ResetStopwatch();
     void BringToForegroundStopwatch();

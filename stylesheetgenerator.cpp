@@ -7,6 +7,7 @@
 
 const QFont StylesheetGenerator::DefaultFont = QFont("DejaVu Sans");
 const QString StylesheetGenerator::DefaultFontHexColor = QString("#42C0FB");
+const QString StylesheetGenerator::DefaultPausedFontHexColor = QString("#FBA16C");
 const QString StylesheetGenerator::DefaultWidgetDarkModeBackground = QString("#1A1A1A");
 const QVector<QPair<QString,QString>> StylesheetGenerator::NiceColors = {
     {"#BE2625", "strawberry"},
@@ -42,6 +43,15 @@ const QString StylesheetGenerator::DefaultLabel(int fontSize)
                    "font-size: %1pt;"
                    "}").arg(fontSize);
 }
+
+const QString StylesheetGenerator::DefaultDangerLabel(int fontSize)
+{
+    return QString("QLabel { "
+                   "font-family: DejaVu Sans; "
+                   "font-size: %1pt;"
+                   "color: #EE2C2C;"
+                   "}").arg(fontSize);
+}
 const QString StylesheetGenerator::DefaultWidgetBackground()
 {
     //hex = "Red";
@@ -65,17 +75,17 @@ const QString StylesheetGenerator::DefaultButtonStyle(int fontSize, QString back
     return QString("QPushButton {"
                    "color: %4;"
                    "font-size: %1pt;"
-                   "font-weight: bold;"
+                   "font-weight: medium;"
                    "background-color: %2;"
                    "border-style: outset;"
-                   "border-width: 0px;"
+                   "border-width: 2px;"
                    "border-radius: 10px;"
                    "border-color: %3;"
                    "padding: 6px;"
                    "}"
                    "QPushButton:pressed {"
                    "border-style: inset;"
-                   "}").arg(fontSize).arg(backgroundColor, borderColor).arg(DefaultWidgetDarkModeBackground);
+                   "}").arg(fontSize).arg(backgroundColor, borderColor).arg("white");
 }
 
 const QString StylesheetGenerator::DefaultQKeySequenceEditStyle(int fontSize, QString backgroundColor, QString borderColor)

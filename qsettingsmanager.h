@@ -8,7 +8,6 @@ class QSettingsManager
 {
 public:
     enum SettingsForHotkeyGroupIndex {
-        BringToForeground,
         ResetKey,
         ToggleKey,
     };
@@ -17,6 +16,8 @@ public:
         StopwatchBackgroundColor,
         StopwatchFont,
         StopwatchFontColor,
+        StopwatchPausedFontColor,
+        StopwatchResetFontColor,
     };
     enum SettingsForClockGroupIndex {
         ClockFont,
@@ -26,6 +27,7 @@ public:
         LastClockPosition,
 
     };
+
 
     const QList<QString> SettingsForHotkeyGroup;
     const QList<QString> SettingsForStopwatchGroup;
@@ -42,6 +44,8 @@ public:
     const QVariant getValue(QString groupName, QString valueName);
 
     QString FetchStopwatchFontColor();
+    QString FetchPausedStopwatchFontColor();
+    QString FetchResetStopwatchFontColor();
     QString FetchStopwatchFont();
     QString FetchClockFont();
     QString FetchClockFontColor();

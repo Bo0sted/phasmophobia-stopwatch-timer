@@ -3,7 +3,6 @@
 
 #include <QWidget>
 
-
 #include "mainwindow.h"
 
 namespace Ui {
@@ -33,8 +32,6 @@ private slots:
 
     void on_ResetTabApplyNewHotkey_clicked();
 
-    void on_BringToForegroundTabApplyNewHotkey_clicked();
-
     void on_closeWindow_clicked();
 
     void on_quitStopwatch_clicked();
@@ -45,13 +42,22 @@ private slots:
 
     void on_ToggleSystemModulePushButton_clicked();
 
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
-
     void on_pushButton_3_clicked();
 
     void on_pushButton_4_clicked();
+
+    void on_PausedColorResetPushButton_clicked();
+
+    void on_primaryColorPickerPushButton_pressed();
+
+    void on_pausedColorPickerPushButton_pressed();
+
+    void on_ResetColorPickerPushButton_pressed();
+
+    void on_ResetColorResetPushButton_clicked();
+
+
+    void on_pushButton_2_pressed();
 
 private:
     Ui::StopwatchInteractiveEditor *ui;

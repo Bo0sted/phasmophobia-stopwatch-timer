@@ -4,7 +4,6 @@
 #include "stopwatchinteractiveeditor.h"
 #include "stylesheetgenerator.h"
 #include "systemtimemodule.h"
-#include "stopwatchinteractiveeditor.h"
 
 #include <QHotkey>
 #include <QMouseEvent>
@@ -20,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     swm{this},
     qhm{this},
     stopwatchFontColor(qsm.FetchStopwatchFontColor()),
+    pausedStopwatchFontColor(qsm.FetchPausedStopwatchFontColor()),
+    resetStopwatchFontColor(qsm.FetchResetStopwatchFontColor()),
     Uptime(QDateTime::currentMSecsSinceEpoch())
 {
     ui->setupUi(this);
@@ -51,6 +52,31 @@ void MainWindow::UpdateStopwatchColor(QColor color)
     ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(stopwatchFontColor));
     // qDebug() << "Applying color to StopwatchLabel:" << color.name()
     //          << "Valid?" << color.isValid();
+}
+
+void MainWindow::RefreshStopwatchColor(bool shouldReset)
+{
+    if ((swm.pauseStopwatch == true && !shouldReset) || swm.pauseStopwatch == false && shouldReset) {
+        ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(pausedStopwatchFontColor));
+    }
+    // This statement should go above the last one because IF the user has a custom reset/initial state set, then itll be set here
+    else if (swm.pauseStopwatch == true && shouldReset){
+        ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(resetStopwatchFontColor));
+    }
+    else
+        ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(stopwatchFontColor));
+
+    this->repaint();
+}
+
+void MainWindow::UpdateStopwatchPausedColor(QColor color)
+{
+    pausedStopwatchFontColor = color;
+}
+
+void MainWindow::UpdateStopwatchResetColor(QColor color)
+{
+    resetStopwatchFontColor = color;
 }
 
 QFont MainWindow::GetCurrentFont()
@@ -192,6 +218,8 @@ bool MainWindow::event(QEvent *event)
 
         connect(sie, &StopwatchInteractiveEditor::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
         connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
+
+        RefreshStopwatchColor(true);
     }
     return QWidget::event(event);
 }

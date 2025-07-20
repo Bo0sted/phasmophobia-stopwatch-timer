@@ -44,6 +44,9 @@ public:
     QString FetchStopwatchFontColorAsHex();
     void UpdateStopwatchFont(QString fontName, int fontSize);
     void UpdateStopwatchColor(QColor color);
+    void RefreshStopwatchColor(bool shouldReset);
+    void UpdateStopwatchPausedColor(QColor color);
+    void UpdateStopwatchResetColor(QColor color);
     QFont GetCurrentFont();
     QString GetActiveStopwatchStyleSheet();
     int GetCurrentStopwatchFontSize();
@@ -62,6 +65,8 @@ private:
     void ResizeWindowToFitStopwatch();
     QString FormatTime(int totalSeconds);
     QColor stopwatchFontColor;
+    QColor pausedStopwatchFontColor;
+    QColor resetStopwatchFontColor;
 protected:
     void mouseMoveEvent(QMouseEvent *event)override;
     void mousePressEvent(QMouseEvent *event)override;

@@ -8,17 +8,14 @@ class MainWindow;
 
 const QString QHotkeyManager::DefaultToggleStopwatchHotkey = "1";
 const QString QHotkeyManager::DefaultResetStopwatchHotkey = "2";
-const QString QHotkeyManager::DefaultBringToForegroundHotkey = "3";
 
 QHotkeyManager::QHotkeyManager(MainWindow *mwr)
     :mw{mwr},
     ToggleStopwatchHotkey{FetchToggleStopwatchHotkey()},
-    ResetStopwatchHotkey{FetchResetStopwatchHotkey()},
-    BringToForegroundStopwatchHotkey{FetchBringToForegroundHotkey()}
+    ResetStopwatchHotkey{FetchResetStopwatchHotkey()}
 {
     toggleStopwatchHotkey = new QHotkey(QKeySequence(ToggleStopwatchHotkey), true, qApp);
     resetStopwatchHotkey = new QHotkey(QKeySequence(ResetStopwatchHotkey), true, qApp);
-    bringToForegroundStopwatchHotkey = new QHotkey(QKeySequence(BringToForegroundStopwatchHotkey), true,qApp);
 
 
     QObject::connect(toggleStopwatchHotkey, &QHotkey::activated, qApp, [&](){
@@ -29,13 +26,8 @@ QHotkeyManager::QHotkeyManager(MainWindow *mwr)
         ResetStopwatch();
     });
 
-    QObject::connect(bringToForegroundStopwatchHotkey, &QHotkey::activated, qApp, [&](){
-        BringToForegroundStopwatch();
-    });
-
     qDebug() << "Toggle hotkey registered:" << toggleStopwatchHotkey->isRegistered();
     qDebug() << "Reset hotkey registered:" << resetStopwatchHotkey->isRegistered();
-    qDebug() << "Foreground hotkey registered:" << bringToForegroundStopwatchHotkey->isRegistered();
 }
 
 QString QHotkeyManager::FetchToggleStopwatchHotkey()
@@ -56,14 +48,6 @@ QString QHotkeyManager::FetchResetStopwatchHotkey()
     else return hotkey.toString();
 }
 
-QString QHotkeyManager::FetchBringToForegroundHotkey()
-{
-    QSettingsManager *qsm = &mw->qsm;
-    auto hotkey = qsm->getValue(qsm->BringToForeground);
-
-    if (hotkey == false) return DefaultBringToForegroundHotkey;
-    else return hotkey.toString();
-}
 
 void QHotkeyManager::DeleteHotkey(AvailableHotkeys ah)
 {
@@ -84,15 +68,8 @@ void QHotkeyManager::DeleteHotkey(AvailableHotkeys ah)
         ResetStopwatchHotkey = DefaultResetStopwatchHotkey;
         return;
     }
-    case BringToForeground: {
-        if (bringToForegroundStopwatchHotkey->isRegistered()) {
-            bringToForegroundStopwatchHotkey->disconnect();
-            delete bringToForegroundStopwatchHotkey;
-        }
-        BringToForegroundStopwatchHotkey = DefaultBringToForegroundHotkey;
-        return;
     }
-    }
+
 }
 
 void QHotkeyManager::FetchAndAssignHotkey(AvailableHotkeys ah)
@@ -115,16 +92,9 @@ void QHotkeyManager::FetchAndAssignHotkey(AvailableHotkeys ah)
                 ResetStopwatch();
             });
             return;
+
     }
-        case BringToForeground: {
-            BringToForegroundStopwatchHotkey = FetchBringToForegroundHotkey();
-            bringToForegroundStopwatchHotkey = new QHotkey(QKeySequence(BringToForegroundStopwatchHotkey), true, qApp);
-            QObject::connect(bringToForegroundStopwatchHotkey, &QHotkey::activated, qApp, [&](){
-                BringToForegroundStopwatch();
-            });
-            return;
-    }
-    }
+}
 }
 
 void QHotkeyManager::AssignHotkey(AvailableHotkeys ah, QString hotkey)
@@ -148,14 +118,7 @@ void QHotkeyManager::AssignHotkey(AvailableHotkeys ah, QString hotkey)
             });
             return;
     }
-        case BringToForeground: {
-            BringToForegroundStopwatchHotkey = hotkey;
-            bringToForegroundStopwatchHotkey = new QHotkey(QKeySequence(BringToForegroundStopwatchHotkey), true, qApp);
-            QObject::connect(bringToForegroundStopwatchHotkey, &QHotkey::activated, qApp, [&](){
-                BringToForegroundStopwatch();
-            });
-            return;
-    }
+
     }
 }
 
@@ -185,23 +148,15 @@ bool QHotkeyManager::IsHotkeyAvailable(QString hotkey, bool shouldAlertUser)
         }
         return false;
     }
-    if (hotkey == BringToForegroundStopwatchHotkey) {
-        if (shouldAlertUser) {
-            QMessageBox msgBox;
-            msgBox.setText(QString("Sorry, %1 is currently assigned to %2").arg(hotkey, mw->qsm.SettingsForHotkeyGroup[mw->qsm.BringToForeground]));
-            msgBox.exec();
-        }
-        return false;
-    }
 
     return true;
 }
 
 void QHotkeyManager::UpdateHotkeySignalBlock(bool shouldBlockSignal)
 {
+    return;
     SetHotkeyBlocked(ToggleKey,shouldBlockSignal);
     SetHotkeyBlocked(ResetKey,shouldBlockSignal);
-    SetHotkeyBlocked(BringToForeground,shouldBlockSignal);
 
 }
 
@@ -213,6 +168,7 @@ void QHotkeyManager::SetHotkeyBlocked(AvailableHotkeys hotkey, bool block)
 void QHotkeyManager::ToggleStopwatch()
 {
     mw->swm.pauseStopwatch = !mw->swm.pauseStopwatch;
+    mw->RefreshStopwatchColor(false);
 }
 
 void QHotkeyManager::ResetStopwatch()
@@ -235,9 +191,6 @@ QHotkey* QHotkeyManager::GetQHotkeyFromAvailableHotkeysEnum(AvailableHotkeys ah)
     }
     case ResetKey: {
         return resetStopwatchHotkey;
-    }
-    case BringToForeground: {
-        return bringToForegroundStopwatchHotkey;
     }
 }
 }

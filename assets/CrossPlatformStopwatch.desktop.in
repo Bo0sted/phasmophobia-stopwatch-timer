@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Stopwatch
+Exec=@EXEC_PATH@
+Icon=stopwatchicon
+Type=Application
+Categories=Utility;

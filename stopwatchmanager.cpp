@@ -7,7 +7,7 @@
 StopwatchManager::StopwatchManager(MainWindow *mwr)
     : pauseStopwatch{true},
     isDeconstructing{false},
-    elapsedSeconds{},
+    elapsedSeconds{0},
     stopwatchThread(QtConcurrent::run(&StopwatchManager::StopwatchThread, this))
 {
     mw = mwr;
@@ -23,8 +23,9 @@ StopwatchManager::~StopwatchManager()
 void StopwatchManager::ResetStopwatch()
 {
     pauseStopwatch = true;
-    elapsedSeconds = 0;
     mw->SetStopwatchValue("0:00");
+    elapsedSeconds = 0;
+    mw->RefreshStopwatchColor(true);
 
 }
 
@@ -33,10 +34,10 @@ void StopwatchManager::StopwatchThread()
     qDebug() << "Stopwatch Thread initialized";
     while (!isDeconstructing) {
         while (!pauseStopwatch && !isDeconstructing) {
-            QThread::msleep(1000);
             if (pauseStopwatch)
                 break;
             elapsedSeconds += 1;
             emit updateElapsedTime(elapsedSeconds);
+            QThread::msleep(1000);
     }}
 }

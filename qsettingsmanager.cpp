@@ -8,7 +8,6 @@
 QSettingsManager::QSettingsManager()
     : settings(QString("%1/%2").arg(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),"StopwatchSettings.ini"), QSettings::Format::IniFormat)
     , SettingsForHotkeyGroup{
-        "Hotkeys/BringToForeground",
         "Hotkeys/Reset",
         "Hotkeys/ToggleOnOff"
           }
@@ -16,7 +15,9 @@ QSettingsManager::QSettingsManager()
         "Stopwatch/LastStopwatchPosition",
         "Stopwatch/StopwatchBackgroundColor",
         "Stopwatch/StopwatchFont",
-        "Stopwatch/StopwatchFontColor"
+        "Stopwatch/StopwatchFontColor",
+        "Stopwatch/StopwatchPausedFontColor",
+        "Stopwatch/StopwatchResetFontColor"
       }
     , SettingsForClockGroup{
         "System-Clock-Module/ClockFont",
@@ -26,7 +27,7 @@ QSettingsManager::QSettingsManager()
         "System-Clock-Module/LastClockPosition"}
 
 {
-    setValue("Application", "Version", "0.5-alpha");
+    setValue("Application", "Version", "1.0-beta");
 }
 
 void QSettingsManager::setValue(QString groupName, QString valueName, QString value)
@@ -76,6 +77,22 @@ QString QSettingsManager::FetchStopwatchFontColor()
     QVariant val = getValue(StopwatchFontColor);
 
     if (val == false) return StylesheetGenerator::DefaultFontHexColor;
+    else return val.toString();
+}
+
+QString QSettingsManager::FetchPausedStopwatchFontColor()
+{
+    QVariant val = getValue(StopwatchPausedFontColor);
+
+    if (val == false) return StylesheetGenerator::DefaultPausedFontHexColor;
+    else return val.toString();
+}
+
+QString QSettingsManager::FetchResetStopwatchFontColor()
+{
+    QVariant val = getValue(StopwatchResetFontColor);
+
+    if (val == false) return StylesheetGenerator::DefaultPausedFontHexColor;
     else return val.toString();
 }
 

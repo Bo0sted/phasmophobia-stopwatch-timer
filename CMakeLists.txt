@@ -44,7 +44,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         systemtimemodule.h systemtimemodule.cpp systemtimemodule.ui
         colorpickerdialog.h colorpickerdialog.cpp colorpickerdialog.ui
         assets.qrc
+        warmwelcome.h warmwelcome.cpp warmwelcome.ui
+
+
     )
+
+target_include_directories(CrossPlatformStopwatch
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET CrossPlatformStopwatch APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
@@ -72,6 +80,22 @@ if(WIN32)
     )
     target_sources(CrossPlatformStopwatch PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/appicon.rc")
 endif()
+
+if(UNIX AND NOT APPLE)
+    install(FILES assets/512x512/stopwatchicon.png
+            DESTINATION share/icons/hicolor/512x512/apps)
+
+    set(EXEC_PATH "${CMAKE_INSTALL_PREFIX}/bin/CrossPlatformStopwatch")
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets/CrossPlatformStopwatch.desktop.in
+        ${CMAKE_CURRENT_BINARY_DIR}/CrossPlatformStopwatch.desktop
+        @ONLY
+    )
+
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CrossPlatformStopwatch.desktop
+            DESTINATION share/applications)
+endif()
+
 
 target_link_libraries(CrossPlatformStopwatch PRIVATE Qt${QT_VERSION_MAJOR}::Widgets qhotkey)
 target_link_libraries(CrossPlatformStopwatch PRIVATE Qt6::Concurrent)

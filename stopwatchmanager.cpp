@@ -25,7 +25,7 @@ void StopwatchManager::ResetStopwatch()
     pauseStopwatch = true;
     mw->SetStopwatchValue("0:00");
     elapsedSeconds = 0;
-    mw->RefreshStopwatchColor(true);
+    mw->RefreshStopwatchState(true);
 
 }
 

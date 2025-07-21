@@ -59,6 +59,19 @@ private slots:
 
     void on_pushButton_2_pressed();
 
+
+    void on_backgroundColorPickerPushButton_pressed();
+
+    void on_pushButton_6_clicked();
+
+    void on_borderColorReseButton_clicked();
+
+    void on_borderColorPickerPushButton_pressed();
+
+    void on_backgroundToggleCheckbox_checkStateChanged(const Qt::CheckState &arg1);
+
+    void on_backgroundToggleCheckbox_clicked();
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;

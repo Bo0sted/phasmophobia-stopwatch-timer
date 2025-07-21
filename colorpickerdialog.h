@@ -24,6 +24,7 @@ private slots:
 
     void on_hexColorInput_textChanged(const QString &arg1);
 
+
 private:
     Ui::ColorPickerDialog *ui;
     void showEvent(QShowEvent *event) override;

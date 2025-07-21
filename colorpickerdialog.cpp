@@ -72,6 +72,7 @@ void ColorPickerDialog::showEvent(QShowEvent *event)
 
                     // Store color using setProperty
                     view->setProperty("hexColor", color);
+                    view->setCursor(QCursor(Qt::PointingHandCursor));
 
                     // Install event filter
                     view->installEventFilter(this);

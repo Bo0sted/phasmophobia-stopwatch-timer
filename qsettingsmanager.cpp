@@ -17,7 +17,10 @@ QSettingsManager::QSettingsManager()
         "Stopwatch/StopwatchFont",
         "Stopwatch/StopwatchFontColor",
         "Stopwatch/StopwatchPausedFontColor",
-        "Stopwatch/StopwatchResetFontColor"
+        "Stopwatch/StopwatchResetFontColor",
+        "Stopwatch/StopwatchBorderColor",
+        "Stopwatch/StopwatchBorderThickness",
+        "Stopwatch/StopwatchBackgroundEnabled"
       }
     , SettingsForClockGroup{
         "System-Clock-Module/ClockFont",
@@ -95,6 +98,40 @@ QString QSettingsManager::FetchResetStopwatchFontColor()
     if (val == false) return StylesheetGenerator::DefaultPausedFontHexColor;
     else return val.toString();
 }
+
+QString QSettingsManager::FetchStopwatchBackgroundColor()
+{
+    QVariant val = getValue(StopwatchBackgroundColor);
+
+    if (val == false) return StylesheetGenerator::DefaultStopwatchBackground;
+    else return val.toString();
+}
+
+QString QSettingsManager::FetchStopwatchBorderColor()
+{
+    QVariant val = getValue(StopwatchBorderColor);
+
+    if (val == false) return StylesheetGenerator::DefaultStopwatchBorderColor;
+    else return val.toString();
+}
+
+QString QSettingsManager::FetchStopwatchBorderWidth()
+{
+    QVariant val = getValue(StopwatchBorderThickness);
+
+    if (val == false) return StylesheetGenerator::DefaultStopwatchBorderWidth;
+    else return val.toString();
+}
+
+bool QSettingsManager::FetchIsBackgroundEnabled()
+{
+    QVariant val = getValue(StopwatchBackgroundEnabled, true);
+
+    if (val == -1) return true;
+    else return val.toBool();
+}
+
+
 
 QString QSettingsManager::FetchStopwatchFont()
 {

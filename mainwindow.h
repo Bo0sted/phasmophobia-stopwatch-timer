@@ -8,17 +8,18 @@
 #include <QTimer>
 
 
+// Forward declaration
+class StopwatchManager;
+class HotkeyManager;
+class SystemTimeModule;
+class StopwatchInteractiveEditor;
+
 #include "qsettingsmanager.h"
 #include "stopwatchmanager.h"
 #include "qhotkeymanager.h"
 #include "systemtimemodule.h"
 #include "stopwatchinteractiveeditor.h"
 
-// Forward declaration
-class StopwatchManager;
-class HotkeyManager;
-class SystemTimeModule;
-class StopwatchInteractiveEditor;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -44,9 +45,14 @@ public:
     QString FetchStopwatchFontColorAsHex();
     void UpdateStopwatchFont(QString fontName, int fontSize);
     void UpdateStopwatchColor(QColor color);
-    void RefreshStopwatchColor(bool shouldReset);
+    void RefreshStopwatchState(bool shouldReset);
     void UpdateStopwatchPausedColor(QColor color);
     void UpdateStopwatchResetColor(QColor color);
+    void UpdateStopwatchBackground(QColor color);
+    void UpdateStopwatchBorderColor(QColor color);
+    void UpdateStopwatchBorderThickness(QString thickness);
+    void SetBackgroundEnabled(bool enabled);
+    bool IsBackgroundEnabled();
     QFont GetCurrentFont();
     QString GetActiveStopwatchStyleSheet();
     int GetCurrentStopwatchFontSize();
@@ -67,6 +73,10 @@ private:
     QColor stopwatchFontColor;
     QColor pausedStopwatchFontColor;
     QColor resetStopwatchFontColor;
+    QColor stopwatchBackgroundColor;
+    QColor stopwatchBorderColor;
+    QColor stopwatchBorderThickness;
+    bool backgroundEnabled;
 protected:
     void mouseMoveEvent(QMouseEvent *event)override;
     void mousePressEvent(QMouseEvent *event)override;

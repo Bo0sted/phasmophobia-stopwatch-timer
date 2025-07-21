@@ -168,7 +168,7 @@ void QHotkeyManager::SetHotkeyBlocked(AvailableHotkeys hotkey, bool block)
 void QHotkeyManager::ToggleStopwatch()
 {
     mw->swm.pauseStopwatch = !mw->swm.pauseStopwatch;
-    mw->RefreshStopwatchColor(false);
+    mw->RefreshStopwatchState(false);
 }
 
 void QHotkeyManager::ResetStopwatch()

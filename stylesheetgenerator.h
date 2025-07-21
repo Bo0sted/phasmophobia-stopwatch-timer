@@ -5,6 +5,7 @@
 #include <QFont>
 #include <QPair>
 #include <QVector>
+#include <QColor>
 
 class StylesheetGenerator
 {
@@ -19,13 +20,16 @@ public:
     static const QString DefaultQKeySequenceEditStyle(int fontSize=12, QString backgroundColor="white", QString borderColor="white");
     static const QString DefaultDangerButton();
     static const QString NewStopwatchStylesheet(QColor color);
-    static const QString NewModuleOutputStylesheet(QColor color);
+    static const QString NewModuleOutputStylesheet(QColor color, QColor background=QColor::fromString("black"), QColor border=QColor::fromString("black"), QString thickness="2px");
 
     static const QFont DefaultFont;
     static const QString DefaultFontHexColor;
     static const QString DefaultPausedFontHexColor;
     static const QVector<QPair<QString,QString>> NiceColors;
     static const QString DefaultWidgetDarkModeBackground;
+    static const QString DefaultStopwatchBackground;
+    static const QString DefaultStopwatchBorderColor;
+    static const QString DefaultStopwatchBorderWidth;
 
 };
 

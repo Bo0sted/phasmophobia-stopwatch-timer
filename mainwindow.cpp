@@ -21,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent)
     stopwatchFontColor(qsm.FetchStopwatchFontColor()),
     pausedStopwatchFontColor(qsm.FetchPausedStopwatchFontColor()),
     resetStopwatchFontColor(qsm.FetchResetStopwatchFontColor()),
+    stopwatchBackgroundColor(qsm.FetchStopwatchBackgroundColor()),
+    stopwatchBorderColor(qsm.FetchStopwatchBorderColor()),
+    stopwatchBorderThickness(qsm.FetchStopwatchBorderWidth()),
+    backgroundEnabled(qsm.FetchIsBackgroundEnabled()),
     Uptime(QDateTime::currentMSecsSinceEpoch())
 {
     ui->setupUi(this);
@@ -49,24 +53,29 @@ void MainWindow::UpdateStopwatchFont(QString fontName, int fontSize)
 void MainWindow::UpdateStopwatchColor(QColor color)
 {
     stopwatchFontColor = color;
-    ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(stopwatchFontColor));
+    ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(stopwatchFontColor, stopwatchBackgroundColor));
     // qDebug() << "Applying color to StopwatchLabel:" << color.name()
     //          << "Valid?" << color.isValid();
 }
 
-void MainWindow::RefreshStopwatchColor(bool shouldReset)
+void MainWindow::RefreshStopwatchState(bool shouldReset)
 {
+    ui->StopwatchLabel->setAttribute(Qt::WA_TranslucentBackground, !backgroundEnabled);
+
     if ((swm.pauseStopwatch == true && !shouldReset) || swm.pauseStopwatch == false && shouldReset) {
-        ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(pausedStopwatchFontColor));
+        ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(pausedStopwatchFontColor, stopwatchBackgroundColor, stopwatchBorderColor));
     }
     // This statement should go above the last one because IF the user has a custom reset/initial state set, then itll be set here
     else if (swm.pauseStopwatch == true && shouldReset){
-        ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(resetStopwatchFontColor));
+        ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(resetStopwatchFontColor, stopwatchBackgroundColor, stopwatchBorderColor));
     }
     else
-        ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(stopwatchFontColor));
+        ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(stopwatchFontColor, stopwatchBackgroundColor, stopwatchBorderColor));
 
-    this->repaint();
+    ui->StopwatchLabel->update();
+    ui->StopwatchLabel->repaint();
+    ui->StopwatchLabel->show();
+
 }
 
 void MainWindow::UpdateStopwatchPausedColor(QColor color)
@@ -78,6 +87,33 @@ void MainWindow::UpdateStopwatchResetColor(QColor color)
 {
     resetStopwatchFontColor = color;
 }
+
+void MainWindow::UpdateStopwatchBackground(QColor color)
+{
+    stopwatchBackgroundColor = color;
+}
+
+void MainWindow::UpdateStopwatchBorderColor(QColor color)
+{
+    stopwatchBorderColor = color;
+}
+
+void MainWindow::UpdateStopwatchBorderThickness(QString thickness)
+{
+    if (!thickness.endsWith("px"))
+            thickness = "0px";
+    stopwatchBorderThickness = thickness;
+}
+
+void MainWindow::SetBackgroundEnabled(bool enabled) {
+    backgroundEnabled = enabled;
+}
+
+
+bool MainWindow::IsBackgroundEnabled() {
+    return backgroundEnabled;
+}
+
 
 QFont MainWindow::GetCurrentFont()
 {
@@ -181,7 +217,7 @@ bool MainWindow::event(QEvent *event)
         SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(qhm.FetchToggleStopwatchHotkey()));
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
 
-        ui->StopwatchLabel->setStyleSheet(QString("QLabel { background-color : black; color : %1; }").arg(stopwatchFontColor.name()));
+        ui->StopwatchLabel->setStyleSheet(QString("QLabel { background-color : %1; color : %2; }").arg(stopwatchBackgroundColor.name()).arg(stopwatchFontColor.name()));
         {
             QPair<float, float> lastKnown = qsm.FetchStopwatchLastPosition();
             this->move(lastKnown.first,lastKnown.second);
@@ -219,7 +255,7 @@ bool MainWindow::event(QEvent *event)
         connect(sie, &StopwatchInteractiveEditor::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
         connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
 
-        RefreshStopwatchColor(true);
+        RefreshStopwatchState(true);
     }
     return QWidget::event(event);
 }

@@ -64,7 +64,8 @@ void UpdateManager::PostAnonymousUsageLog()
     json["os"] = QSysInfo::prettyProductName();
     json["version"] = QCoreApplication::applicationVersion();
     json["uuid"] = mw->qsm.FetchUUID();
-    json["timestamp"] = QDateTime::currentSecsSinceEpoch();
+    //Using server timestamp instead
+    //json["timestamp"] = QDateTime::currentSecsSinceEpoch();
 
     QJsonDocument doc(json);
     QByteArray data = doc.toJson();

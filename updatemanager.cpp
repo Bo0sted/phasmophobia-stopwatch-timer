@@ -11,6 +11,7 @@
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLocale>
 
 
 UpdateManager::UpdateManager(MainWindow *mwr, QObject *parent)
@@ -34,8 +35,8 @@ void UpdateManager::CheckForUpdateAndPromptUser() {
             QMessageBox::StandardButton result = QMessageBox::question(
                 nullptr,
                 "Update Available",
-                QString("A new version (%1) is available. Do you want to download it?").arg(latestVersion),
-                QMessageBox::Yes | QMessageBox::No
+                QString("A new version (%1) is available. Would you like to visit the download page?").arg(latestVersion),
+                QMessageBox::Open | QMessageBox::Ignore
                 );
 
             if (result == QMessageBox::Yes) {
@@ -64,6 +65,8 @@ void UpdateManager::PostAnonymousUsageLog()
     json["os"] = QSysInfo::prettyProductName();
     json["version"] = QCoreApplication::applicationVersion();
     json["uuid"] = mw->qsm.FetchUUID();
+    QLocale locale;
+    json["country"] = QLocale::countryToString(locale.country());
     //Using server timestamp instead
     //json["timestamp"] = QDateTime::currentSecsSinceEpoch();
 

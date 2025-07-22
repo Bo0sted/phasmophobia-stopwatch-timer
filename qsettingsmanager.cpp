@@ -236,7 +236,7 @@ bool QSettingsManager::ShouldPostPing()
     qint64 last = FetchLastPingUnix();
     qint64 now = QDateTime::currentSecsSinceEpoch();
 
-    return (now - last) > MinutesToSeconds(0);
+    return (now - last) > MinutesToSeconds(30);
 }
 
 bool QSettingsManager::ShouldCheckUpdate()
@@ -244,7 +244,7 @@ bool QSettingsManager::ShouldCheckUpdate()
     qint64 last = FetchLastUpdateCheckUnix();
     qint64 now = QDateTime::currentSecsSinceEpoch();
 
-    return (now - last) > MinutesToSeconds(0);
+    return (now - last) > MinutesToSeconds(30);
 }
 
 qint64 QSettingsManager::MinutesToSeconds(int minutes)

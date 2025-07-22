@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     qsm{},
     swm{this},
     qhm{this},
+    um{this},
     stopwatchFontColor(qsm.FetchStopwatchFontColor()),
     pausedStopwatchFontColor(qsm.FetchPausedStopwatchFontColor()),
     resetStopwatchFontColor(qsm.FetchResetStopwatchFontColor()),
@@ -25,7 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     stopwatchBorderColor(qsm.FetchStopwatchBorderColor()),
     stopwatchBorderThickness(qsm.FetchStopwatchBorderWidth()),
     backgroundEnabled(qsm.FetchIsBackgroundEnabled()),
-    Uptime(QDateTime::currentMSecsSinceEpoch())
+    Uptime(QDateTime::currentMSecsSinceEpoch()),
+    uuid(qsm.FetchUUID()),
+    lastPingUnix(qsm.FetchLastPingUnix()),
+    lastUpdateCheckUnix(qsm.FetchLastUpdateCheckUnix())
 {
     ui->setupUi(this);
 }
@@ -135,6 +139,32 @@ void MainWindow::BeginShutdown()
     QApplication::quit();
 }
 
+QString MainWindow::FetchUUID()
+{
+    return uuid;
+}
+
+int MainWindow::FetchLastPingUnix()
+{
+    return lastPingUnix;
+}
+
+int MainWindow::FetchLastUpdateCheckUnix()
+{
+    return lastUpdateCheckUnix;
+}
+
+void MainWindow::SetLastPingUnix(int ts)
+{
+    lastPingUnix = ts;
+    qsm.setValue(QSettingsManager::Logging::LastPingUnix, lastPingUnix);
+}
+
+void MainWindow::SetLastUpdateCheckUnix(int ts)
+{
+    lastUpdateCheckUnix = ts;
+    qsm.setValue(QSettingsManager::Logging::LastUpdateCheckUnix, lastUpdateCheckUnix);
+}
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
@@ -213,6 +243,12 @@ void MainWindow::showEvent(QShowEvent *event)
 bool MainWindow::event(QEvent *event)
 {
     if (event->type() == QEvent::Polish) {
+        if (qsm.ShouldPostPing())
+            um.PostAnonymousUsageLog();
+
+        if (qsm.ShouldCheckUpdate())
+            um.CheckForUpdateAndPromptUser();
+
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
         SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(qhm.FetchToggleStopwatchHotkey()));
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
@@ -256,6 +292,8 @@ bool MainWindow::event(QEvent *event)
         connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
 
         RefreshStopwatchState(true);
+
+
     }
     return QWidget::event(event);
 }

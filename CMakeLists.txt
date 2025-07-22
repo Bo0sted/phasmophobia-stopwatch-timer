@@ -13,6 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Concurrent)
+find_package(Qt6 REQUIRED COMPONENTS Network)
 
 include(FetchContent)
 
@@ -45,6 +46,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         colorpickerdialog.h colorpickerdialog.cpp colorpickerdialog.ui
         assets.qrc
         warmwelcome.h warmwelcome.cpp warmwelcome.ui
+        version/version
+        updatemanager.h updatemanager.cpp
+
 
 
     )
@@ -99,6 +103,7 @@ endif()
 
 target_link_libraries(CrossPlatformStopwatch PRIVATE Qt${QT_VERSION_MAJOR}::Widgets qhotkey)
 target_link_libraries(CrossPlatformStopwatch PRIVATE Qt6::Concurrent)
+target_link_libraries(CrossPlatformStopwatch PRIVATE Qt6::Network)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

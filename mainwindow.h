@@ -7,18 +7,19 @@
 #include <QLabel>
 #include <QTimer>
 
-
 // Forward declaration
 class StopwatchManager;
 class HotkeyManager;
 class SystemTimeModule;
 class StopwatchInteractiveEditor;
+class UpdateManager;
 
 #include "qsettingsmanager.h"
 #include "stopwatchmanager.h"
 #include "qhotkeymanager.h"
 #include "systemtimemodule.h"
 #include "stopwatchinteractiveeditor.h"
+#include "updatemanager.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -57,7 +58,11 @@ public:
     QString GetActiveStopwatchStyleSheet();
     int GetCurrentStopwatchFontSize();
     void BeginShutdown();
-
+    QString FetchUUID();
+    int FetchLastPingUnix();
+    int FetchLastUpdateCheckUnix();
+    void SetLastPingUnix(int ts);
+    void SetLastUpdateCheckUnix(int ts);
 
 public slots:
     void updateElapsedTime(const int &time);
@@ -77,6 +82,10 @@ private:
     QColor stopwatchBorderColor;
     QColor stopwatchBorderThickness;
     bool backgroundEnabled;
+    QString uuid;
+    int lastPingUnix;
+    int lastUpdateCheckUnix;
+    UpdateManager um;
 protected:
     void mouseMoveEvent(QMouseEvent *event)override;
     void mousePressEvent(QMouseEvent *event)override;

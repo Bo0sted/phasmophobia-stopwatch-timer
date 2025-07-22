@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "updatemanager.h"
 
 #include <QApplication>
 #include <QHotkey>
@@ -14,6 +15,7 @@ int main(int argc, char *argv[])
     #endif
 
     QApplication a(argc, argv);
+    QCoreApplication::setApplicationVersion("1.1");
     MainWindow w;
 
     w.setWindowFlag(Qt::WindowStaysOnTopHint, true);
@@ -23,7 +25,6 @@ int main(int argc, char *argv[])
     QIcon icon(":/assets/512x512/stopwatchpicture.png");
     if (icon.isNull()) qWarning() << "Failed to load icon from resource!";
     a.setWindowIcon(icon);
-
 
     w.show();
     return a.exec();

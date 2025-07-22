@@ -4,6 +4,9 @@
 #include <QSettings>
 #include <QCoreApplication>
 #include <QStandardPaths>
+#include <QUuid>
+#include <QDateTime>
+#include <QDebug>
 
 QSettingsManager::QSettingsManager()
     : settings(QString("%1/%2").arg(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),"StopwatchSettings.ini"), QSettings::Format::IniFormat)
@@ -28,9 +31,13 @@ QSettingsManager::QSettingsManager()
         "System-Clock-Module/ClockBackgroundColor",
         "System-Clock-Module/IsClockEnabled",
         "System-Clock-Module/LastClockPosition"}
+    , SettingsForLoggingGroup{
+        "Network/UUID",
+        "Network/LastPingUnix",
+        "Network/LastUpdateCheckUnix"}
 
 {
-    setValue("Application", "Version", "1.0-beta");
+    setValue("Application", "Version", QString("%1").arg(QCoreApplication::applicationVersion()));
 }
 
 void QSettingsManager::setValue(QString groupName, QString valueName, QString value)
@@ -53,9 +60,19 @@ void QSettingsManager::setValue(SettingsForClockGroupIndex e, QString value)
     settings.setValue(QString("%1").arg(SettingsForClockGroup[e]), value);
 }
 
+void QSettingsManager::setValue(Logging e, QVariant value)
+{
+    settings.setValue(QString("%1").arg(SettingsForLoggingGroup[e]), value);
+}
+
 const QVariant QSettingsManager::getValue(SettingsForClockGroupIndex e, bool shouldDefaultBeInteger)
 {
     return settings.value(SettingsForClockGroup[e], false);
+}
+
+const QVariant QSettingsManager::getValue(enum Logging e)
+{
+    return settings.value(SettingsForLoggingGroup[e], false);
 }
 
 const QVariant QSettingsManager::getValue(enum SettingsForHotkeyGroupIndex e)
@@ -188,4 +205,57 @@ bool QSettingsManager::CheckIfClockEnabled()
 
     if (val == -1) return true;
     else return val.toBool();
+}
+
+QString QSettingsManager::FetchUUID()
+{
+    QVariant val = getValue(UUID);
+
+    if (val == false) return GenerateUUID();
+    else return val.toString();
+}
+
+int QSettingsManager::FetchLastPingUnix()
+{
+    QVariant val = getValue(LastPingUnix);
+
+    if (val == false) return 0;
+    else return val.toInt();
+}
+
+int QSettingsManager::FetchLastUpdateCheckUnix()
+{
+    QVariant val = getValue(LastUpdateCheckUnix);
+
+    if (val == false) return 0;
+    else return val.toInt();
+}
+
+bool QSettingsManager::ShouldPostPing()
+{
+    qint64 last = FetchLastPingUnix();
+    qint64 now = QDateTime::currentSecsSinceEpoch();
+
+    return (now - last) > MinutesToSeconds(30);
+}
+
+bool QSettingsManager::ShouldCheckUpdate()
+{
+    qint64 last = FetchLastUpdateCheckUnix();
+    qint64 now = QDateTime::currentSecsSinceEpoch();
+
+    return (now - last) > MinutesToSeconds(30);
+}
+
+qint64 QSettingsManager::MinutesToSeconds(int minutes)
+{
+    return static_cast<qint64>(minutes) * 60;
+}
+
+QString QSettingsManager::GenerateUUID()
+{
+    auto uuid = QUuid::createUuid().toString(QUuid::WithoutBraces).toLower();
+    setValue(UUID, uuid);
+    return uuid;
+
 }

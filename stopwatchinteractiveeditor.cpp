@@ -5,6 +5,7 @@
 #include "colorpickerdialog.h"
 #include "systemtimemodule.h"
 #include "stopwatchinteractiveeditor.h"
+#include "warmwelcome.h"
 
 #include <QCloseEvent>
 #include <QPushButton>
@@ -38,6 +39,7 @@ void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
     mw->qsm.setValue(QSettingsManager::StopwatchFont,ui->FontPickerCombo->currentText());
     mw->qsm.setValue(QSettingsManager::ClockFont,ui->FontPickerComboClock->currentText());
     mw->qsm.setValue(QSettingsManager::IsClockEnabled,QString("%1").arg(mw->stm->CheckIfModuleIsEnabled()));
+    mw->qsm.setValue(QSettingsManager::StopwatchRainbowModeIndex, QString("%1").arg(ui->rainbowColorComboBox->currentIndex()));
 }
 
 void StopwatchInteractiveEditor::mouseMoveEvent(QMouseEvent *event)
@@ -84,6 +86,11 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
 
         ui->backgroundToggleCheckbox->setChecked(mw->qsm.FetchIsBackgroundEnabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
 
+        ui->rainbowColorComboBox->addItems({"Disabled", "Text", "Background"});
+
+        readyForUserUIchanges = true;
+        ui->rainbowColorComboBox->setCurrentIndex(mw->GetRainbowMode());
+
 
         qint64 now = QDateTime::currentMSecsSinceEpoch();
         qint64 elapsedMs = now - mw->Uptime;
@@ -92,6 +99,7 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         int elapsedMinutes = elapsedMs / 60000;
 
         ui->UptimeLabel->setText(QString("Uptime ~ %1 hours (%2 minutes)").arg(QString::number(elapsedHours, 'f', 2)).arg(elapsedMinutes));
+
     }
 
     return QWidget::event(event);
@@ -378,4 +386,28 @@ void StopwatchInteractiveEditor::on_backgroundToggleCheckbox_clicked()
     if (mw->IsBackgroundEnabled())
         QMessageBox::information(this, "Information", "Please restart the program to effectuate this change.");
 }
+
+
+void StopwatchInteractiveEditor::on_AboutProgramPushButton_clicked()
+{
+    auto cpd = new WarmWelcome(mw,this);
+    cpd->setWindowFlag(Qt::WindowStaysOnTopHint, true);
+    auto val = cpd->exec();
+    if (val == QDialog::Accepted) {
+
+    }
+}
+
+
+
+void StopwatchInteractiveEditor::on_rainbowColorComboBox_currentIndexChanged(int index)
+{
+    if (readyForUserUIchanges)
+        mw->SetRainbowMode(index);
+}
+
+
+
+
+
 

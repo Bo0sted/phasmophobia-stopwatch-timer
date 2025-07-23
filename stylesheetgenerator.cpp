@@ -92,9 +92,14 @@ const QString StylesheetGenerator::DefaultButtonStyle(int fontSize, QString back
                    "border-color: %3;"
                    "padding: 6px;"
                    "}"
+                   "QPushButton:hover {"
+                   "  text-decoration: underline;"
+                   "}"
                    "QPushButton:pressed {"
                    "border-style: inset;"
-                   "}").arg(fontSize).arg(backgroundColor, borderColor).arg("white");
+                   "padding-left: 7px;"
+                   "padding-top: 7px;"
+                   "}").arg(fontSize).arg(backgroundColor).arg(borderColor).arg("white");
 }
 
 const QString StylesheetGenerator::DefaultQKeySequenceEditStyle(int fontSize, QString backgroundColor, QString borderColor)
@@ -116,6 +121,19 @@ const QString StylesheetGenerator::DefaultDangerButton()
                    "border-width: 2px;"
                    "border-color: #BE2625;}");
 
+}
+
+const QString StylesheetGenerator::NewStopwatchStylesheet(QColor textColor, QColor backgroundColor)
+{
+    return QString("QLabel "
+                   "{ "
+                   "background-color : %2; "
+                   "color : %1; "
+                   //"border: %4 solid %3;"
+                   "}").arg(textColor.name())
+                       .arg(backgroundColor.name());
+        // .arg(border.name()) // Border color
+        // .arg(thickness); // Border thickness
 }
 
 const QString StylesheetGenerator::NewModuleOutputStylesheet(QColor color, QColor background, QColor border, QString thickness)

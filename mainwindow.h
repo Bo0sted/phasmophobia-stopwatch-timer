@@ -38,6 +38,7 @@ public:
     QHotkeyManager qhm;
     SystemTimeModule *stm;
     StopwatchInteractiveEditor *sie;
+    UpdateManager um;
     const qint64 Uptime;
 
     MainWindow(QWidget *parent = nullptr);
@@ -63,9 +64,16 @@ public:
     int FetchLastUpdateCheckUnix();
     void SetLastPingUnix(int ts);
     void SetLastUpdateCheckUnix(int ts);
+    QString FetchLatestVersion();
+    void SetLatestVersion(QString version);
+
+    int GetRainbowMode();
+    void SetRainbowMode(int index);
 
 public slots:
     void updateElapsedTime(const int &time);
+    void updateRainbowColor(const QColor& color);
+    void updateRainbowBackgroundColor(const QColor& color);
 signals:
     void toggleModuleSignal(bool shouldEnable);
     void toggleEditorSignal(bool shouldOpen);
@@ -75,6 +83,7 @@ private:
     QFuture<void> stopwatchUpdateRespondThread;
     void ResizeWindowToFitStopwatch();
     QString FormatTime(int totalSeconds);
+
     QColor stopwatchFontColor;
     QColor pausedStopwatchFontColor;
     QColor resetStopwatchFontColor;
@@ -85,7 +94,8 @@ private:
     QString uuid;
     int lastPingUnix;
     int lastUpdateCheckUnix;
-    UpdateManager um;
+    QString latestVersion;
+    int stopwatchRainbowMode;
 protected:
     void mouseMoveEvent(QMouseEvent *event)override;
     void mousePressEvent(QMouseEvent *event)override;

@@ -72,11 +72,19 @@ private slots:
 
     void on_backgroundToggleCheckbox_clicked();
 
+    void on_AboutProgramPushButton_clicked();
+
+
+    void on_rainbowColorComboBox_currentIndexChanged(int index);
+
+
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;
     QPointF oldPosition;
     bool open;
+    bool readyForUserUIchanges = false;
 
     void showEvent(QShowEvent *event) override;
     void closeEvent(QCloseEvent *event) override;

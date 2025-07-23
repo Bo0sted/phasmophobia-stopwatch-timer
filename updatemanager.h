@@ -15,8 +15,9 @@ class UpdateManager : public QObject {
 
 public:
     explicit UpdateManager(MainWindow *mwr, QObject *parent = nullptr);
-    void CheckForUpdateAndPromptUser();
+    void CheckForUpdateAndPromptUser(std::function<void()> onFinished = nullptr);
     void PostAnonymousUsageLog();
+    void OpenGithubInBrowser();
 
 private:
     MainWindow *mw;
@@ -24,6 +25,7 @@ private:
     const QString githubVersionRef = "https://raw.githubusercontent.com/Bo0sted/CrossplatformStopwatch/refs/heads/master/version/version";
     const QString cloudflarePingEndpoint = "https://workers-playground-delicate-heart-a0b1.donttrackmepls.workers.dev/ping";
     const QString currentVersion;
+    const QString latestVersion;
 
 };
 

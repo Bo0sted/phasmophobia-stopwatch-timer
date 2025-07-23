@@ -23,7 +23,8 @@ QSettingsManager::QSettingsManager()
         "Stopwatch/StopwatchResetFontColor",
         "Stopwatch/StopwatchBorderColor",
         "Stopwatch/StopwatchBorderThickness",
-        "Stopwatch/StopwatchBackgroundEnabled"
+        "Stopwatch/StopwatchBackgroundEnabled",
+        "Stopwatch/StopwatchRainbowModeIndex",
       }
     , SettingsForClockGroup{
         "System-Clock-Module/ClockFont",
@@ -139,6 +140,15 @@ QString QSettingsManager::FetchStopwatchBorderWidth()
     if (val == false) return StylesheetGenerator::DefaultStopwatchBorderWidth;
     else return val.toString();
 }
+
+int QSettingsManager::FetchStopwatchRainbowModeIndex()
+{
+    QVariant val = getValue(StopwatchRainbowModeIndex);
+
+    if (val == false) return 0;
+    else return val.toInt();
+}
+
 
 bool QSettingsManager::FetchIsBackgroundEnabled()
 {

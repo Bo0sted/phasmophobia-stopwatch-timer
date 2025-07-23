@@ -12,18 +12,25 @@ class StopwatchManager : public QObject
     Q_OBJECT
 public:
     std::atomic<bool> pauseStopwatch;
+    std::atomic<bool> rainbowModeOn;
+    std::atomic<bool> rainbowModeBackgroundOn;
 
     StopwatchManager(MainWindow *mwr);
     ~StopwatchManager();
     void ResetStopwatch();
-    void StopwatchThread();
     int elapsedSeconds;
 signals:
     void updateElapsedTime(const int &time); // Signal to update elapsed time
+    void updateRainbowColor(const QColor& color);
+    void updateRainbowBackgroundColor(const QColor& color);
 private:
     MainWindow *mw;
     std::atomic<bool> isDeconstructing;
     QFuture<void> stopwatchThread;
+    QFuture<void> rainbowModeThread;
+
+    void StopwatchThread();
+    void RainbowModeThread();
 };
 
 #endif // STOPWATCHMANAGER_H

@@ -29,7 +29,10 @@ MainWindow::MainWindow(QWidget *parent)
     Uptime(QDateTime::currentMSecsSinceEpoch()),
     uuid(qsm.FetchUUID()),
     lastPingUnix(qsm.FetchLastPingUnix()),
-    lastUpdateCheckUnix(qsm.FetchLastUpdateCheckUnix())
+    lastUpdateCheckUnix(qsm.FetchLastUpdateCheckUnix()),
+    latestVersion{"Unknown"},
+    stopwatchRainbowMode{(qsm.FetchStopwatchRainbowModeIndex())}
+
 {
     ui->setupUi(this);
 }
@@ -64,9 +67,7 @@ void MainWindow::UpdateStopwatchColor(QColor color)
 
 void MainWindow::RefreshStopwatchState(bool shouldReset)
 {
-    ui->StopwatchLabel->setAttribute(Qt::WA_TranslucentBackground, !backgroundEnabled);
-
-    if ((swm.pauseStopwatch == true && !shouldReset) || swm.pauseStopwatch == false && shouldReset) {
+    if (swm.pauseStopwatch == true && !shouldReset) {
         ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(pausedStopwatchFontColor, stopwatchBackgroundColor, stopwatchBorderColor));
     }
     // This statement should go above the last one because IF the user has a custom reset/initial state set, then itll be set here
@@ -75,6 +76,7 @@ void MainWindow::RefreshStopwatchState(bool shouldReset)
     }
     else
         ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(stopwatchFontColor, stopwatchBackgroundColor, stopwatchBorderColor));
+
 
     ui->StopwatchLabel->update();
     ui->StopwatchLabel->repaint();
@@ -111,6 +113,7 @@ void MainWindow::UpdateStopwatchBorderThickness(QString thickness)
 
 void MainWindow::SetBackgroundEnabled(bool enabled) {
     backgroundEnabled = enabled;
+
 }
 
 
@@ -164,6 +167,48 @@ void MainWindow::SetLastUpdateCheckUnix(int ts)
 {
     lastUpdateCheckUnix = ts;
     qsm.setValue(QSettingsManager::Logging::LastUpdateCheckUnix, lastUpdateCheckUnix);
+}
+
+QString MainWindow::FetchLatestVersion()
+{
+    return latestVersion;
+}
+
+void MainWindow::SetLatestVersion(QString version)
+{
+    latestVersion = version;
+}
+
+int MainWindow::GetRainbowMode()
+{
+    return stopwatchRainbowMode;
+}
+
+
+void MainWindow::SetRainbowMode(int index )
+{
+    stopwatchRainbowMode = index;
+
+    switch (stopwatchRainbowMode) {
+    case 0: {
+        swm.rainbowModeOn = false;
+        swm.rainbowModeBackgroundOn = false;
+        ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewStopwatchStylesheet(stopwatchFontColor.name(), stopwatchBackgroundColor.name()));
+        RefreshStopwatchState(false);
+        break;
+    }
+    case 1: {
+        swm.rainbowModeOn = true;
+        swm.rainbowModeBackgroundOn = false;
+        break;
+    }
+    case 2: {
+        swm.rainbowModeOn = false;
+        swm.rainbowModeBackgroundOn = true;
+        break;
+    }
+    }
+
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
@@ -234,6 +279,8 @@ QString MainWindow::FormatTime(int totalSeconds)
     }
 }
 
+
+
 void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
@@ -253,7 +300,6 @@ bool MainWindow::event(QEvent *event)
         SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(qhm.FetchToggleStopwatchHotkey()));
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
 
-        ui->StopwatchLabel->setStyleSheet(QString("QLabel { background-color : %1; color : %2; }").arg(stopwatchBackgroundColor.name()).arg(stopwatchFontColor.name()));
         {
             QPair<float, float> lastKnown = qsm.FetchStopwatchLastPosition();
             this->move(lastKnown.first,lastKnown.second);
@@ -290,10 +336,10 @@ bool MainWindow::event(QEvent *event)
 
         connect(sie, &StopwatchInteractiveEditor::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
         connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
+        connect(&swm,&StopwatchManager::updateRainbowColor, this, &MainWindow::updateRainbowColor);
+        connect(&swm,&StopwatchManager::updateRainbowBackgroundColor, this, &MainWindow::updateRainbowBackgroundColor);
 
         RefreshStopwatchState(true);
-
-
     }
     return QWidget::event(event);
 }
@@ -301,4 +347,13 @@ bool MainWindow::event(QEvent *event)
 void MainWindow::updateElapsedTime(const int &time) {
     ui->StopwatchLabel->setText(FormatTime(time));
     ResizeWindowToFitStopwatch();
+}
+
+void MainWindow::updateRainbowColor(const QColor& color) {
+    ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewStopwatchStylesheet(color.name(),stopwatchBackgroundColor.name()));
+}
+
+void MainWindow::updateRainbowBackgroundColor(const QColor &color)
+{
+    ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewStopwatchStylesheet(stopwatchFontColor.name(), color.name()));
 }

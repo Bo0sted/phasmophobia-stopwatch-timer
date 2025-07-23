@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>616</width>
-    <height>530</height>
+    <height>647</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -178,6 +178,19 @@
         </spacer>
        </item>
        <item>
+        <widget class="QPushButton" name="AboutProgramPushButton">
+         <property name="maximumSize">
+          <size>
+           <width>65</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>About</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="quitStopwatch">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -275,7 +288,7 @@
            <x>0</x>
            <y>0</y>
            <width>591</width>
-           <height>381</height>
+           <height>501</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -346,6 +359,66 @@
                <string>Reset Font</string>
               </property>
              </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QLabel" name="label_6">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Effects</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
+              <item>
+               <widget class="QLabel" name="label_7">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Rainbow Color</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="rainbowColorComboBox">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>
@@ -681,7 +754,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>110</height>
+                <height>125</height>
                </size>
               </property>
               <property name="currentIndex">
@@ -703,7 +776,7 @@
                   <x>-8</x>
                   <y>0</y>
                   <width>217</width>
-                  <height>80</height>
+                  <height>91</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -825,7 +898,7 @@
                   <x>-8</x>
                   <y>0</y>
                   <width>217</width>
-                  <height>80</height>
+                  <height>91</height>
                  </rect>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_5">

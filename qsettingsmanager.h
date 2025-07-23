@@ -20,7 +20,8 @@ public:
         StopwatchResetFontColor,
         StopwatchBorderColor,
         StopwatchBorderThickness,
-        StopwatchBackgroundEnabled
+        StopwatchBackgroundEnabled,
+        StopwatchRainbowModeIndex,
 
     };
     enum SettingsForClockGroupIndex {
@@ -66,6 +67,7 @@ public:
     QString FetchStopwatchBackgroundColor();
     QString FetchStopwatchBorderColor();
     QString FetchStopwatchBorderWidth();
+    int FetchStopwatchRainbowModeIndex();
     bool FetchIsBackgroundEnabled();
     QPair<float,float> FetchStopwatchLastPosition();
     QPair<float,float> FetchSystemClockLastPosition();

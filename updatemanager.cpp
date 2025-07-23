@@ -21,7 +21,7 @@ UpdateManager::UpdateManager(MainWindow *mwr, QObject *parent)
 {
 }
 
-void UpdateManager::CheckForUpdateAndPromptUser() {
+void UpdateManager::CheckForUpdateAndPromptUser(std::function<void()> onFinished) {
     QNetworkRequest request(githubVersionRef);
     QNetworkReply* reply = manager->get(request);
 
@@ -30,6 +30,7 @@ void UpdateManager::CheckForUpdateAndPromptUser() {
             QString latestVersion = QString(reply->readAll()).trimmed();
             qDebug() << "Current version:" << currentVersion;
             qDebug() << "Latest version:" << latestVersion;
+            mw->SetLatestVersion(latestVersion);
 
         if (latestVersion > currentVersion) {
             QMessageBox::StandardButton result = QMessageBox::question(
@@ -39,8 +40,8 @@ void UpdateManager::CheckForUpdateAndPromptUser() {
                 QMessageBox::Open | QMessageBox::Ignore
                 );
 
-            if (result == QMessageBox::Yes) {
-                QDesktopServices::openUrl(QUrl("https://github.com/Bo0sted/CrossplatformStopwatch/releases"));
+            if (result == QMessageBox::Open) {
+                OpenGithubInBrowser();
             }
         }
         else {
@@ -49,11 +50,18 @@ void UpdateManager::CheckForUpdateAndPromptUser() {
         mw->SetLastUpdateCheckUnix(QDateTime::currentSecsSinceEpoch());
     } else {
         qWarning() << "Version check failed:" << reply->errorString();
+        mw->SetLatestVersion("Version check failed");
     }
 
     reply->deleteLater();
+
+    if (onFinished) {
+        onFinished();
+    }
     });
 }
+
+
 
 void UpdateManager::PostAnonymousUsageLog()
 {
@@ -80,6 +88,11 @@ void UpdateManager::PostAnonymousUsageLog()
         reply->deleteLater();
         mw->SetLastPingUnix(QDateTime::currentSecsSinceEpoch());
     });
+}
+
+void UpdateManager::OpenGithubInBrowser()
+{
+    QDesktopServices::openUrl(QUrl("https://github.com/Bo0sted/CrossplatformStopwatch/releases"));
 }
 
 

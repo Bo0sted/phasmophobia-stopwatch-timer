@@ -19,7 +19,7 @@ public:
     static const QString DefaultButtonStyle(int fontSize=12, QString backgroundColor=DefaultWidgetDarkModeBackground, QString borderColor="white");
     static const QString DefaultQKeySequenceEditStyle(int fontSize=12, QString backgroundColor="white", QString borderColor="white");
     static const QString DefaultDangerButton();
-    static const QString NewStopwatchStylesheet(QColor color);
+    static const QString NewStopwatchStylesheet(QColor textColor, QColor backgroundColor);
     static const QString NewModuleOutputStylesheet(QColor color, QColor background=QColor::fromString("black"), QColor border=QColor::fromString("black"), QString thickness="2px");
 
     static const QFont DefaultFont;

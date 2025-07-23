@@ -1,8 +1,11 @@
 #ifndef QSETTINGSMANAGER_H
 #define QSETTINGSMANAGER_H
 
+#include "stopwatchmanager.h"
+
 #include <QSettings>
 #include <QList>
+
 
 class QSettingsManager
 {
@@ -22,6 +25,7 @@ public:
         StopwatchBorderThickness,
         StopwatchBackgroundEnabled,
         StopwatchRainbowModeIndex,
+        StopwatchFormatModeIndex,
 
     };
     enum SettingsForClockGroupIndex {
@@ -38,6 +42,7 @@ public:
         LastPingUnix,
         LastUpdateCheckUnix,
     };
+
 
 
     const QList<QString> SettingsForHotkeyGroup;
@@ -68,6 +73,7 @@ public:
     QString FetchStopwatchBorderColor();
     QString FetchStopwatchBorderWidth();
     int FetchStopwatchRainbowModeIndex();
+    enum StopwatchManager::FormatModes FetchStopwatchFormatMode();
     bool FetchIsBackgroundEnabled();
     QPair<float,float> FetchStopwatchLastPosition();
     QPair<float,float> FetchSystemClockLastPosition();

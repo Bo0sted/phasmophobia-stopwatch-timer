@@ -79,6 +79,8 @@ private slots:
 
 
 
+    void on_formatTimeComboBox_currentIndexChanged(int index);
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;

@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
     lastPingUnix(qsm.FetchLastPingUnix()),
     lastUpdateCheckUnix(qsm.FetchLastUpdateCheckUnix()),
     latestVersion{"Unknown"},
-    stopwatchRainbowMode{(qsm.FetchStopwatchRainbowModeIndex())}
+    stopwatchRainbowMode{(qsm.FetchStopwatchRainbowModeIndex())},
+    stopwatchFormatMode(qsm.FetchStopwatchFormatMode())
 
 {
     ui->setupUi(this);
@@ -211,6 +212,18 @@ void MainWindow::SetRainbowMode(int index )
 
 }
 
+StopwatchManager::FormatModes MainWindow::GetFormatMode()
+{
+    return stopwatchFormatMode;
+}
+
+void MainWindow::SetFormatMode(StopwatchManager::FormatModes format)
+{
+    stopwatchFormatMode = format;
+    RefreshStopwatchState(false);
+
+}
+
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     if (!event->buttons().testFlag(Qt::MouseButton::RightButton)) {
@@ -264,6 +277,13 @@ QString MainWindow::FormatTime(int totalSeconds)
     int hours = totalSeconds / 3600;
     int minutes = (totalSeconds % 3600) / 60;
     int seconds = totalSeconds % 60;
+
+    if (stopwatchFormatMode == StopwatchManager::TotalSecondsOnly)
+        return QString("%1")
+            .arg(totalSeconds);
+
+    if (stopwatchFormatMode == StopwatchManager::TotalMinutesOnly)
+        return QString::number(static_cast<double>(totalSeconds) / 60.0, 'f', 1);
 
     if (hours > 0) {
         // Format as H:MM:SS

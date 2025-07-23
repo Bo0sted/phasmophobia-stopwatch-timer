@@ -11,6 +11,13 @@ class StopwatchManager : public QObject
 {
     Q_OBJECT
 public:
+    enum FormatModes {
+        HourMinuteSecond,
+        TotalMinutesOnly,
+        TotalSecondsOnly
+
+    };
+
     std::atomic<bool> pauseStopwatch;
     std::atomic<bool> rainbowModeOn;
     std::atomic<bool> rainbowModeBackgroundOn;

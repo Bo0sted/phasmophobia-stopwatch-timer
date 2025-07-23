@@ -70,6 +70,9 @@ public:
     int GetRainbowMode();
     void SetRainbowMode(int index);
 
+    StopwatchManager::FormatModes GetFormatMode();
+    void SetFormatMode(StopwatchManager::FormatModes fm);
+
 public slots:
     void updateElapsedTime(const int &time);
     void updateRainbowColor(const QColor& color);
@@ -96,6 +99,7 @@ private:
     int lastUpdateCheckUnix;
     QString latestVersion;
     int stopwatchRainbowMode;
+    StopwatchManager::FormatModes stopwatchFormatMode;
 protected:
     void mouseMoveEvent(QMouseEvent *event)override;
     void mousePressEvent(QMouseEvent *event)override;

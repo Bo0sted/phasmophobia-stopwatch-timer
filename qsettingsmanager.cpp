@@ -1,3 +1,4 @@
+#include "mainwindow.h"
 #include "qsettingsmanager.h"
 #include "stylesheetgenerator.h"
 
@@ -25,6 +26,7 @@ QSettingsManager::QSettingsManager()
         "Stopwatch/StopwatchBorderThickness",
         "Stopwatch/StopwatchBackgroundEnabled",
         "Stopwatch/StopwatchRainbowModeIndex",
+          "Stopwatch/StopwatchFormatModeIndex",
       }
     , SettingsForClockGroup{
         "System-Clock-Module/ClockFont",
@@ -147,6 +149,14 @@ int QSettingsManager::FetchStopwatchRainbowModeIndex()
 
     if (val == false) return 0;
     else return val.toInt();
+}
+
+StopwatchManager::FormatModes QSettingsManager::FetchStopwatchFormatMode()
+{
+    QVariant val = getValue(StopwatchFormatModeIndex);
+
+    if (val == false) return StopwatchManager::HourMinuteSecond;
+    else return static_cast<StopwatchManager::FormatModes>(val.toInt());
 }
 
 

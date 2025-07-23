@@ -40,6 +40,7 @@ void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
     mw->qsm.setValue(QSettingsManager::ClockFont,ui->FontPickerComboClock->currentText());
     mw->qsm.setValue(QSettingsManager::IsClockEnabled,QString("%1").arg(mw->stm->CheckIfModuleIsEnabled()));
     mw->qsm.setValue(QSettingsManager::StopwatchRainbowModeIndex, QString("%1").arg(ui->rainbowColorComboBox->currentIndex()));
+    mw->qsm.setValue(QSettingsManager::StopwatchFormatModeIndex, QString("%1").arg(ui->formatTimeComboBox->currentIndex()));
 }
 
 void StopwatchInteractiveEditor::mouseMoveEvent(QMouseEvent *event)
@@ -87,9 +88,11 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->backgroundToggleCheckbox->setChecked(mw->qsm.FetchIsBackgroundEnabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
 
         ui->rainbowColorComboBox->addItems({"Disabled", "Text", "Background"});
+        ui->formatTimeComboBox->addItems({"Hour:Minute:Second", "Total minutes only", "Total seconds only"});
 
         readyForUserUIchanges = true;
         ui->rainbowColorComboBox->setCurrentIndex(mw->GetRainbowMode());
+        ui->formatTimeComboBox->setCurrentIndex(mw->GetFormatMode());
 
 
         qint64 now = QDateTime::currentMSecsSinceEpoch();
@@ -410,4 +413,11 @@ void StopwatchInteractiveEditor::on_rainbowColorComboBox_currentIndexChanged(int
 
 
 
+
+
+void StopwatchInteractiveEditor::on_formatTimeComboBox_currentIndexChanged(int index)
+{
+    if (readyForUserUIchanges)
+        mw->SetFormatMode(static_cast<StopwatchManager::FormatModes>(index));
+}
 

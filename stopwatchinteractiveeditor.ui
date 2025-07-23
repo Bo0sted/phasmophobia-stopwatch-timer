@@ -205,7 +205,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Quit Stopwatch</string>
+          <string>Shutdown</string>
          </property>
         </widget>
        </item>

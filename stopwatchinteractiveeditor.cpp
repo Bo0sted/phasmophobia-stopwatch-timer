@@ -75,7 +75,7 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->CustomizationModulesHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
         ui->ToggleTabActiveAssignmentLabel->setText(mw->qhm.FetchToggleStopwatchHotkey());
         ui->ResetTabActiveAssignmentLabel->setText(mw->qhm.FetchResetStopwatchHotkey());
-        //ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
+        ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
         UpdateSystemModuleTogglePushButton();
         ui->primaryColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchFontColor()));
         ui->pausedColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchPausedStopwatchFontColor()));
@@ -83,6 +83,7 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->pushButton_2->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchClockFontColor()));
         ui->backgroundColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchBackgroundColor()));
         ui->borderColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchBorderColor()));
+
 
 
         ui->backgroundToggleCheckbox->setChecked(mw->qsm.FetchIsBackgroundEnabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);

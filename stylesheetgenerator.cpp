@@ -117,9 +117,10 @@ const QString StylesheetGenerator::DefaultDangerButton()
 {
     return QString("QPushButton { "
                    "color: White;"
-                   "background-color: #EE2C2C;"
+                   //"background-color: #EE2C2C;"
                    "border-width: 2px;"
-                   "border-color: #BE2625;}");
+                   "border-color: #EE2C2C;}");
+                   //"border-color: #BE2625;}");
 
 }
 

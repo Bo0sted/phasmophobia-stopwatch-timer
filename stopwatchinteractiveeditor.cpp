@@ -30,6 +30,8 @@ StopwatchInteractiveEditor::~StopwatchInteractiveEditor()
 void StopwatchInteractiveEditor::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
+    RefreshUptimeLabel();
+
 
 }
 
@@ -96,13 +98,7 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->formatTimeComboBox->setCurrentIndex(mw->GetFormatMode());
 
 
-        qint64 now = QDateTime::currentMSecsSinceEpoch();
-        qint64 elapsedMs = now - mw->Uptime;
 
-        double elapsedHours = elapsedMs / 3600000.0;
-        int elapsedMinutes = elapsedMs / 60000;
-
-        ui->UptimeLabel->setText(QString("Uptime ~ %1 hours (%2 minutes)").arg(QString::number(elapsedHours, 'f', 2)).arg(elapsedMinutes));
 
     }
 
@@ -138,6 +134,17 @@ void StopwatchInteractiveEditor::RefreshOpenState()
     else {
         mw->qhm.UpdateHotkeySignalBlock(false);
     }
+}
+
+void StopwatchInteractiveEditor::RefreshUptimeLabel()
+{
+    ui->UptimeLabel->setText([&]() {
+        qint64 now = QDateTime::currentMSecsSinceEpoch();
+        qint64 elapsedMs = now - mw->Uptime;
+        return QString("Uptime ~ %1 hours (%2 minutes)")
+            .arg(QString::number(elapsedMs / 3600000.0, 'f', 2))
+            .arg(elapsedMs / 60000);
+    }());
 }
 
 void StopwatchInteractiveEditor::setEditorOpen(bool shouldOpen)

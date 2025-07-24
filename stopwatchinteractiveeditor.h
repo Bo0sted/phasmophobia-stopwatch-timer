@@ -19,6 +19,7 @@ public:
 
     void UpdateSystemModuleTogglePushButton();
     void RefreshOpenState();
+    void RefreshUptimeLabel();
 signals:
     void toggleModuleSignal(bool shouldEnable);
 public slots:

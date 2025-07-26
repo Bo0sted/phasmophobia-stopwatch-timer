@@ -17,10 +17,6 @@
 - Whichever hotkeys are assigned in settings (whether thats default or custom hotkeys), they will become **exclusive** to the stopwatch. Which means as long as the stopwatch is open, the two hotkeys will **not** work in any other window except the stopwatch. Please choose two keys you do not often use in your day-to-day typing.
 - There are a few other minor [known limitations](https://github.com/Skycoder42/QHotkey?tab=readme-ov-file#known-limitations) with the hotkey library I chose for this project. Unfortunately, there are no good "one size fits all" solutions for cross platform hotkeys.
 
-## Caveats with program behavior
-- Turning the background on/off is broken and requires a program restart to see the effect changed.
-
-
 # Install instructions
 coming soon...
 

@@ -65,7 +65,7 @@ void StopwatchManager::RainbowModeThread()
             if (hue > 1.0) hue -= 1.0;
             //t += 0.05;
 
-            QThread::msleep(40);  // Small delay for smooth update
+            QThread::msleep(25);  // Small delay for smooth update
         }
     }
         //qDebug() << "[Thread] Exiting";

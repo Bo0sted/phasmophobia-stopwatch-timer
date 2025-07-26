@@ -71,7 +71,6 @@ private slots:
 
     void on_backgroundToggleCheckbox_checkStateChanged(const Qt::CheckState &arg1);
 
-    void on_backgroundToggleCheckbox_clicked();
 
     void on_AboutProgramPushButton_clicked();
 

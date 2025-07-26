@@ -392,11 +392,6 @@ void StopwatchInteractiveEditor::on_backgroundToggleCheckbox_checkStateChanged(c
 }
 
 
-void StopwatchInteractiveEditor::on_backgroundToggleCheckbox_clicked()
-{
-    if (mw->IsBackgroundEnabled())
-        QMessageBox::information(this, "Information", "Please restart the program to effectuate this change.");
-}
 
 
 void StopwatchInteractiveEditor::on_AboutProgramPushButton_clicked()

@@ -78,6 +78,14 @@ void MainWindow::RefreshStopwatchState(bool shouldReset)
     else
         ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(stopwatchFontColor, stopwatchBackgroundColor, stopwatchBorderColor));
 
+    if (!backgroundEnabled) {
+        ui->StopwatchLabel->setAttribute(Qt::WA_NoSystemBackground);
+        ui->StopwatchLabel->setAutoFillBackground(false);
+        ui->StopwatchLabel->setStyleSheet(QString("%1%2").arg(ui->StopwatchLabel->styleSheet()).arg("background-color: rgba(0, 0, 0, 0);"));
+    }
+    else {
+        ui->StopwatchLabel->setAttribute(Qt::WA_NoSystemBackground, false);
+    }
 
     ui->StopwatchLabel->update();
     ui->StopwatchLabel->repaint();

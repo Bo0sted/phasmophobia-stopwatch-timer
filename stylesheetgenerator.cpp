@@ -119,8 +119,22 @@ const QString StylesheetGenerator::DefaultDangerButton()
                    "color: White;"
                    //"background-color: #EE2C2C;"
                    "border-width: 2px;"
-                   "border-color: #EE2C2C;}");
+                   "border-color: #EE2C2C;"
                    //"border-color: #BE2625;}");
+                   //"font-size: %1pt;"
+                   "font-weight: medium;"
+                   "border-style: solid;"
+                   "border-radius: 10px;"
+                   "padding: 6px;"
+                   "}"
+                   "QPushButton:hover {"
+                   "  text-decoration: underline;"
+                   "}"
+                   "QPushButton:pressed {"
+                   "border-style: solid;"
+                   "padding-left: 7px;"
+                   "padding-top: 7px;"
+                   "}");//.arg(fontSize).arg(backgroundColor).arg(borderColor).arg("white");
 
 }
 

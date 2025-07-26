@@ -1,4 +1,5 @@
 <img width="1469" height="777" alt="image" src="https://github.com/user-attachments/assets/6a941f6e-9742-4c52-9898-2996d65babe5" />
+
 # Welcome to Crossplatform Stopwatch
 - Stopwatch has Start, Stop and Reset state. Press 1 to Start/Stop and 2 to reset. Hotkeys are re-assigable in settings.
 - System clock monitor available. Enable in settings. 

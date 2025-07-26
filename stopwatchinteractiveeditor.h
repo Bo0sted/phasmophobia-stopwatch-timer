@@ -20,6 +20,8 @@ public:
     void UpdateSystemModuleTogglePushButton();
     void RefreshOpenState();
     void RefreshUptimeLabel();
+    void SetBorderOptionsVisible(bool visible);
+    void SetBackgroundOptionsEnabled(bool enabled);
 signals:
     void toggleModuleSignal(bool shouldEnable);
 public slots:
@@ -80,6 +82,8 @@ private slots:
 
 
     void on_formatTimeComboBox_currentIndexChanged(int index);
+
+    void on_backgroundColorResetPushButton_clicked();
 
 private:
     Ui::StopwatchInteractiveEditor *ui;

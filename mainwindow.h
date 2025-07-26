@@ -72,6 +72,7 @@ public:
 
     StopwatchManager::FormatModes GetFormatMode();
     void SetFormatMode(StopwatchManager::FormatModes fm);
+    QColor GetBackground();
 
 public slots:
     void updateElapsedTime(const int &time);

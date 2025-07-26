@@ -86,9 +86,10 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->backgroundColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchBackgroundColor()));
         ui->borderColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchBorderColor()));
 
-
-
-        ui->backgroundToggleCheckbox->setChecked(mw->qsm.FetchIsBackgroundEnabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+        auto backgroundEnabled = mw->qsm.FetchIsBackgroundEnabled();
+        ui->backgroundToggleCheckbox->setChecked(backgroundEnabled ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+        SetBorderOptionsVisible(backgroundEnabled);
+        SetBackgroundOptionsEnabled(backgroundEnabled);
 
         ui->rainbowColorComboBox->addItems({"Disabled", "Text", "Background"});
         ui->formatTimeComboBox->addItems({"Hour:Minute:Second", "Total minutes only", "Total seconds only"});
@@ -145,6 +146,19 @@ void StopwatchInteractiveEditor::RefreshUptimeLabel()
             .arg(QString::number(elapsedMs / 3600000.0, 'f', 2))
             .arg(elapsedMs / 60000);
     }());
+}
+
+void StopwatchInteractiveEditor::SetBorderOptionsVisible(bool visible)
+{
+    ui->borderColorPickerPushButton->setVisible(visible);
+    ui->borderColorReseButton->setVisible(visible);
+    ui->borderLabel->setVisible(visible);
+}
+
+void StopwatchInteractiveEditor::SetBackgroundOptionsEnabled(bool enabled)
+{
+    ui->backgroundColorPickerPushButton->setEnabled(enabled);
+    ui->backgroundColorResetPushButton->setEnabled(enabled);
 }
 
 void StopwatchInteractiveEditor::setEditorOpen(bool shouldOpen)
@@ -359,7 +373,7 @@ void StopwatchInteractiveEditor::on_pushButton_6_clicked()
 
 void StopwatchInteractiveEditor::on_borderColorReseButton_clicked()
 {
-    auto color = StylesheetGenerator::DefaultStopwatchBorderColor;
+    auto color = mw->GetBackground().name();
     mw->UpdateStopwatchBorderColor(color);
     mw->RefreshStopwatchState(true);
     mw->qsm.setValue(QSettingsManager::StopwatchBorderColor,color);
@@ -389,6 +403,8 @@ void StopwatchInteractiveEditor::on_backgroundToggleCheckbox_checkStateChanged(c
     mw->SetBackgroundEnabled(newState);
     mw->qsm.setValue(QSettingsManager::StopwatchBackgroundEnabled,QString("%1").arg(newState));
     mw->RefreshStopwatchState(false);
+    SetBorderOptionsVisible(newState);
+    SetBackgroundOptionsEnabled(newState);
 }
 
 
@@ -422,5 +438,14 @@ void StopwatchInteractiveEditor::on_formatTimeComboBox_currentIndexChanged(int i
 {
     if (readyForUserUIchanges)
         mw->SetFormatMode(static_cast<StopwatchManager::FormatModes>(index));
+}
+
+void StopwatchInteractiveEditor::on_backgroundColorResetPushButton_clicked()
+{
+    auto color = StylesheetGenerator::DefaultStopwatchBackground;
+    mw->UpdateStopwatchBackground(color);
+    mw->RefreshStopwatchState(true);
+    mw->qsm.setValue(QSettingsManager::StopwatchBackgroundColor,color);
+    ui->backgroundColorPickerPushButton->setStyleSheet(ui->backgroundColorPickerPushButton->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color));
 }
 

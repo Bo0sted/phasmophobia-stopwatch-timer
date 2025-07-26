@@ -232,6 +232,12 @@ void MainWindow::SetFormatMode(StopwatchManager::FormatModes format)
 
 }
 
+QColor MainWindow::GetBackground()
+{
+    return stopwatchBackgroundColor;
+}
+
+
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     if (!event->buttons().testFlag(Qt::MouseButton::RightButton)) {

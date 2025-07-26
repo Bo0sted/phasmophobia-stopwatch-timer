@@ -65,7 +65,7 @@ private slots:
 
     void on_backgroundColorPickerPushButton_pressed();
 
-    void on_pushButton_6_clicked();
+    void backgroundColorResetPushButton();
 
     void on_borderColorReseButton_clicked();
 

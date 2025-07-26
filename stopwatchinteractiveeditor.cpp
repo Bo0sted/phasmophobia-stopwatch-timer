@@ -75,8 +75,8 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->FontPickerComboClock->setCurrentText(mw->stm->GetCurrentFont().family());
         ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeader());
         ui->CustomizationModulesHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
-        ui->ToggleTabActiveAssignmentLabel->setText(mw->qhm.FetchToggleStopwatchHotkey());
-        ui->ResetTabActiveAssignmentLabel->setText(mw->qhm.FetchResetStopwatchHotkey());
+        ui->ToggleTabActiveAssignmentLabel->setText(mw->uiohm.FetchToggleStopwatchHotkey());
+        ui->ResetTabActiveAssignmentLabel->setText(mw->uiohm.FetchResetStopwatchHotkey());
         ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
         UpdateSystemModuleTogglePushButton();
         ui->primaryColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchFontColor()));
@@ -130,10 +130,10 @@ void StopwatchInteractiveEditor::RefreshOpenState()
     this->setVisible(open);
 
     if (open) {
-        mw->qhm.UpdateHotkeySignalBlock(true);
+        mw->uiohm.UpdateHotkeySignalBlock(true);
     }
     else {
-        mw->qhm.UpdateHotkeySignalBlock(false);
+        mw->uiohm.UpdateHotkeySignalBlock(false);
     }
 }
 
@@ -183,9 +183,9 @@ void StopwatchInteractiveEditor::on_FontPickerResetButton_clicked()
 
 void StopwatchInteractiveEditor::on_ToggleTabApplyNewHotkey_clicked()
 {
-    if (mw->qhm.IsHotkeyAvailable(ui->ToggleTabHotkeyInput->keySequence().toString(),true)) {
+    if (mw->uiohm.IsHotkeyAvailable(ui->ToggleTabHotkeyInput->keySequence().toString(),true)) {
         QString hotkeyName = ui->ToggleTabHotkeyInput->keySequence().toString();
-        mw->qhm.AssignHotkey(QHotkeyManager::AvailableHotkeys::ToggleKey,hotkeyName);
+        mw->uiohm.AssignHotkey(UioHotkeyManager::AvailableHotkeys::ToggleKey,hotkeyName);
         ui->ToggleTabActiveAssignmentLabel->setText(hotkeyName);
         mw->qsm.setValue(QSettingsManager::ToggleKey,hotkeyName);
     }
@@ -194,9 +194,9 @@ void StopwatchInteractiveEditor::on_ToggleTabApplyNewHotkey_clicked()
 
 void StopwatchInteractiveEditor::on_ResetTabApplyNewHotkey_clicked()
 {
-    if (mw->qhm.IsHotkeyAvailable(ui->ResetTabHotkeyInput->keySequence().toString(),true)) {
+    if (mw->uiohm.IsHotkeyAvailable(ui->ResetTabHotkeyInput->keySequence().toString(),true)) {
         QString hotkeyName = ui->ResetTabHotkeyInput->keySequence().toString();
-        mw->qhm.AssignHotkey(QHotkeyManager::AvailableHotkeys::ResetKey,hotkeyName);
+        mw->uiohm.AssignHotkey(UioHotkeyManager::AvailableHotkeys::ResetKey,hotkeyName);
         ui->ResetTabActiveAssignmentLabel->setText(hotkeyName);
         mw->qsm.setValue(QSettingsManager::ResetKey,hotkeyName);
     }
@@ -360,7 +360,7 @@ void StopwatchInteractiveEditor::on_backgroundColorPickerPushButton_pressed()
 }
 
 
-void StopwatchInteractiveEditor::on_pushButton_6_clicked()
+void StopwatchInteractiveEditor::backgroundColorResetPushButton()
 {
     auto color = StylesheetGenerator::DefaultStopwatchBackground;
     mw->UpdateStopwatchBackground(color);

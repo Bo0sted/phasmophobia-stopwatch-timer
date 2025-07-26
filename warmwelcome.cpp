@@ -55,8 +55,8 @@ bool WarmWelcome::event(QEvent *event)
         ui->aboutSubtextLabel->setText(QString("Developed by Bo0sted<br>"
                                                "Start/Stop Hotkey: %1<br>"
                                                "Reset Hotkey: %2<br>"
-                                               ).arg(mw->qhm.FetchToggleStopwatchHotkey())
-                                           .arg(mw->qhm.FetchResetStopwatchHotkey()));
+                                               ).arg(mw->uiohm.FetchToggleStopwatchHotkey())
+                                           .arg(mw->uiohm.FetchResetStopwatchHotkey()));
 
         RefreshVersion();
 

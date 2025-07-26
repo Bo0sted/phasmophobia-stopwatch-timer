@@ -4,6 +4,7 @@
 #include "stopwatchinteractiveeditor.h"
 #include "stylesheetgenerator.h"
 #include "systemtimemodule.h"
+#include "uioeventloop.h"
 
 #include <QHotkey>
 #include <QMouseEvent>
@@ -17,8 +18,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui(new Ui::MainWindow),
     qsm{},
     swm{this},
-    qhm{this},
+    // qhm{this},
     um{this},
+    uioel{this},
+    uiohm{this, &uioel},
     stopwatchFontColor(qsm.FetchStopwatchFontColor()),
     pausedStopwatchFontColor(qsm.FetchPausedStopwatchFontColor()),
     resetStopwatchFontColor(qsm.FetchResetStopwatchFontColor()),
@@ -257,7 +260,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::MouseButton::RightButton) {
         sie->setVisible(true);
-        qhm.UpdateHotkeySignalBlock(true);
+        uiohm.UpdateHotkeySignalBlock(true);
     }
 }
 
@@ -331,7 +334,7 @@ bool MainWindow::event(QEvent *event)
             um.CheckForUpdateAndPromptUser();
 
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
-        SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(qhm.FetchToggleStopwatchHotkey()));
+        SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(uiohm.FetchToggleStopwatchHotkey()));
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
 
         {

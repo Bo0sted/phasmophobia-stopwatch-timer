@@ -9,10 +9,12 @@
 
 // Forward declaration
 class StopwatchManager;
-class HotkeyManager;
+// class HotkeyManager;
 class SystemTimeModule;
 class StopwatchInteractiveEditor;
 class UpdateManager;
+class UioEventLoop;
+class UioHotkeyManager;
 
 #include "qsettingsmanager.h"
 #include "stopwatchmanager.h"
@@ -20,6 +22,8 @@ class UpdateManager;
 #include "systemtimemodule.h"
 #include "stopwatchinteractiveeditor.h"
 #include "updatemanager.h"
+#include "uioeventloop.h"
+#include "uiohotkeymanager.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -35,10 +39,13 @@ class MainWindow : public QMainWindow
 public:
     QSettingsManager qsm;
     StopwatchManager swm;
-    QHotkeyManager qhm;
+    // QHotkeyManager qhm;
     SystemTimeModule *stm;
     StopwatchInteractiveEditor *sie;
     UpdateManager um;
+private: UioEventLoop uioel;
+public:
+    UioHotkeyManager uiohm;
     const qint64 Uptime;
 
     MainWindow(QWidget *parent = nullptr);

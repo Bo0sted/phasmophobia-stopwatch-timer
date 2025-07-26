@@ -48,6 +48,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         warmwelcome.h warmwelcome.cpp warmwelcome.ui
         version/version
         updatemanager.h updatemanager.cpp
+        uioeventloop.h uioeventloop.cpp
+        uiohotkeymanager.h uiohotkeymanager.cpp
 
 
 
@@ -101,6 +103,9 @@ if(UNIX AND NOT APPLE)
 endif()
 
 
+add_subdirectory(vendor/libuiohook)
+target_link_libraries(CrossPlatformStopwatch PRIVATE uiohook)
+target_include_directories(CrossPlatformStopwatch PRIVATE vendor/libuiohook/include)
 target_link_libraries(CrossPlatformStopwatch PRIVATE Qt${QT_VERSION_MAJOR}::Widgets qhotkey)
 target_link_libraries(CrossPlatformStopwatch PRIVATE Qt6::Concurrent)
 target_link_libraries(CrossPlatformStopwatch PRIVATE Qt6::Network)

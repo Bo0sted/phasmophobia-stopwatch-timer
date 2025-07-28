@@ -53,6 +53,7 @@ public:
     QSettingsManager();
     void setValue(QString groupName, QString valueName, QString value);
     void setValue(enum SettingsForStopwatchGroupIndex e, QString value);
+    void setValue(enum SettingsForHotkeyGroupIndex e, QVariantList value);
     void setValue(enum SettingsForHotkeyGroupIndex e, QString value);
     void setValue(enum SettingsForClockGroupIndex e, QString value);
     void setValue(enum Logging e, QVariant value);

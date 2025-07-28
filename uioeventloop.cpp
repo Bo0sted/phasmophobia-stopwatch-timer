@@ -1,4 +1,6 @@
 #include "uioeventloop.h"
+#include "uiokey.h"
+
 #include <QDebug>
 #include <thread>
 
@@ -8,7 +10,7 @@ UioEventLoop::UioEventLoop(QObject *parent)
     : QObject(parent) {
     g_instance = this;
 
-    hook_set_dispatch_proc(UioEventLoop::dispatch_proc);
+    hook_set_dispatch_proc(&UioEventLoop::dispatch_proc);
 
     // Start uiohook in a separate thread
     std::thread([]() {
@@ -30,9 +32,22 @@ void UioEventLoop::dispatch_proc(uiohook_event * const event) {
 }
 
 void UioEventLoop::handleEvent(uiohook_event * const event) {
+    auto keycode = event->data.keyboard.keycode;
+    auto rawcode = event->data.keyboard.rawcode;
     if (event->type == EVENT_KEY_PRESSED) {
-        emit keyPressed(event->data.keyboard.keycode);
-    } else if (event->type == EVENT_KEY_RELEASED) {
-        emit keyReleased(event->data.keyboard.keycode);
+        if (IsKeycodeModifierKey(event->data.keyboard.keycode,event->data.keyboard.rawcode)) {
+            #ifdef Q_OS_LINUX
+            keycode = translateLinuxRawcodeToKeycode(rawcode);
+            #endif
+        }
+        emit keyPressed(keycode);
+    }
+    else if (event->type == EVENT_KEY_RELEASED) {
+        if (IsKeycodeModifierKey(event->data.keyboard.keycode,event->data.keyboard.rawcode)) {
+            #ifdef Q_OS_LINUX
+            keycode = translateLinuxRawcodeToKeycode(rawcode);
+            #endif
+        }
+        emit keyReleased(keycode);
     }
 }

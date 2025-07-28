@@ -6,6 +6,7 @@
 #include "systemtimemodule.h"
 #include "stopwatchinteractiveeditor.h"
 #include "warmwelcome.h"
+#include "uiokey.h"
 
 #include <QCloseEvent>
 #include <QPushButton>
@@ -75,8 +76,8 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->FontPickerComboClock->setCurrentText(mw->stm->GetCurrentFont().family());
         ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeader());
         ui->CustomizationModulesHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
-        ui->ToggleTabActiveAssignmentLabel->setText(mw->uiohm.FetchToggleStopwatchHotkey());
-        ui->ResetTabActiveAssignmentLabel->setText(mw->uiohm.FetchResetStopwatchHotkey());
+        ui->ToggleTabActiveAssignmentLabel->setText(QString("%1").arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchToggleStopwatchHotkey())));
+        ui->ResetTabActiveAssignmentLabel->setText(QString("%1").arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchResetStopwatchHotkey())));
         ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
         UpdateSystemModuleTogglePushButton();
         ui->primaryColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchFontColor()));
@@ -161,10 +162,46 @@ void StopwatchInteractiveEditor::SetBackgroundOptionsEnabled(bool enabled)
     ui->backgroundColorResetPushButton->setEnabled(enabled);
 }
 
+void StopwatchInteractiveEditor::RefreshToggleHotkeyPushButton()
+{
+    auto mode = mw->uiohm.GetHotkeyAssignMode();
+    ui->ToggleHotkeyRecordPushButton->setText(mode ? "Disable" : "Record");
+}
+
 void StopwatchInteractiveEditor::setEditorOpen(bool shouldOpen)
 {
     open = shouldOpen;
     RefreshOpenState();
+}
+
+void StopwatchInteractiveEditor::refreshHotkeyDisplays()
+{
+    QStringList parts;
+
+    // Show all active modifiers
+    for (int mod : mw->uiohm.GetActiveModifiers()) {
+        switch (mod) {
+        case VC_SHIFT_L:
+        case VC_SHIFT_R: parts << "Shift"; break;
+        case VC_CONTROL_L:
+        case VC_CONTROL_R: parts << "Ctrl"; break;
+        case VC_ALT_L:
+        case VC_ALT_R: parts << "Alt"; break;
+        case VC_META_L:
+        case VC_META_R: parts << "Meta"; break;
+        }
+    }
+
+    // If a main key is selected, add it
+    int key = mw->uiohm.GetHotkeyToReasign();
+    if (key != -1 && !IsKeycodeModifierKey(key, 0)) {
+        parts << KeycodeToQString(key); // Convert int → readable key name
+    }
+
+    // Join with " + " and set to label
+    if (mw->uiohm.GetHotkeyAssignMode())
+        ui->HotkeyAssignModeDisplay->setText(parts.join(" + "));
+    RefreshToggleHotkeyPushButton();
 }
 
 void StopwatchInteractiveEditor::on_FontPickerCombo_currentFontChanged(const QFont &f)
@@ -181,25 +218,16 @@ void StopwatchInteractiveEditor::on_FontPickerResetButton_clicked()
 
 
 
-void StopwatchInteractiveEditor::on_ToggleTabApplyNewHotkey_clicked()
-{
-    if (mw->uiohm.IsHotkeyAvailable(ui->ToggleTabHotkeyInput->keySequence().toString(),true)) {
-        QString hotkeyName = ui->ToggleTabHotkeyInput->keySequence().toString();
-        mw->uiohm.AssignHotkey(UioHotkeyManager::AvailableHotkeys::ToggleKey,hotkeyName);
-        ui->ToggleTabActiveAssignmentLabel->setText(hotkeyName);
-        mw->qsm.setValue(QSettingsManager::ToggleKey,hotkeyName);
-    }
-}
 
 
 void StopwatchInteractiveEditor::on_ResetTabApplyNewHotkey_clicked()
 {
-    if (mw->uiohm.IsHotkeyAvailable(ui->ResetTabHotkeyInput->keySequence().toString(),true)) {
-        QString hotkeyName = ui->ResetTabHotkeyInput->keySequence().toString();
-        mw->uiohm.AssignHotkey(UioHotkeyManager::AvailableHotkeys::ResetKey,hotkeyName);
-        ui->ResetTabActiveAssignmentLabel->setText(hotkeyName);
-        mw->qsm.setValue(QSettingsManager::ResetKey,hotkeyName);
-    }
+    // if (mw->uiohm.IsHotkeyAvailable(ui->ResetTabHotkeyInput->keySequence().toString(),true)) {
+    //     QString hotkeyName = ui->ResetTabHotkeyInput->keySequence().toString();
+    //     mw->uiohm.AssignHotkey(UioHotkeyManager::AvailableHotkeys::ResetKey,hotkeyName);
+    //     ui->ResetTabActiveAssignmentLabel->setText(hotkeyName);
+    //     mw->qsm.setValue(QSettingsManager::ResetKey,hotkeyName);
+    // }
 }
 
 
@@ -447,5 +475,55 @@ void StopwatchInteractiveEditor::on_backgroundColorResetPushButton_clicked()
     mw->RefreshStopwatchState(true);
     mw->qsm.setValue(QSettingsManager::StopwatchBackgroundColor,color);
     ui->backgroundColorPickerPushButton->setStyleSheet(ui->backgroundColorPickerPushButton->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color));
+}
+
+
+
+
+
+
+
+void StopwatchInteractiveEditor::on_AssignToggleHotkeyPushButton_clicked()
+{
+    auto buffer = mw->uiohm.GetHotkeyAssignBuffer();
+    if (buffer.empty()) {
+        QMessageBox::information(this, "Empty", "No keys were recorded. Please try again!");
+        return;
+    }
+
+    mw->uiohm.SetHotkeyReassignMode(false);
+    RefreshToggleHotkeyPushButton();
+
+    QVariantList keycodes = {};
+
+    for (const auto i: buffer)
+        keycodes.append(i);
+
+    mw->uiohm.AssignHotkey(UioHotkeyManager::ToggleKey, buffer);
+    mw->qsm.setValue(QSettingsManager::ToggleKey, keycodes);
+    ui->ToggleTabActiveAssignmentLabel->setText(mw->uiohm.GetDisplayFromQListOfKeycodes(buffer));
+
+
+
+}
+
+
+void StopwatchInteractiveEditor::on_ToggleHotkeyRecordPushButton_clicked()
+{
+    auto mode = mw->uiohm.GetHotkeyAssignMode();
+    mw->uiohm.SetHotkeyReassignMode(!mode);
+    ui->ToggleHotkeyRecordPushButton->setText(mode ? "Record" : "Disable");
+
+    // if (!mode)
+    //     mw->uiohm.ClearHotkeyAssignState();
+
+    ui->ToggleHotkeyRecordPushButton->repaint();
+
+    // if (mw->uiohm.IsHotkeyAvailable(ui->ToggleTabHotkeyInput->keySequence().toString(),true)) {
+    //     QString hotkeyName = ui->ToggleTabHotkeyInput->keySequence().toString();
+    //     mw->uiohm.AssignHotkey(UioHotkeyManager::AvailableHotkeys::ToggleKey,hotkeyName);
+    //     ui->ToggleTabActiveAssignmentLabel->setText(hotkeyName);
+    //     mw->qsm.setValue(QSettingsManager::ToggleKey,hotkeyName);
+    // }
 }
 

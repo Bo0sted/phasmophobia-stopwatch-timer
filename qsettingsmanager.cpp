@@ -53,6 +53,11 @@ void QSettingsManager::setValue(SettingsForStopwatchGroupIndex e, QString value)
     settings.setValue(QString("%1").arg(SettingsForStopwatchGroup[e]), value);
 }
 
+void QSettingsManager::setValue(SettingsForHotkeyGroupIndex e, QVariantList value)
+{
+    settings.setValue(QString("%1").arg(SettingsForHotkeyGroup[e]), value);
+}
+
 void QSettingsManager::setValue(SettingsForHotkeyGroupIndex e, QString value)
 {
     settings.setValue(QString("%1").arg(SettingsForHotkeyGroup[e]), value);
@@ -80,7 +85,7 @@ const QVariant QSettingsManager::getValue(enum Logging e)
 
 const QVariant QSettingsManager::getValue(enum SettingsForHotkeyGroupIndex e)
 {
-    return settings.value(SettingsForHotkeyGroup[e], false);
+    return settings.value(SettingsForHotkeyGroup[e],false);
 }
 
 const QVariant QSettingsManager::getValue(enum SettingsForStopwatchGroupIndex e, bool shouldDefaultBeInteger)

@@ -5,6 +5,7 @@
 #include "stylesheetgenerator.h"
 #include "systemtimemodule.h"
 #include "uioeventloop.h"
+#include <uiokey.h>
 
 #include <QHotkey>
 #include <QMouseEvent>
@@ -328,13 +329,15 @@ bool MainWindow::event(QEvent *event)
 {
     if (event->type() == QEvent::Polish) {
         if (qsm.ShouldPostPing())
-            um.PostAnonymousUsageLog();
+            //um.PostAnonymousUsageLog();
 
         if (qsm.ShouldCheckUpdate())
             um.CheckForUpdateAndPromptUser();
 
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
-        SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(uiohm.FetchToggleStopwatchHotkey()));
+        SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(uiohm.GetDisplayFromQListOfKeycodes(uiohm.FetchToggleStopwatchHotkey())));
+        qDebug() << "Fetch toggle: "<< uiohm.FetchToggleStopwatchHotkey();
+        qDebug() << "Get display: "<< uiohm.GetDisplayFromQListOfKeycodes(uiohm.FetchToggleStopwatchHotkey());
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
 
         {
@@ -361,6 +364,10 @@ bool MainWindow::event(QEvent *event)
                             | Qt::FramelessWindowHint
                             );
         sie->show();
+
+
+        connect(&uiohm, &UioHotkeyManager::refreshHotkeyDisplays,
+                sie, &StopwatchInteractiveEditor::refreshHotkeyDisplays);
 
         connect(this, &MainWindow::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
         if (!qsm.CheckIfClockEnabled())

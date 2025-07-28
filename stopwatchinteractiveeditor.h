@@ -22,16 +22,16 @@ public:
     void RefreshUptimeLabel();
     void SetBorderOptionsVisible(bool visible);
     void SetBackgroundOptionsEnabled(bool enabled);
+    void RefreshToggleHotkeyPushButton();
 signals:
     void toggleModuleSignal(bool shouldEnable);
 public slots:
     void setEditorOpen(bool shouldOpen);
+    void refreshHotkeyDisplays();
 private slots:
     void on_FontPickerCombo_currentFontChanged(const QFont &f);
 
     void on_FontPickerResetButton_clicked();
-
-    void on_ToggleTabApplyNewHotkey_clicked();
 
     void on_ResetTabApplyNewHotkey_clicked();
 
@@ -84,6 +84,11 @@ private slots:
     void on_formatTimeComboBox_currentIndexChanged(int index);
 
     void on_backgroundColorResetPushButton_clicked();
+
+
+    void on_AssignToggleHotkeyPushButton_clicked();
+
+    void on_ToggleHotkeyRecordPushButton_clicked();
 
 private:
     Ui::StopwatchInteractiveEditor *ui;

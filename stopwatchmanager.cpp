@@ -25,8 +25,10 @@ StopwatchManager::~StopwatchManager()
 
 void StopwatchManager::ResetStopwatch()
 {
+    pauseStopwatch = true;
     elapsedSeconds = 0;
     emit updateElapsedTime(elapsedSeconds);
+    mw->RefreshStopwatchState(true);
 }
 
 void StopwatchManager::StopwatchThread()

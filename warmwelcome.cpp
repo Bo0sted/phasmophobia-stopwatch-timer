@@ -1,6 +1,7 @@
 #include "warmwelcome.h"
 #include "ui_warmwelcome.h"
 #include "stylesheetgenerator.h"
+#include "uiokey.h"
 
 #include <QMouseEvent>
 #include <QCursor>
@@ -55,8 +56,8 @@ bool WarmWelcome::event(QEvent *event)
         ui->aboutSubtextLabel->setText(QString("Developed by Bo0sted<br>"
                                                "Start/Stop Hotkey: %1<br>"
                                                "Reset Hotkey: %2<br>"
-                                               ).arg(mw->uiohm.FetchToggleStopwatchHotkey())
-                                           .arg(mw->uiohm.FetchResetStopwatchHotkey()));
+                                               ).arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchToggleStopwatchHotkey()))
+                                           .arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchResetStopwatchHotkey())));
 
         RefreshVersion();
 

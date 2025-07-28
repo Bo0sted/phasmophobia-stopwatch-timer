@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QString>
 
+#include "uiohook.h"
+
 class MainWindow;
 class UioEventLoop;
 
@@ -17,32 +19,41 @@ public:
 
     explicit UioHotkeyManager(MainWindow *mwr, UioEventLoop *loop);
 
-    static const QString DefaultToggleStopwatchHotkey;
-    static const QString DefaultResetStopwatchHotkey;
+    static const QList<int> DefaultToggleStopwatchHotkey;
+    static const QList<int> DefaultResetStopwatchHotkey;
 
-    QString FetchToggleStopwatchHotkey();
-    QString FetchResetStopwatchHotkey();
+    QList<int> FetchToggleStopwatchHotkey();
+    QList<int> FetchResetStopwatchHotkey();
 
     void DeleteHotkey(AvailableHotkeys ah);
     void FetchAndAssignHotkey(AvailableHotkeys ah);
-    void AssignHotkey(AvailableHotkeys ah, QString hotkey);
-    bool IsHotkeyAvailable(QString hotkey, bool shouldAlertUser = false);
+    void AssignHotkey(AvailableHotkeys ah, QList<int> hotkey);
+    bool IsHotkeyAvailable(QList<int> hotkey, bool shouldAlertUser = false);
+    bool IsHotkeyMatch(int keycode, const QList<int> &targetHotkey);
+    QString IntToUioKeyName(QList<int> hotkey);
+    void SetHotkeyReassignMode(bool enabled);
+    bool GetHotkeyAssignMode();
+    int GetHotkeyToReasign();
+    QList<int> GetActiveModifiers();
+    void ClearHotkeyAssignState();
+    QList<int> GetHotkeyAssignBuffer();
+    QString GetDisplayFromQListOfKeycodes(QList<int> keycodes);
 
     void UpdateHotkeySignalBlock(bool shouldBlockSignal = true);
-    void SetHotkeyBlocked(AvailableHotkeys hotkey, bool block);
-
+signals:
+    void refreshHotkeyDisplays();
 private slots:
     void onKeyPressed(int keycode);
-
+    void onKeyReleased(int keycode);
 private:
     MainWindow *mw;
     UioEventLoop *eventLoop;
+    bool hotkeyReassignMode;
+    int newAssignedHotkey;
+    QList<int> activeModifiers;
 
-    QString ToggleStopwatchHotkey;
-    QString ResetStopwatchHotkey;
-
-    int toggleKeycode;
-    int resetKeycode;
+    QList<int> ToggleStopwatchHotkey;
+    QList<int> ResetStopwatchHotkey;
 
     void ToggleStopwatch();
     void ResetStopwatch();

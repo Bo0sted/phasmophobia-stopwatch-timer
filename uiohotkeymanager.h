@@ -34,7 +34,7 @@ public:
     void SetHotkeyReassignMode(bool enabled);
     bool GetHotkeyAssignMode();
     int GetHotkeyToReasign();
-    QList<int> GetActiveModifiers();
+    QList<int> GetNewModifiers();
     void ClearHotkeyAssignState();
     QList<int> GetHotkeyAssignBuffer();
     QString GetDisplayFromQListOfKeycodes(QList<int> keycodes);
@@ -45,11 +45,14 @@ signals:
 private slots:
     void onKeyPressed(int keycode);
     void onKeyReleased(int keycode);
+    void onModifierPressed(int keycode);
+    void onModifierReleased(int keycode);
 private:
     MainWindow *mw;
     UioEventLoop *eventLoop;
     bool hotkeyReassignMode;
     int newAssignedHotkey;
+    QList<int> newModifiers;
     QList<int> activeModifiers;
 
     QList<int> ToggleStopwatchHotkey;

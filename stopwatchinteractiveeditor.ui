@@ -272,12 +272,6 @@
                   <height>0</height>
                  </size>
                 </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
                </widget>
               </item>
               <item>
@@ -285,12 +279,9 @@
                 <property name="orientation">
                  <enum>Qt::Orientation::Horizontal</enum>
                 </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Policy::Fixed</enum>
-                </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>220</width>
+                  <width>40</width>
                   <height>20</height>
                  </size>
                 </property>
@@ -342,6 +333,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="pushButton_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
@@ -689,7 +686,7 @@
                      <item>
                       <widget class="QLabel" name="ToggleTabActiveAssignmentSubtext">
                        <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                          <horstretch>0</horstretch>
                          <verstretch>0</verstretch>
                         </sizepolicy>
@@ -1276,6 +1273,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="AboutProgramPushButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
            <width>65</width>
@@ -1297,12 +1300,12 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>885</width>
+           <width>65</width>
            <height>50</height>
           </size>
          </property>
          <property name="text">
-          <string>Shutdown</string>
+          <string>Close</string>
          </property>
         </widget>
        </item>

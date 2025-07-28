@@ -23,6 +23,7 @@ public:
     void SetBorderOptionsVisible(bool visible);
     void SetBackgroundOptionsEnabled(bool enabled);
     void RefreshToggleHotkeyPushButton();
+    void RefreshToggleHotkeyAssignModeDisplay();
 signals:
     void toggleModuleSignal(bool shouldEnable);
 public slots:

@@ -20,12 +20,18 @@ UioHotkeyManager::UioHotkeyManager(MainWindow *mwr, UioEventLoop *loop)
     ResetStopwatchHotkey{FetchResetStopwatchHotkey()},
     hotkeyReassignMode(false),
     newAssignedHotkey(-1),
-    activeModifiers{}
+    activeModifiers{},
+    newModifiers{}
 {
     connect(eventLoop, &UioEventLoop::keyReleased,
             this, &UioHotkeyManager::onKeyReleased);
     connect(eventLoop, &UioEventLoop::keyPressed,
             this, &UioHotkeyManager::onKeyPressed);
+    connect(eventLoop, &UioEventLoop::modifierPressed,
+            this, &UioHotkeyManager::onModifierPressed);
+    connect(eventLoop, &UioEventLoop::modifierReleased,
+            this, &UioHotkeyManager::onModifierReleased);
+
 }
 
 QList<int> UioHotkeyManager::FetchToggleStopwatchHotkey() {
@@ -109,20 +115,21 @@ int UioHotkeyManager::GetHotkeyToReasign()
     return newAssignedHotkey;
 }
 
-QList<int> UioHotkeyManager::GetActiveModifiers()
+QList<int> UioHotkeyManager::GetNewModifiers()
 {
-    return activeModifiers;
+    return newModifiers;
 }
 
 void UioHotkeyManager::ClearHotkeyAssignState()
 {
-    activeModifiers.clear();
+    newModifiers.clear();
     newAssignedHotkey = -1;
+    emit refreshHotkeyDisplays();
 }
 
 QList<int> UioHotkeyManager::GetHotkeyAssignBuffer()
 {
-    QList<int> buffer = activeModifiers;
+    QList<int> buffer = newModifiers;
     if (newAssignedHotkey != -1)
         buffer.append(newAssignedHotkey);
     return buffer;
@@ -166,44 +173,18 @@ bool UioHotkeyManager::IsHotkeyMatch(int keycode, const QList<int> &targetHotkey
 
 
 void UioHotkeyManager::onKeyPressed(int keycode) {
-    // Always track modifiers
-    if (IsKeycodeModifierKey(keycode, keycode)) {
-        // If the modifier already exists, reset everything
-        if (activeModifiers.contains(keycode)) {
-            activeModifiers.clear();
-            newAssignedHotkey = -1;
-            // emit refreshHotkeyDisplays();
-            return;
-        }
-
-        // Otherwise, add it
-        activeModifiers.append(keycode);
-         emit refreshHotkeyDisplays();
-        return;
-    }
-
-    // Hotkey reassign mode logic
     if (hotkeyReassignMode) {
         newAssignedHotkey = keycode;
-        //emit refreshHotkeyDisplays();
+        emit refreshHotkeyDisplays();
         return;
     }
 }
 
-
 void UioHotkeyManager::onKeyReleased(int keycode) {
-    // Always track modifier release
-    if (IsKeycodeModifierKey(keycode, keycode) && !hotkeyReassignMode) {
-        activeModifiers.removeOne(keycode);
-    }
-    if (hotkeyReassignMode) {
-        emit refreshHotkeyDisplays();
-        return;
-    }
-
     if (hotkeyReassignMode) {
         newAssignedHotkey = keycode;
         SetHotkeyReassignMode(false);
+        mw->sie->RefreshToggleHotkeyAssignModeDisplay();
         emit refreshHotkeyDisplays();
         return;
     }
@@ -215,6 +196,35 @@ void UioHotkeyManager::onKeyReleased(int keycode) {
         ResetStopwatch();
     }
 }
+
+void UioHotkeyManager::onModifierPressed(int keycode)
+{
+    if (hotkeyReassignMode) {
+        if (!newModifiers.contains(keycode)) {
+            newModifiers.append(keycode);
+        }
+        newAssignedHotkey = -1;
+    }
+
+    if (activeModifiers.contains(keycode)) {
+        activeModifiers.clear();
+    } else {
+        activeModifiers.append(keycode);
+    }
+
+    emit refreshHotkeyDisplays();
+}
+
+void UioHotkeyManager::onModifierReleased(int keycode)
+{
+    if (hotkeyReassignMode) {
+        newModifiers.removeOne(keycode);
+        emit refreshHotkeyDisplays();
+    }
+
+    activeModifiers.removeOne(keycode);
+}
+
 
 void UioHotkeyManager::ToggleStopwatch() {
     mw->swm.pauseStopwatch = !mw->swm.pauseStopwatch;

@@ -35,19 +35,26 @@ void UioEventLoop::handleEvent(uiohook_event * const event) {
     auto keycode = event->data.keyboard.keycode;
     auto rawcode = event->data.keyboard.rawcode;
     if (event->type == EVENT_KEY_PRESSED) {
-        if (IsKeycodeModifierKey(event->data.keyboard.keycode,event->data.keyboard.rawcode)) {
+        if (IsKeycodeModifierKey(event->data.keyboard.keycode, event->data.keyboard.rawcode)) {
             #ifdef Q_OS_LINUX
             keycode = translateLinuxRawcodeToKeycode(rawcode);
             #endif
+            emit modifierPressed(keycode);
+            emit keyPressed(keycode); // send as normal key too
+        } else {
+            emit keyPressed(keycode);
         }
-        emit keyPressed(keycode);
     }
     else if (event->type == EVENT_KEY_RELEASED) {
-        if (IsKeycodeModifierKey(event->data.keyboard.keycode,event->data.keyboard.rawcode)) {
+        if (IsKeycodeModifierKey(event->data.keyboard.keycode, event->data.keyboard.rawcode)) {
             #ifdef Q_OS_LINUX
             keycode = translateLinuxRawcodeToKeycode(rawcode);
             #endif
+            emit modifierReleased(keycode);
+            emit keyReleased(keycode);
+        } else {
+            emit keyReleased(keycode);
         }
-        emit keyReleased(keycode);
     }
+
 }

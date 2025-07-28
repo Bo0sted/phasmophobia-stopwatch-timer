@@ -99,8 +99,7 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->rainbowColorComboBox->setCurrentIndex(mw->GetRainbowMode());
         ui->formatTimeComboBox->setCurrentIndex(mw->GetFormatMode());
 
-
-
+        ui->ToggleHotkeyRecordPushButton->setFocusPolicy(Qt::NoFocus);
 
     }
 
@@ -168,6 +167,11 @@ void StopwatchInteractiveEditor::RefreshToggleHotkeyPushButton()
     ui->ToggleHotkeyRecordPushButton->setText(mode ? "Disable" : "Record");
 }
 
+void StopwatchInteractiveEditor::RefreshToggleHotkeyAssignModeDisplay()
+{
+    ui->HotkeyAssignModeDisplay->setText(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.GetHotkeyAssignBuffer()));
+}
+
 void StopwatchInteractiveEditor::setEditorOpen(bool shouldOpen)
 {
     open = shouldOpen;
@@ -178,17 +182,17 @@ void StopwatchInteractiveEditor::refreshHotkeyDisplays()
 {
     QStringList parts;
 
-    // Show all active modifiers
-    for (int mod : mw->uiohm.GetActiveModifiers()) {
+    for (int mod : mw->uiohm.GetNewModifiers()) {
         switch (mod) {
-        case VC_SHIFT_L:
-        case VC_SHIFT_R: parts << "Shift"; break;
-        case VC_CONTROL_L:
-        case VC_CONTROL_R: parts << "Ctrl"; break;
-        case VC_ALT_L:
-        case VC_ALT_R: parts << "Alt"; break;
-        case VC_META_L:
-        case VC_META_R: parts << "Meta"; break;
+        case VC_SHIFT_L:   parts << "Left Shift";   break;
+        case VC_SHIFT_R:   parts << "Right Shift";  break;
+        case VC_CONTROL_L: parts << "Left Ctrl";    break;
+        case VC_CONTROL_R: parts << "Right Ctrl";   break;
+        case VC_ALT_L:     parts << "Left Alt";     break;
+        case VC_ALT_R:     parts << "Right Alt";    break;
+        case VC_META_L:    parts << "Left Meta";    break;
+        case VC_META_R:    parts << "Right Meta";   break;
+        default:           parts << KeycodeToQString(mod); break;
         }
     }
 
@@ -199,8 +203,10 @@ void StopwatchInteractiveEditor::refreshHotkeyDisplays()
     }
 
     // Join with " + " and set to label
-    if (mw->uiohm.GetHotkeyAssignMode())
+    if (mw->uiohm.GetHotkeyAssignMode()) {
         ui->HotkeyAssignModeDisplay->setText(parts.join(" + "));
+    }
+
     RefreshToggleHotkeyPushButton();
 }
 
@@ -514,8 +520,8 @@ void StopwatchInteractiveEditor::on_ToggleHotkeyRecordPushButton_clicked()
     mw->uiohm.SetHotkeyReassignMode(!mode);
     ui->ToggleHotkeyRecordPushButton->setText(mode ? "Record" : "Disable");
 
-    // if (!mode)
-    //     mw->uiohm.ClearHotkeyAssignState();
+    if (!mode)
+        mw->uiohm.ClearHotkeyAssignState();
 
     ui->ToggleHotkeyRecordPushButton->repaint();
 
@@ -526,4 +532,3 @@ void StopwatchInteractiveEditor::on_ToggleHotkeyRecordPushButton_clicked()
     //     mw->qsm.setValue(QSettingsManager::ToggleKey,hotkeyName);
     // }
 }
-

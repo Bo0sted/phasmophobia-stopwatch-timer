@@ -13,6 +13,8 @@ public:
 signals:
     void keyPressed(int keycode);
     void keyReleased(int keycode);
+    void modifierPressed(int keycode);
+    void modifierReleased(int keycode);
 private:
     static void dispatch_proc(uiohook_event * const event);
     void handleEvent(uiohook_event * const event);

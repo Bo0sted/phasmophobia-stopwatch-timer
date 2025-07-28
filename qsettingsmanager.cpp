@@ -26,7 +26,7 @@ QSettingsManager::QSettingsManager()
         "Stopwatch/StopwatchBorderThickness",
         "Stopwatch/StopwatchBackgroundEnabled",
         "Stopwatch/StopwatchRainbowModeIndex",
-          "Stopwatch/StopwatchFormatModeIndex",
+        "Stopwatch/StopwatchFormatModeIndex",
       }
     , SettingsForClockGroup{
         "System-Clock-Module/ClockFont",

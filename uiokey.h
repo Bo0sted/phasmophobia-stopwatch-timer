@@ -166,6 +166,10 @@ inline QString UioKeyToQString(UioKey key) {
     case UioKey::I: return "I";
     case UioKey::O: return "O";
     case UioKey::P: return "P";
+    case UioKey::LBRACKET: return "[";
+    case UioKey::RBRACKET: return "]";
+    case UioKey::ENTER: return "Enter";
+    case UioKey::LCTRL: return "Left Ctrl";
     case UioKey::A: return "A";
     case UioKey::S: return "S";
     case UioKey::D: return "D";
@@ -175,6 +179,11 @@ inline QString UioKeyToQString(UioKey key) {
     case UioKey::J: return "J";
     case UioKey::K: return "K";
     case UioKey::L: return "L";
+    case UioKey::SEMICOLON: return ";";
+    case UioKey::APOSTROPHE: return "'";
+    case UioKey::GRAVE: return "`";
+    case UioKey::LSHIFT: return "Left Shift";
+    case UioKey::BACKSLASH: return "\\";
     case UioKey::Z: return "Z";
     case UioKey::X: return "X";
     case UioKey::C: return "C";
@@ -182,20 +191,14 @@ inline QString UioKeyToQString(UioKey key) {
     case UioKey::B: return "B";
     case UioKey::N: return "N";
     case UioKey::M: return "M";
-    case UioKey::LBRACKET: return "[";
-    case UioKey::RBRACKET: return "]";
-    case UioKey::SEMICOLON: return ";";
-    case UioKey::APOSTROPHE: return "'";
-    case UioKey::GRAVE: return "`";
-    case UioKey::BACKSLASH: return "\\";
     case UioKey::COMMA: return ",";
     case UioKey::PERIOD: return ".";
     case UioKey::SLASH: return "/";
-    case UioKey::ENTER: return "Enter";
+    case UioKey::RSHIFT: return "Right Shift";
+    case UioKey::KP_MULTIPLY: return "Numpad *";
+    case UioKey::LALT: return "Left Alt";
     case UioKey::SPACE: return "Space";
     case UioKey::CAPS_LOCK: return "Caps Lock";
-    case UioKey::NUM_LOCK: return "Num Lock";
-    case UioKey::SCROLL_LOCK: return "Scroll Lock";
     case UioKey::F1: return "F1";
     case UioKey::F2: return "F2";
     case UioKey::F3: return "F3";
@@ -206,30 +209,27 @@ inline QString UioKeyToQString(UioKey key) {
     case UioKey::F8: return "F8";
     case UioKey::F9: return "F9";
     case UioKey::F10: return "F10";
-    case UioKey::F11: return "F11";
-    case UioKey::F12: return "F12";
-    case UioKey::KP_0: return "Numpad 0";
-    case UioKey::KP_1: return "Numpad 1";
-    case UioKey::KP_2: return "Numpad 2";
-    case UioKey::KP_3: return "Numpad 3";
-    case UioKey::KP_4: return "Numpad 4";
-    case UioKey::KP_5: return "Numpad 5";
-    case UioKey::KP_6: return "Numpad 6";
+    case UioKey::NUM_LOCK: return "Num Lock";
+    case UioKey::SCROLL_LOCK: return "Scroll Lock";
     case UioKey::KP_7: return "Numpad 7";
     case UioKey::KP_8: return "Numpad 8";
     case UioKey::KP_9: return "Numpad 9";
-    case UioKey::KP_PERIOD: return "Numpad .";
-    case UioKey::KP_DIVIDE: return "Numpad /";
-    case UioKey::KP_MULTIPLY: return "Numpad *";
     case UioKey::KP_MINUS: return "Numpad -";
+    case UioKey::KP_4: return "Numpad 4";
+    case UioKey::KP_5: return "Numpad 5";
+    case UioKey::KP_6: return "Numpad 6";
     case UioKey::KP_PLUS: return "Numpad +";
+    case UioKey::KP_1: return "Numpad 1";
+    case UioKey::KP_2: return "Numpad 2";
+    case UioKey::KP_3: return "Numpad 3";
+    case UioKey::KP_0: return "Numpad 0";
+    case UioKey::KP_PERIOD: return "Numpad .";
+    case UioKey::F11: return "F11";
+    case UioKey::F12: return "F12";
+    case UioKey::KP_DIVIDE: return "Numpad /";
     case UioKey::KP_ENTER: return "Numpad Enter";
-    case UioKey::LCTRL: return "Left Ctrl";
     case UioKey::RCTRL: return "Right Ctrl";
-    case UioKey::LALT: return "Left Alt";
     case UioKey::RALT: return "Right Alt";
-    case UioKey::LSHIFT: return "Left Shift";
-    case UioKey::RSHIFT: return "Right Shift";
     case UioKey::HOME: return "Home";
     case UioKey::UP: return "Up";
     case UioKey::PAGE_UP: return "Page Up";
@@ -259,9 +259,9 @@ inline int translateLinuxRawcodeToKeycode(int rawcode) {
     default: return VC_UNDEFINED;
     }
 }
-
 inline UioKey IntToUioKey(int code) {
     switch (code) {
+    case VC_UNDEFINED: return UioKey::NONE;
     case VC_ESCAPE: return UioKey::ESCAPE;
     case VC_1: return UioKey::ONE;
     case VC_2: return UioKey::TWO;

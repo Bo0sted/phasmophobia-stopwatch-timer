@@ -57,8 +57,11 @@ If an internet connection is available, the stopwatch will attempt to connect du
 
 That's it! I a am privacy concious person myself so I designed these logs to be as privacy friendly as possible.
 
-### But why the logs?
+### But why the ping log?
 Because it's interesting. There is no ulterior motive. It's simply interesting to get an idea of how many people are using my program and from what regions of the world!
+
+### Can I disable them?
+As of right now, I haven't added a way to disable the logs just yet since I haven't officially released anything yet. But once I do make an official release, the option will be there. If you are downloading my code and building it yourself, you may go to this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332), comment it out and the logging functionality will be completely disabled.
 
 # Install instructions
 coming soon...

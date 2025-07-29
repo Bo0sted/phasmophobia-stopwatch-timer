@@ -48,11 +48,11 @@ If an internet connection is available, the stopwatch will attempt to connect du
   - The code that handles this logging can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
   - But the log only consists of:
     - The name of your operating system. If you run Linux, this will probably include the name of your distro.
-    - The version of your program
-    - Your UUID. This is a randomly generated combination of letters and numbers to distinguish your anonymous log from other people. It is generated when the program is launched and it doesn't detect a UUID in your configuration file. 
+    - The version of your program.
+    - Your UUID. This is a randomly generated combination of letters and numbers to distinguish your anonymous log from other people. It is generated when the program starts up and doesn't detect a UUID in your config file.
       - The code for UUID generation can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/qsettingsmanager.cpp#L281)
-      - And last but not least your country code. This information is obtained 100% offline by looking at the language of your system.
-    - And a unix timestamp
+      - Your country code. This information is obtained 100% offline by looking at the language of your system.
+      - And last but not least a unix timestamp
 
 
 That's it! I a am privacy concious person myself so I designed these logs to be as privacy friendly as possible.

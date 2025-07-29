@@ -78,6 +78,7 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->CustomizationModulesHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
         ui->ToggleTabActiveAssignmentLabel->setText(QString("%1").arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchToggleStopwatchHotkey())));
         ui->ResetTabActiveAssignmentLabel->setText(QString("%1").arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchResetStopwatchHotkey())));
+        ui->RestoreTabActiveAssignmentLabel->setText(QString("%1").arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchRestoreStopwatchHotkey())));
         ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
         UpdateSystemModuleTogglePushButton();
         ui->primaryColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchFontColor()));
@@ -172,6 +173,11 @@ void StopwatchInteractiveEditor::RefreshToggleHotkeyPushButton()
 void StopwatchInteractiveEditor::RefreshToggleHotkeyAssignModeDisplay()
 {
     ui->HotkeyAssignModeDisplay->setText(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.GetHotkeyAssignBuffer()));
+}
+
+
+int StopwatchInteractiveEditor::GetActiveTabFromHotkeyGroup() {
+    return ui->ToggleHotkeyTabWidget->currentIndex();
 }
 
 void StopwatchInteractiveEditor::setEditorOpen(bool shouldOpen)
@@ -494,10 +500,15 @@ void StopwatchInteractiveEditor::on_backgroundColorResetPushButton_clicked()
 void StopwatchInteractiveEditor::on_AssignToggleHotkeyPushButton_clicked()
 {
     auto buffer = mw->uiohm.GetHotkeyAssignBuffer();
+    auto targetHotkey = mw->uiohm.GetHotkeyForCurrentTab();
+
     if (buffer.empty()) {
         QMessageBox::information(this, "Empty", "No keys were recorded. Please try again!");
         return;
     }
+
+    if (!mw->uiohm.IsHotkeyAvailable(buffer, targetHotkey, true))
+        return;
 
     mw->uiohm.SetHotkeyReassignMode(false);
     RefreshToggleHotkeyPushButton();
@@ -507,13 +518,26 @@ void StopwatchInteractiveEditor::on_AssignToggleHotkeyPushButton_clicked()
     for (const auto i: buffer)
         keycodes.append(i);
 
-    mw->uiohm.AssignHotkey(UioHotkeyManager::ToggleKey, buffer);
-    mw->qsm.setValue(QSettingsManager::ToggleKey, keycodes);
-    ui->ToggleTabActiveAssignmentLabel->setText(mw->uiohm.GetDisplayFromQListOfKeycodes(buffer));
+    mw->uiohm.AssignHotkey(targetHotkey, buffer);
 
+    QSettingsManager::SettingsForHotkeyGroupIndex settingsKey;
+    switch (targetHotkey) {
+    case UioHotkeyManager::ToggleKey:  settingsKey = QSettingsManager::ToggleKey; break;
+    case UioHotkeyManager::ResetKey:   settingsKey = QSettingsManager::ResetKey; break;
+    case UioHotkeyManager::RestoreKey: settingsKey = QSettingsManager::RestoreKey; break;
+    }
+    mw->qsm.setValue(settingsKey, keycodes);
 
-
+    QLabel *targetLabel = ui->HotkeyAssignModeDisplay;
+    switch (targetHotkey) {
+    case UioHotkeyManager::ToggleKey:  targetLabel = ui->ToggleTabActiveAssignmentLabel; break;
+    case UioHotkeyManager::ResetKey:   targetLabel = ui->ResetTabActiveAssignmentLabel; break;
+    case UioHotkeyManager::RestoreKey: targetLabel = ui->RestoreTabActiveAssignmentLabel; break;
+    }
+    if (targetLabel)
+        targetLabel->setText(mw->uiohm.GetDisplayFromQListOfKeycodes(buffer));
 }
+
 
 
 void StopwatchInteractiveEditor::on_ToggleHotkeyRecordPushButton_clicked()

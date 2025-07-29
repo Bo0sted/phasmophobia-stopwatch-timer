@@ -24,6 +24,7 @@ public:
     void SetBackgroundOptionsEnabled(bool enabled);
     void RefreshToggleHotkeyPushButton();
     void RefreshToggleHotkeyAssignModeDisplay();
+    int GetActiveTabFromHotkeyGroup();
 signals:
     void toggleModuleSignal(bool shouldEnable);
 public slots:

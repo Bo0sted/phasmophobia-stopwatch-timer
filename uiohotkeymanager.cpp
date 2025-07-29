@@ -11,6 +11,7 @@
 
 const QList<int> UioHotkeyManager::DefaultToggleStopwatchHotkey = QList<int>{VC_1};
 const QList<int> UioHotkeyManager::DefaultResetStopwatchHotkey = QList<int>{VC_2};
+const QList<int> UioHotkeyManager::DefaultRestoreStopwatchHotkey = QList<int>{VC_3};
 
 UioHotkeyManager::UioHotkeyManager(MainWindow *mwr, UioEventLoop *loop)
     : QObject(mwr),
@@ -18,10 +19,13 @@ UioHotkeyManager::UioHotkeyManager(MainWindow *mwr, UioEventLoop *loop)
     eventLoop{loop},
     ToggleStopwatchHotkey{FetchToggleStopwatchHotkey()},
     ResetStopwatchHotkey{FetchResetStopwatchHotkey()},
+    RestoreStopwatchHotkey{FetchRestoreStopwatchHotkey()},
     hotkeyReassignMode(false),
     newAssignedHotkey(-1),
     activeModifiers{},
-    newModifiers{} {
+    newModifiers{},
+    totalElapsedSecondsBeforeReset{}
+{
     connect(eventLoop, &UioEventLoop::keyReleased, this, &UioHotkeyManager::onKeyReleased);
     connect(eventLoop, &UioEventLoop::keyPressed, this, &UioHotkeyManager::onKeyPressed);
     connect(eventLoop, &UioEventLoop::modifierPressed, this, &UioHotkeyManager::onModifierPressed);
@@ -46,10 +50,21 @@ QList<int> UioHotkeyManager::FetchResetStopwatchHotkey() {
     return (hotkey == false ? QList<int>{DefaultResetStopwatchHotkey} : hotkeyList.toList());
 }
 
+QList<int> UioHotkeyManager::FetchRestoreStopwatchHotkey()
+{
+    auto *qsm = &mw->qsm;
+    QVariant hotkey = qsm->getValue(qsm->RestoreKey);
+    QList<int> hotkeyList;
+    for (const QVariant &v : hotkey.toList())
+        hotkeyList.append(v.toInt());
+    return (hotkey == false ? QList<int>{DefaultRestoreStopwatchHotkey} : hotkeyList.toList());
+}
+
 void UioHotkeyManager::DeleteHotkey(AvailableHotkeys ah) {
     switch (ah) {
     case ToggleKey: ToggleStopwatchHotkey = DefaultToggleStopwatchHotkey; break;
     case ResetKey:  ResetStopwatchHotkey  = DefaultResetStopwatchHotkey;  break;
+    case RestoreKey:  RestoreStopwatchHotkey  = DefaultRestoreStopwatchHotkey;  break;
     }
 }
 
@@ -58,6 +73,7 @@ void UioHotkeyManager::FetchAndAssignHotkey(AvailableHotkeys ah) {
     switch (ah) {
     case ToggleKey: ToggleStopwatchHotkey = FetchToggleStopwatchHotkey(); break;
     case ResetKey:  ResetStopwatchHotkey  = FetchResetStopwatchHotkey();  break;
+    case RestoreKey:  RestoreStopwatchHotkey  = FetchRestoreStopwatchHotkey();  break;
     }
 }
 
@@ -66,25 +82,64 @@ void UioHotkeyManager::AssignHotkey(AvailableHotkeys ah, QList<int> hotkey) {
     switch (ah) {
     case ToggleKey: ToggleStopwatchHotkey = hotkey; break;
     case ResetKey:  ResetStopwatchHotkey  = hotkey; break;
+    case RestoreKey:  RestoreStopwatchHotkey  = hotkey; break;
     }
 }
 
-bool UioHotkeyManager::IsHotkeyAvailable(QList<int> hotkey, bool shouldAlertUser) {
-    if (hotkey == ToggleStopwatchHotkey || hotkey == ResetStopwatchHotkey) {
+bool listsEqual(QList<int> a, QList<int> b) {
+    std::sort(a.begin(), a.end());
+    std::sort(b.begin(), b.end());
+    return a == b;
+}
+
+bool UioHotkeyManager::IsHotkeyAvailable(QList<int> hotkey, AvailableHotkeys target, bool shouldAlertUser) {
+    // Ignore if reassigning to itself
+    QList<int> currentHotkey;
+    switch (target) {
+    case ToggleKey:  currentHotkey = ToggleStopwatchHotkey; break;
+    case ResetKey:   currentHotkey = ResetStopwatchHotkey; break;
+    case RestoreKey: currentHotkey = RestoreStopwatchHotkey; break;
+    }
+    if (listsEqual(hotkey, currentHotkey))
+        return true;
+
+    // Check against other hotkeys
+    if ((target != ToggleKey   && listsEqual(hotkey, ToggleStopwatchHotkey)) ||
+        (target != ResetKey    && listsEqual(hotkey, ResetStopwatchHotkey)) ||
+        (target != RestoreKey  && listsEqual(hotkey, RestoreStopwatchHotkey)))
+    {
         if (shouldAlertUser) {
-            QString message = QString("Sorry, %1 is already assigned.")
+            QString msg = QString("Sorry, %1 is already assigned.")
             .arg(GetDisplayFromQListOfKeycodes(hotkey));
-            QMessageBox::information(nullptr, "Hotkey Error", message);
+            QMessageBox::information(nullptr, "Hotkey Error", msg);
         }
         return false;
     }
+
     return true;
 }
 
-void UioHotkeyManager::SetHotkeyReassignMode(bool enabled) { hotkeyReassignMode = enabled; }
-bool UioHotkeyManager::GetHotkeyAssignMode() { return hotkeyReassignMode; }
-int UioHotkeyManager::GetHotkeyToReasign() { return newAssignedHotkey; }
-QList<int> UioHotkeyManager::GetNewModifiers() { return newModifiers; }
+
+
+void UioHotkeyManager::SetHotkeyReassignMode(bool enabled)
+{
+    hotkeyReassignMode = enabled;
+}
+
+bool UioHotkeyManager::GetHotkeyAssignMode()
+{
+    return hotkeyReassignMode;
+}
+
+int UioHotkeyManager::GetHotkeyToReasign()
+{
+    return newAssignedHotkey;
+}
+
+QList<int> UioHotkeyManager::GetNewModifiers()
+{
+    return newModifiers;
+}
 
 void UioHotkeyManager::ClearHotkeyAssignState() {
     newModifiers.clear();
@@ -103,6 +158,17 @@ QString UioHotkeyManager::GetDisplayFromQListOfKeycodes(QList<int> keycodes) {
     QStringList parts;
     for (int code : keycodes) parts << KeycodeToQString(code);
     return parts.join(" + ");
+}
+
+UioHotkeyManager::AvailableHotkeys UioHotkeyManager::GetHotkeyForCurrentTab()
+{
+    int tabIndex = mw->sie->GetActiveTabFromHotkeyGroup(); // however you get it
+    switch (tabIndex) {
+    case 0: return ToggleKey;
+    case 1: return ResetKey;
+    case 2: return RestoreKey;
+    default: return ToggleKey; // fallback
+    }
 }
 
 void UioHotkeyManager::UpdateHotkeySignalBlock(bool shouldBlockSignal) {
@@ -137,8 +203,9 @@ void UioHotkeyManager::onKeyReleased(int keycode, int rawcode) {
 
     if (hotkeyReassignMode) {
         newAssignedHotkey = translatedKeycode;
+        AvailableHotkeys targetHotkey = GetHotkeyForCurrentTab();
+        AssignHotkey(targetHotkey, GetHotkeyAssignBuffer());
         SetHotkeyReassignMode(false);
-        mw->sie->RefreshToggleHotkeyAssignModeDisplay();
         emit refreshHotkeyDisplays();
         return;
     }
@@ -146,7 +213,11 @@ void UioHotkeyManager::onKeyReleased(int keycode, int rawcode) {
     if (IsHotkeyMatch(translatedKeycode, ToggleStopwatchHotkey)) {
         ToggleStopwatch();
     } else if (IsHotkeyMatch(translatedKeycode, ResetStopwatchHotkey)) {
+        totalElapsedSecondsBeforeReset = mw->swm.elapsedSeconds;
         ResetStopwatch();
+    }
+    else if (IsHotkeyMatch(translatedKeycode, RestoreStopwatchHotkey)) {
+        RestoreStopwatch();
     }
 }
 
@@ -176,14 +247,32 @@ void UioHotkeyManager::ToggleStopwatch() {
     mw->RefreshStopwatchState(false);
 }
 
-void UioHotkeyManager::ResetStopwatch() { mw->swm.ResetStopwatch(); }
-void UioHotkeyManager::BringToForegroundStopwatch() { mw->show(); mw->activateWindow(); mw->raise(); }
+void UioHotkeyManager::ResetStopwatch()
+{
+    mw->swm.ResetStopwatch();
+}
+
+void UioHotkeyManager::RestoreStopwatch()
+{
+    mw->swm.elapsedSeconds = totalElapsedSecondsBeforeReset;
+}
+void UioHotkeyManager::BringToForegroundStopwatch()
+{
+    mw->show();
+    mw->activateWindow();
+    mw->raise();
+}
 
 int UioHotkeyManager::autoTranslateKeycode(const Hotkey &hotkey) {
     int translated = translateLinuxRawcodeToKeycode(hotkey.rawcode);
-    if (translated != VC_UNDEFINED) {
+
+    // Only trust translation for special keys
+    if (translated != VC_UNDEFINED &&
+        (translated >= VC_INSERT && translated <= VC_RIGHT)) {
         return translated;
     }
+
+    // Otherwise, fallback to normal keycode
     return hotkey.keycode;
 }
 

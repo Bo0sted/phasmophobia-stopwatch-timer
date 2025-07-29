@@ -13,6 +13,7 @@ QSettingsManager::QSettingsManager()
     : settings(QString("%1/%2").arg(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),"StopwatchSettings.ini"), QSettings::Format::IniFormat)
     , SettingsForHotkeyGroup{
         "Hotkeys/Reset",
+        "Hotkeys/Restore",
         "Hotkeys/ToggleOnOff"
           }
     , SettingsForStopwatchGroup{

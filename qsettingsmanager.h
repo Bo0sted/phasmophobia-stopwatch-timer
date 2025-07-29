@@ -12,6 +12,7 @@ class QSettingsManager
 public:
     enum SettingsForHotkeyGroupIndex {
         ResetKey,
+        RestoreKey,
         ToggleKey,
     };
     enum SettingsForStopwatchGroupIndex {

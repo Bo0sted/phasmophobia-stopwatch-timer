@@ -15,21 +15,24 @@ class UioHotkeyManager : public QObject {
 public:
     enum AvailableHotkeys {
         ToggleKey,
-        ResetKey
+        ResetKey,
+        RestoreKey
     };
 
     explicit UioHotkeyManager(MainWindow *mwr, UioEventLoop *loop);
 
     static const QList<int> DefaultToggleStopwatchHotkey;
     static const QList<int> DefaultResetStopwatchHotkey;
+    static const QList<int> DefaultRestoreStopwatchHotkey;
 
     QList<int> FetchToggleStopwatchHotkey();
     QList<int> FetchResetStopwatchHotkey();
+    QList<int> FetchRestoreStopwatchHotkey();
 
     void DeleteHotkey(AvailableHotkeys ah);
     void FetchAndAssignHotkey(AvailableHotkeys ah);
     void AssignHotkey(AvailableHotkeys ah, QList<int> hotkey);
-    bool IsHotkeyAvailable(QList<int> hotkey, bool shouldAlertUser = false);
+    bool IsHotkeyAvailable(QList<int> hotkey, AvailableHotkeys target, bool shouldAlertUser = false);
     bool IsHotkeyMatch(int keycode, const QList<int> &targetHotkey);
     QString IntToUioKeyName(QList<int> hotkey);
     void SetHotkeyReassignMode(bool enabled);
@@ -39,6 +42,7 @@ public:
     void ClearHotkeyAssignState();
     QList<int> GetHotkeyAssignBuffer();
     QString GetDisplayFromQListOfKeycodes(QList<int> keycodes);
+    AvailableHotkeys GetHotkeyForCurrentTab();
 
     // 🔹 Translation helpers
     int translateLinuxRawcodeToKeycode(int rawcode);
@@ -66,9 +70,12 @@ private:
 
     QList<int> ToggleStopwatchHotkey;
     QList<int> ResetStopwatchHotkey;
+    QList<int> RestoreStopwatchHotkey;
+    int totalElapsedSecondsBeforeReset;
 
     void ToggleStopwatch();
     void ResetStopwatch();
+    void RestoreStopwatch();
     void BringToForegroundStopwatch();
 };
 

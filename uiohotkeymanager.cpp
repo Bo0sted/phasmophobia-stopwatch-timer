@@ -180,15 +180,13 @@ void UioHotkeyManager::ResetStopwatch() { mw->swm.ResetStopwatch(); }
 void UioHotkeyManager::BringToForegroundStopwatch() { mw->show(); mw->activateWindow(); mw->raise(); }
 
 int UioHotkeyManager::autoTranslateKeycode(const Hotkey &hotkey) {
-    #ifdef _WIN32
-    return hotkey.rawcode;
-    #else
     int translated = translateLinuxRawcodeToKeycode(hotkey.rawcode);
-    if (translated != VC_UNDEFINED)
+    if (translated != VC_UNDEFINED) {
         return translated;
+    }
     return hotkey.keycode;
-#endif
 }
+
 int UioHotkeyManager::translateLinuxRawcodeToKeycode(int rawcode) {
     switch (rawcode) {
     case 65505: return VC_SHIFT_L;

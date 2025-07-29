@@ -205,6 +205,18 @@ int UioHotkeyManager::translateLinuxRawcodeToKeycode(int rawcode) {
     case 65364: return VC_DOWN;
     case 65361: return VC_LEFT;
     case 65363: return VC_RIGHT;
+
+    case 45: return VC_INSERT;
+    case 46: return VC_DELETE;
+    case 36: return VC_HOME;
+    case 35: return VC_END;
+    case 33: return VC_PAGE_UP;
+    case 34: return VC_PAGE_DOWN;
+    // Arrows on Windows
+    case 38: return VC_UP;
+    case 40: return VC_DOWN;
+    case 37: return VC_LEFT;
+    case 39: return VC_RIGHT;
     default: return VC_UNDEFINED;
     }
 }

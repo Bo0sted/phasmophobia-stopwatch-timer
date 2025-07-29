@@ -11,10 +11,10 @@ public:
     ~UioEventLoop();
 
 signals:
-    void keyPressed(int keycode);
-    void keyReleased(int keycode);
-    void modifierPressed(int keycode);
-    void modifierReleased(int keycode);
+    void keyPressed(int keycode, int rawcode);
+    void keyReleased(int keycode, int rawcode);
+    void modifierPressed(int keycode, int rawcode);
+    void modifierReleased(int keycode, int rawcode);
 private:
     static void dispatch_proc(uiohook_event * const event);
     void handleEvent(uiohook_event * const event);

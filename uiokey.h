@@ -2,6 +2,11 @@
 #include <QString>
 #include "uiohook.h"
 
+struct Hotkey {
+    int keycode; // VC_* code
+    int rawcode; // platform raw code
+};
+
 
 inline bool IsKeycodeModifierKey(int keycode, int rawcode) {
 #ifdef Q_OS_LINUX
@@ -256,9 +261,40 @@ inline int translateLinuxRawcodeToKeycode(int rawcode) {
     case 65508: return VC_CONTROL_R;
     case 65516: return VC_META_R;
     case 65514: return VC_ALT_R;
+
+    case 65360: return VC_HOME;
+    case 65367: return VC_END;
+    case 65365: return VC_PAGE_UP;
+    case 65366: return VC_PAGE_DOWN;
+    case 65361: return VC_LEFT;
+    case 65362: return VC_UP;
+    case 65363: return VC_RIGHT;
+    case 65364: return VC_DOWN;
     default: return VC_UNDEFINED;
     }
 }
+
+inline int translateKeycodeToLinuxRawcode(int keycode) {
+    switch (keycode) {
+    case VC_SHIFT_L:   return 65505;
+    case VC_CONTROL_L: return 65507;
+    case VC_META_L:    return 65515;
+    case VC_ALT_L:     return 65513;
+    case VC_SHIFT_R:   return 65506;
+    case VC_CONTROL_R: return 65508;
+    case VC_META_R:    return 65516;
+    case VC_ALT_R:     return 65514;
+    default:           return keycode; // fallback
+    }
+}
+
+inline int AutoTranslateKeycode(const Hotkey &hotkey) {
+    int translated = translateLinuxRawcodeToKeycode(hotkey.rawcode);
+    if (translated != VC_UNDEFINED)
+        return translated;
+    return hotkey.keycode;
+}
+
 inline UioKey IntToUioKey(int code) {
     switch (code) {
     case VC_UNDEFINED: return UioKey::NONE;
@@ -303,7 +339,6 @@ inline UioKey IntToUioKey(int code) {
     case VC_SEMICOLON: return UioKey::SEMICOLON;
     case VC_QUOTE: return UioKey::APOSTROPHE;
     case VC_BACKQUOTE: return UioKey::GRAVE;
-    case VC_SHIFT_L: return UioKey::LSHIFT;
     case VC_BACK_SLASH: return UioKey::BACKSLASH;
     case VC_Z: return UioKey::Z;
     case VC_X: return UioKey::X;
@@ -315,6 +350,7 @@ inline UioKey IntToUioKey(int code) {
     case VC_COMMA: return UioKey::COMMA;
     case VC_PERIOD: return UioKey::PERIOD;
     case VC_SLASH: return UioKey::SLASH;
+    case VC_SHIFT_L: return UioKey::LSHIFT;
     case VC_SHIFT_R: return UioKey::RSHIFT;
     case VC_KP_MULTIPLY: return UioKey::KP_MULTIPLY;
     case VC_ALT_L: return UioKey::LALT;
@@ -330,6 +366,8 @@ inline UioKey IntToUioKey(int code) {
     case VC_F8: return UioKey::F8;
     case VC_F9: return UioKey::F9;
     case VC_F10: return UioKey::F10;
+    case VC_F11: return UioKey::F11;
+    case VC_F12: return UioKey::F12;
     case VC_NUM_LOCK: return UioKey::NUM_LOCK;
     case VC_SCROLL_LOCK: return UioKey::SCROLL_LOCK;
     case VC_KP_7: return UioKey::KP_7;
@@ -345,13 +383,12 @@ inline UioKey IntToUioKey(int code) {
     case VC_KP_3: return UioKey::KP_3;
     case VC_KP_0: return UioKey::KP_0;
     case VC_KP_SEPARATOR: return UioKey::KP_PERIOD;
-    case VC_F11: return UioKey::F11;
-    case VC_F12: return UioKey::F12;
     case VC_KP_DIVIDE: return UioKey::KP_DIVIDE;
     case VC_KP_ENTER: return UioKey::KP_ENTER;
     case VC_CONTROL_R: return UioKey::RCTRL;
     case VC_ALT_R: return UioKey::RALT;
     case VC_HOME: return UioKey::HOME;
+    case 3653: return UioKey::HOME;
     case VC_UP: return UioKey::UP;
     case VC_PAGE_UP: return UioKey::PAGE_UP;
     case VC_LEFT: return UioKey::LEFT;

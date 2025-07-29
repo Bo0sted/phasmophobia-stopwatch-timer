@@ -336,8 +336,11 @@ bool MainWindow::event(QEvent *event)
 
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
         SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(uiohm.GetDisplayFromQListOfKeycodes(uiohm.FetchToggleStopwatchHotkey())));
-        qDebug() << "Fetch toggle: "<< uiohm.FetchToggleStopwatchHotkey();
-        qDebug() << "Get display: "<< uiohm.GetDisplayFromQListOfKeycodes(uiohm.FetchToggleStopwatchHotkey());
+        QList<int> hotkey = uiohm.FetchToggleStopwatchHotkey();
+        if (!hotkey.isEmpty()) {
+            int mainKey = hotkey.last();
+            qDebug() << "Fetch toggle:" << translateKeycodeToLinuxRawcode(mainKey);
+        }        qDebug() << "Get display: "<< uiohm.GetDisplayFromQListOfKeycodes(uiohm.FetchToggleStopwatchHotkey());
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
 
         {

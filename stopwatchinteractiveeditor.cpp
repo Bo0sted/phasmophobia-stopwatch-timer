@@ -100,6 +100,8 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->formatTimeComboBox->setCurrentIndex(mw->GetFormatMode());
 
         ui->ToggleHotkeyRecordPushButton->setFocusPolicy(Qt::NoFocus);
+        ui->FontPickerCombo->setFocusPolicy(Qt::NoFocus);
+        ui->SettingsTabWidget->setFocusPolicy(Qt::NoFocus);
 
     }
 

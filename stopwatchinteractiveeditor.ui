@@ -92,6 +92,9 @@
          <height>200</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
        <property name="tabPosition">
         <enum>QTabWidget::TabPosition::North</enum>
        </property>

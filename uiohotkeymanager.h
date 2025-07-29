@@ -3,11 +3,12 @@
 
 #include <QObject>
 #include <QString>
-
 #include "uiohook.h"
+#include "uiokey.h"
 
 class MainWindow;
 class UioEventLoop;
+
 
 class UioHotkeyManager : public QObject {
     Q_OBJECT
@@ -39,14 +40,22 @@ public:
     QList<int> GetHotkeyAssignBuffer();
     QString GetDisplayFromQListOfKeycodes(QList<int> keycodes);
 
+    // 🔹 Translation helpers
+    int translateLinuxRawcodeToKeycode(int rawcode);
+    int translateKeycodeToLinuxRawcode(int keycode);
+    int autoTranslateKeycode(const Hotkey &hk);
+
     void UpdateHotkeySignalBlock(bool shouldBlockSignal = true);
+
 signals:
     void refreshHotkeyDisplays();
+
 private slots:
-    void onKeyPressed(int keycode);
-    void onKeyReleased(int keycode);
-    void onModifierPressed(int keycode);
-    void onModifierReleased(int keycode);
+    void onKeyPressed(int keycode, int rawcode);
+    void onKeyReleased(int keycode, int rawcode);
+    void onModifierPressed(int keycode, int rawcode);
+    void onModifierReleased(int keycode, int rawcode);
+
 private:
     MainWindow *mw;
     UioEventLoop *eventLoop;

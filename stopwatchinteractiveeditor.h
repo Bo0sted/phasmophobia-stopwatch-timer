@@ -35,8 +35,6 @@ private slots:
 
     void on_FontPickerResetButton_clicked();
 
-    void on_ResetTabApplyNewHotkey_clicked();
-
     void on_closeWindow_clicked();
 
     void on_quitStopwatch_clicked();

@@ -119,8 +119,6 @@ bool UioHotkeyManager::IsHotkeyAvailable(QList<int> hotkey, AvailableHotkeys tar
     return true;
 }
 
-
-
 void UioHotkeyManager::SetHotkeyReassignMode(bool enabled)
 {
     hotkeyReassignMode = enabled;

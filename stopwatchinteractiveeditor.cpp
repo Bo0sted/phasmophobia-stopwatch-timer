@@ -234,15 +234,6 @@ void StopwatchInteractiveEditor::on_FontPickerResetButton_clicked()
 
 
 
-void StopwatchInteractiveEditor::on_ResetTabApplyNewHotkey_clicked()
-{
-    // if (mw->uiohm.IsHotkeyAvailable(ui->ResetTabHotkeyInput->keySequence().toString(),true)) {
-    //     QString hotkeyName = ui->ResetTabHotkeyInput->keySequence().toString();
-    //     mw->uiohm.AssignHotkey(UioHotkeyManager::AvailableHotkeys::ResetKey,hotkeyName);
-    //     ui->ResetTabActiveAssignmentLabel->setText(hotkeyName);
-    //     mw->qsm.setValue(QSettingsManager::ResetKey,hotkeyName);
-    // }
-}
 
 
 

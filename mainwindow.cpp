@@ -329,7 +329,7 @@ bool MainWindow::event(QEvent *event)
 {
     if (event->type() == QEvent::Polish) {
         if (qsm.ShouldPostPing())
-            //um.PostAnonymousUsageLog();
+            um.PostAnonymousUsageLog();
 
         if (qsm.ShouldCheckUpdate())
             um.CheckForUpdateAndPromptUser();

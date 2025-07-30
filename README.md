@@ -2,6 +2,31 @@
 
 # Welcome to Crossplatform Stopwatch:
 
+# Install instructions
+## Windows
+- Setup exe coming soon...
+## Linux
+### Prerequisites: Install build tools and ensure compatibility
+You must be running X11 or something comparable to Xwayland. Please see [caveat for running on Linux](#running-on-linux)
+- Arch / EndeavourOS / Manjaro
+  - `sudo pacman -S --needed git cmake base-devel qt6`
+- Debian/Ubuntu
+  - `sudo apt install git cmake build-essential qt6-base-dev qt6-base-dev-tools -y`
+- Fedora
+  - `sudo dnf install git cmake gcc-c++ make qt6-qtbase-devel -y`
+### Step 1: Clone
+`git clone https://github.com/Bo0sted/CrossplatformStopwatch.git
+cd CrossplatformStopwatch`
+### Step 2: Create a build folder
+`mkdir build
+cd build`
+### Step 3: Run CMake
+`cmake ..`
+### Step 4: Compile
+`make`
+### Step 5: Launch app
+`./CrossPlatformStopwatch`
+
 ## How to use
 - Press 1 to Toggle timer on/off
 - Press 2 to Reset timer
@@ -50,9 +75,31 @@
 - This project uses libuiohook, which is dependent on the [X11 protocol](https://is.gd/GhPqpn). As a result, your Linux installation must either be running X11 as its display protocol or running Wayland with an X11 compatibility layer on top of it like [Xwayland](https://wiki.archlinux.org/title/Wayland)
   **- Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.**
 
-### Understanding the need for internet connectivity
-If an internet connection is available, the stopwatch will attempt to connect at startup for two specific reasons:
-- First connection is to Github.com, and it checks the [version](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/version/version) file for the "official" version of this app.
+# License
+This project is licensed under the GNU General Public License version 3.0 (GPL‑3.0). It is a copyleft license that ensures the software remains free and open for all users.
+
+Key terms of GPL‑3.0:
+
+    You are free to use, copy, modify, and distribute the software for any purpose, including commercial use.
+
+    If you distribute the software in modified form or as a compiled binary, you must also provide the complete corresponding source code.
+
+    Any distributed version, modified or unmodified, must remain under the GPL‑3.0 license. You cannot relicense it under a proprietary or more restrictive license.
+
+    Contributors grant a patent license for any patents that their contributions might cover.
+
+    The license includes an anti‑tivoization clause, which means that if the software is distributed on hardware that restricts modification, you must still allow users to install and run modified versions.
+
+    Additional restrictions that limit the rights granted by GPL‑3.0 cannot be applied.
+
+The full text of the license is available here: https://www.gnu.org/licenses/gpl-3.0.en.html
+
+By contributing to this project, you agree that your contributions will be licensed under GPL‑3.0.
+For more details, see the full license text here: https://www.gnu.org/licenses/gpl-3.0.en.html
+
+### Transparency about remote capabilities
+When launching the app (and a period of 2 hours has passed since last connection), if an internet connection is available, the stopwatch will attempt exactly two network requests: 
+- First connection is to this website, github.com, and it checks the [version](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/version/version) file for the "official" version of this app.
 - Next connection is to my humble [worker](https://workers.cloudflare.com/) server that collects a generic and anonymous log about your system.
   - The log consists of:
     - The name of your operating system. If you run Linux, this will probably include the name of your distro.
@@ -64,17 +111,10 @@ If an internet connection is available, the stopwatch will attempt to connect at
     - The function that handles this logging can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
 
 ### Why the log?
-Because it's interesting. There is no ulterior motive. It's interesting to know how many people are using my app and from what parts of the world.
+As somebody who takes my own privacy very seriously I would never try to infringe on the privacy of somebody else. With that being said I am naturally a curious person, and quite frankly, I think it's really interesting to see roughly how many people use my app and from what parts of the world! That is why I designed these logs to be as privacy friendly as possible, and why I am being so transparent about it.
 
 ### Can I disable them?
-As of right now, I haven't added a way to disable the logs just yet since I haven't officially released anything yet. But once I do make an official release, the option will be there. If you are downloading my code and building it yourself, you may go to this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332), comment it out and the logging functionality will be completely disabled.
-
-# Install instructions
-coming soon...
-
-# License
-Licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html).
-
+As of right now since there isn't any public release yet, I haven't gotten around to adding the code that disables it. But once I do make an official release, the functionality will be there. If you're compiling my code for yourself, you may go to this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332), comment it out and the logging functionality will be completely disabled.
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)

@@ -44,30 +44,27 @@
 # Caveats
 
 ## Regarding MacOS support
-- This project is compatible on MacOS, but it requires work. Unfortunately, I do not have a Mac (nor would I ever purchase one) so unfortunately no releases or extra support will be added for MacOS. However, if you have a Macbook and some time, this project will compile on a Mac. All that needs to be done is adding raw scan code translations for libuiohook since its an old library and some of the keycodes that are defined in it are outdated and do not register properly. I did this for Linux and Windows since I have access to both types of machines, but a Mac is something im not willing to touch.
+- This project (should) compile on Mac. It uses the Qt framework and libuiohook, both of which are cross platform. The problem with Mac is I don't personally have one, and in order to release anything related to Mac I need to own one since virtualizing that platform is not really possible. After compiling, the program should run and register hotkeys 100% fine, but the issue is many of the keys that are defined in libuiohook are outdated and no longer correspond with the operating system. That means when you go to register a hotkey, instead of showing the name of the key that's registered, it'll simply show "Unknown". If this is not an issue for you, then all you need to do is compile the code and everything should work fine.
 
 ## Running on Linux
-- This project uses a hotkey library that is dependent on X11. As a result, your Linux installation must either be running X11 as its display protocl or Wayland with an X11 compatibility layer on top of it like [Xwayland](https://wiki.archlinux.org/title/Wayland)
-  - Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.
+- This project uses libuiohook, which is dependent on the [X11 protocol](https://is.gd/GhPqpn). As a result, your Linux installation must either be running X11 as its display protocol or running Wayland with an X11 compatibility layer on top of it like [Xwayland](https://wiki.archlinux.org/title/Wayland)
+  **- Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.**
 
 ## Understanding the need for internet connectivity
-If an internet connection is available, the stopwatch will attempt to connect during these two specific scenarios:
-- Everytime the program starts up, it connects to Github.com, looks at this repository and checks the [version](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/version/version) file for the latest version of this program.
-- Every time the program starts up it will also attempt to post an anonymous usage log.
-  - The code that handles this logging can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
-  - But the log only consists of:
+If an internet connection is available, the stopwatch will attempt to connect at startup for two specific reasons:
+- First connection is to Github.com, and it checks the [version](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/version/version) file for the "official" version of this app.
+- Next connection is to my humble [worker](https://workers.cloudflare.com/) server that collects a generic and anonymous log about your system.
+  - The log consists of:
     - The name of your operating system. If you run Linux, this will probably include the name of your distro.
-    - The version of your program.
+    - Program version.
     - Your UUID. This is a randomly generated combination of letters and numbers to distinguish your anonymous log from other people. It is generated when the program starts up and doesn't detect a UUID in your config file.
       - The code for UUID generation can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/qsettingsmanager.cpp#L281)
     - Your country code. This information is obtained 100% offline by looking at the language of your system.
     - And last but not least a unix timestamp
+    - The function that handles this logging can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
 
-
-That's it! I a am privacy concious person myself so I designed these logs to be as privacy friendly as possible.
-
-### But why the ping log?
-Because it's interesting. There is no ulterior motive. It's simply interesting to get an idea of how many people are using my program and from what regions of the world!
+### Why the log?
+Because it's interesting. There is no ulterior motive. It's interesting to know how many people are using my app and from what parts of the world.
 
 ### Can I disable them?
 As of right now, I haven't added a way to disable the logs just yet since I haven't officially released anything yet. But once I do make an official release, the option will be there. If you are downloading my code and building it yourself, you may go to this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332), comment it out and the logging functionality will be completely disabled.

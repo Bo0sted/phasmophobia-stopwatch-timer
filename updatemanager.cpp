@@ -75,8 +75,7 @@ void UpdateManager::PostAnonymousUsageLog()
     json["uuid"] = mw->qsm.FetchUUID();
     QLocale locale;
     json["country"] = QLocale::countryToString(locale.country());
-    //Using server timestamp instead
-    //json["timestamp"] = QDateTime::currentSecsSinceEpoch();
+    json["timestamp"] = QDateTime::currentSecsSinceEpoch();
 
     QJsonDocument doc(json);
     QByteArray data = doc.toJson();

@@ -93,31 +93,28 @@ bool listsEqual(QList<int> a, QList<int> b) {
 }
 
 bool UioHotkeyManager::IsHotkeyAvailable(QList<int> hotkey, AvailableHotkeys target, bool shouldAlertUser) {
-    // Ignore if reassigning to itself
-    QList<int> currentHotkey;
-    switch (target) {
-    case ToggleKey:  currentHotkey = ToggleStopwatchHotkey; break;
-    case ResetKey:   currentHotkey = ResetStopwatchHotkey; break;
-    case RestoreKey: currentHotkey = RestoreStopwatchHotkey; break;
-    }
-    if (listsEqual(hotkey, currentHotkey))
-        return true;
+    QString conflictName;
 
-    // Check against other hotkeys
-    if ((target != ToggleKey   && listsEqual(hotkey, ToggleStopwatchHotkey)) ||
-        (target != ResetKey    && listsEqual(hotkey, ResetStopwatchHotkey)) ||
-        (target != RestoreKey  && listsEqual(hotkey, RestoreStopwatchHotkey)))
-    {
+    if (listsEqual(hotkey, ToggleStopwatchHotkey))
+        conflictName = "Toggle Stopwatch";
+    else if (listsEqual(hotkey, ResetStopwatchHotkey))
+        conflictName = "Reset Stopwatch";
+    else if (listsEqual(hotkey, RestoreStopwatchHotkey))
+        conflictName = "Restore Stopwatch";
+
+    if (!conflictName.isEmpty()) {
         if (shouldAlertUser) {
-            QString msg = QString("Sorry, %1 is already assigned.")
-            .arg(GetDisplayFromQListOfKeycodes(hotkey));
-            QMessageBox::information(nullptr, "Hotkey Error", msg);
+            QMessageBox::information(nullptr, "Hotkey error", QString("Sorry, %1 is already assigned to %2.")
+            .arg(GetDisplayFromQListOfKeycodes(hotkey))
+            .arg(conflictName));
         }
         return false;
     }
 
     return true;
 }
+
+
 
 void UioHotkeyManager::SetHotkeyReassignMode(bool enabled)
 {
@@ -201,9 +198,6 @@ void UioHotkeyManager::onKeyReleased(int keycode, int rawcode) {
 
     if (hotkeyReassignMode) {
         newAssignedHotkey = translatedKeycode;
-        AvailableHotkeys targetHotkey = GetHotkeyForCurrentTab();
-        AssignHotkey(targetHotkey, GetHotkeyAssignBuffer());
-        SetHotkeyReassignMode(false);
         emit refreshHotkeyDisplays();
         return;
     }

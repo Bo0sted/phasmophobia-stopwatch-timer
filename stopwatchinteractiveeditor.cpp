@@ -498,8 +498,13 @@ void StopwatchInteractiveEditor::on_AssignToggleHotkeyPushButton_clicked()
         return;
     }
 
-    if (!mw->uiohm.IsHotkeyAvailable(buffer, targetHotkey, true))
+    if (!mw->uiohm.IsHotkeyAvailable(buffer, targetHotkey, true)) {
+        mw->uiohm.AssignHotkey(targetHotkey, buffer);
+        mw->uiohm.ClearHotkeyAssignState();
+        mw->uiohm.SetHotkeyReassignMode(false);
+        RefreshToggleHotkeyPushButton();
         return;
+    }
 
     mw->uiohm.SetHotkeyReassignMode(false);
     RefreshToggleHotkeyPushButton();

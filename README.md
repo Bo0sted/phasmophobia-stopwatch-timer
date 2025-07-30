@@ -1,25 +1,28 @@
 <img width="1469" height="777" alt="image" src="https://github.com/user-attachments/assets/6a941f6e-9742-4c52-9898-2996d65babe5" />
 
-# Welcome to Crossplatform Stopwatch:
+# Welcome to Crossplatform Stopwatch
 
 # Install instructions
 ## Windows
 - Setup exe coming soon...
 ## Linux
 ### Prerequisites: Install build tools and ensure compatibility
-You must be running X11 or something comparable to Xwayland. Please see [caveat for running on Linux](#running-on-linux)
-- Arch / EndeavourOS / Manjaro
-  - `sudo pacman -S --needed git cmake base-devel qt6`
-- Debian/Ubuntu
-  - `sudo apt install git cmake build-essential qt6-base-dev qt6-base-dev-tools -y`
-- Fedora
-  - `sudo dnf install git cmake gcc-c++ make qt6-qtbase-devel -y`
+- You must be running X11 or something comparable to Xwayland. Please see [caveat for running on Linux](#running-on-linux)
+- After ensuring you have the proper setup, install the necessary tools:
+  - **Arch / EndeavourOS / Manjaro**
+    - `sudo pacman -S --needed git cmake base-devel qt6`
+  - **Debian/Ubuntu**
+    - `sudo apt install git cmake build-essential qt6-base-dev qt6-base-dev-tools -y`
+  - **Fedora**
+    - `sudo dnf install git cmake gcc-c++ make qt6-qtbase-devel -y`
 ### Step 1: Clone
-`git clone https://github.com/Bo0sted/CrossplatformStopwatch.git
-cd CrossplatformStopwatch`
+`git clone https://github.com/Bo0sted/CrossplatformStopwatch.git`
+
+`cd CrossplatformStopwatch`
 ### Step 2: Create a build folder
-`mkdir build
-cd build`
+`mkdir build`
+
+`cd build`
 ### Step 3: Run CMake
 `cmake ..`
 ### Step 4: Compile

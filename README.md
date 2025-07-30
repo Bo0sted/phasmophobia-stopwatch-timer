@@ -43,14 +43,14 @@
 
 # Caveats
 
-## Regarding MacOS support
+### MacOS support
 - This project (should) compile on Mac. It uses the Qt framework and libuiohook, both of which are cross platform. The problem with Mac is I don't personally have one, and in order to release anything related to Mac I need to own one since virtualizing that platform is not really possible. After compiling, the program should run and register hotkeys 100% fine, but the issue is many of the keys that are defined in libuiohook are outdated and no longer correspond with the operating system. That means when you go to register a hotkey, instead of showing the name of the key that's registered, it'll simply show "Unknown". If this is not an issue for you, then all you need to do is compile the code and everything should work fine.
 
-## Running on Linux
+### Running on Linux
 - This project uses libuiohook, which is dependent on the [X11 protocol](https://is.gd/GhPqpn). As a result, your Linux installation must either be running X11 as its display protocol or running Wayland with an X11 compatibility layer on top of it like [Xwayland](https://wiki.archlinux.org/title/Wayland)
   **- Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.**
 
-## Understanding the need for internet connectivity
+### Understanding the need for internet connectivity
 If an internet connection is available, the stopwatch will attempt to connect at startup for two specific reasons:
 - First connection is to Github.com, and it checks the [version](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/version/version) file for the "official" version of this app.
 - Next connection is to my humble [worker](https://workers.cloudflare.com/) server that collects a generic and anonymous log about your system.

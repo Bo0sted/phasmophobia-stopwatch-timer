@@ -41,6 +41,15 @@
 - Multi-threaded design to ensure the time is never delayed and user interface is responsive and fluid.
 - Using libuiohook to handle global hotkeys in a non-blocking fashion. This is a major improvement over QHotkey, which I used in version 1.3 and below. While Qhotkey was super easy and intuitive to use, it came with many limiations like no numpad key support and worst of all it handled keys in an exclusive fashion. Keys would not get passed onto other programs once the stopwatch captured the key.
 
+# Caveats
+
+## Regarding MacOS support
+- This project is compatible on MacOS, but it requires work. Unfortunately, I do not have a Mac (nor would I ever purchase one) so unfortunately no releases or extra support will be added for MacOS. However, if you have a Macbook and some time, this project will compile on a Mac. All that needs to be done is adding raw scan code translations for libuiohook since its an old library and some of the keycodes that are defined in it are outdated and do not register properly. I did this for Linux and Windows since I have access to both types of machines, but a Mac is something im not willing to touch.
+
+## Running on Linux
+- This project uses a hotkey library that is dependent on X11. As a result, your Linux installation must either be running X11 as its display protocl or Wayland with an X11 compatibility layer on top of it like [Xwayland](https://wiki.archlinux.org/title/Wayland)
+  - Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.
+
 ## Understanding the need for internet connectivity
 If an internet connection is available, the stopwatch will attempt to connect during these two specific scenarios:
 - Everytime the program starts up, it connects to Github.com, looks at this repository and checks the [version](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/version/version) file for the latest version of this program.

@@ -4,7 +4,7 @@
 
 # Install instructions
 ## Windows
-- Setup exe coming soon...
+- Setup installer coming soon...
 ## Linux
 ### Prerequisites: Install build tools and ensure compatibility
 - You must be running X11 or something comparable to Xwayland. Please see [caveat for running on Linux](#running-on-linux)
@@ -30,6 +30,25 @@
 ### Step 5: Launch app
 `./CrossPlatformStopwatch`
 
+## Running on Linux
+### X11 and its relevance to this app
+- This project uses libuiohook, which is dependent on the [X11 protocol](https://is.gd/GhPqpn). As a result, your Linux installation must either be running X11 as its display protocol or running Wayland with an X11 compatibility layer on top of it like [Xwayland](https://wiki.archlinux.org/title/Wayland)
+  **- Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.**
+### Important notice about registering hotkeys specifically on Linux:
+- It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the global hothey **immediately** instead of queueing it up and processing it as a passive key grab. If you are experiencing hotkey delay issues, or issues with hotkeys not working at all, please consider registering with a modifier. 
+__Exapmle__
+Hotkey: Number 9
+X11 response while app not in focus: **delayed**
+
+Hotkey: Shift + Number 9
+X11 response while app not in focus: **instant**
+
+Hotkey: Shift
+X11 response while app not in focus: **instant**
+
+Hotkey: Letter H
+X11 response while app not in focus: **instant**
+ 
 ## How to use
 - Press 1 to Toggle timer on/off
 - Press 2 to Reset timer
@@ -73,10 +92,6 @@
 
 ### MacOS support
 - This project (should) compile on Mac. It uses the Qt framework and libuiohook, both of which are cross platform. The problem with Mac is I don't personally have one, and in order to release anything related to Mac I need to own one since virtualizing that platform is not really possible. After compiling, the program should run and register hotkeys 100% fine, but the issue is many of the keys that are defined in libuiohook are outdated and no longer correspond with the operating system. That means when you go to register a hotkey, instead of showing the name of the key that's registered, it'll simply show "Unknown". If this is not an issue for you, then all you need to do is compile the code and everything should work fine.
-
-### Running on Linux
-- This project uses libuiohook, which is dependent on the [X11 protocol](https://is.gd/GhPqpn). As a result, your Linux installation must either be running X11 as its display protocol or running Wayland with an X11 compatibility layer on top of it like [Xwayland](https://wiki.archlinux.org/title/Wayland)
-  **- Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.**
 
 # License
 This project is licensed under the GNU General Public License version 3.0 (GPL‑3.0). It is a copyleft license that ensures the software remains free and open for all users.

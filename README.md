@@ -36,18 +36,20 @@
   **- Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.**
 ### Important notice about registering hotkeys specifically on Linux:
 - It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used in a global hotkey. If you are experiencing hotkey delay issues, or issues with hotkeys not working at all, please consider registering your hotkeys with a modifier. 
-__Exapmle__
-Hotkey: Number 9
+
+__**Example**__
+Hotkey: `Number 9`
 X11 response while app not in focus: **delayed**
+X11 response while app is focused: **instant**
 
-Hotkey: Shift + Number 9
-X11 response while app not in focus: **instant**
+Hotkey: `Shift + Number 9`
+X11 response while not in focus: **instant**
 
-Hotkey: Shift
-X11 response while app not in focus: **instant**
+Hotkey: `Shift`
+X11 response while not in focus: **instant**
 
-Hotkey: Letter H
-X11 response while app not in focus: **instant**
+Hotkey: `Letter H`
+X11 response while not in focus: **instant**
  
 ## How to use
 - Press 1 to Toggle timer on/off

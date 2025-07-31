@@ -35,6 +35,7 @@ void StopwatchManager::StopwatchThread()
 {
     qDebug() << "Stopwatch Thread initialized";
     while (!isDeconstructing) {
+        QThread::msleep(100);
         while (!pauseStopwatch && !isDeconstructing) {
             if (pauseStopwatch)
                 break;

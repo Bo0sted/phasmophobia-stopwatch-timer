@@ -9,9 +9,9 @@
 #include <QMessageBox>
 #include <QDebug>
 
-const QList<int> UioHotkeyManager::DefaultToggleStopwatchHotkey = QList<int>{VC_1};
-const QList<int> UioHotkeyManager::DefaultResetStopwatchHotkey = QList<int>{VC_2};
-const QList<int> UioHotkeyManager::DefaultRestoreStopwatchHotkey = QList<int>{VC_3};
+const QList<int> UioHotkeyManager::DefaultToggleStopwatchHotkey = QList<int>{VC_SHIFT_L,VC_1};
+const QList<int> UioHotkeyManager::DefaultResetStopwatchHotkey = QList<int>{VC_SHIFT_L,VC_2};
+const QList<int> UioHotkeyManager::DefaultRestoreStopwatchHotkey = QList<int>{VC_SHIFT_L,VC_3};
 
 UioHotkeyManager::UioHotkeyManager(MainWindow *mwr, UioEventLoop *loop)
     : QObject(mwr),
@@ -194,6 +194,7 @@ void UioHotkeyManager::onKeyPressed(int keycode, int rawcode) {
 }
 
 void UioHotkeyManager::onKeyReleased(int keycode, int rawcode) {
+    qDebug() << "Key released:" << keycode << rawcode;
     int translatedKeycode = autoTranslateKeycode(Hotkey{keycode, rawcode});
 
     if (hotkeyReassignMode) {

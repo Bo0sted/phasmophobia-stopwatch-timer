@@ -25,7 +25,7 @@ public:
     StopwatchManager(MainWindow *mwr);
     ~StopwatchManager();
     void ResetStopwatch();
-    int elapsedSeconds;
+    std::atomic<int> elapsedSeconds;
 signals:
     void updateElapsedTime(const int &time); // Signal to update elapsed time
     void updateRainbowColor(const QColor& color);

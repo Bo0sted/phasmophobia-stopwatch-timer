@@ -194,7 +194,6 @@ void UioHotkeyManager::onKeyPressed(int keycode, int rawcode) {
 }
 
 void UioHotkeyManager::onKeyReleased(int keycode, int rawcode) {
-    qDebug() << "Key released:" << keycode << rawcode;
     int translatedKeycode = autoTranslateKeycode(Hotkey{keycode, rawcode});
 
     if (hotkeyReassignMode) {

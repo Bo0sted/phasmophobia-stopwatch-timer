@@ -32,7 +32,7 @@ void SystemTimeModule::showEvent(QShowEvent *event)
     event->accept();
     QString style = StylesheetGenerator::NewModuleOutputStylesheet(mw->qsm.FetchClockFontColor());
     ui->SystemTimeLabel->setStyleSheet(style);
-    UpdateClockFont(mw->qsm.FetchClockFont(), 25);
+    UpdateClockFont(mw->qsm.FetchClockFont(), mw->qsm.FetchClockFontSize());
 
 }
 
@@ -110,6 +110,11 @@ bool SystemTimeModule::CheckIfModuleIsEnabled()
 void SystemTimeModule::RefreshModuleState()
 {
     this->setVisible(enabled);
+}
+
+int SystemTimeModule::GetCurrentFontSize()
+{
+    return ui->SystemTimeLabel->font().pointSize();
 }
 
 void SystemTimeModule::updateClock(const QString &time)

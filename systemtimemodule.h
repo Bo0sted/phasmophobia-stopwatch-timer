@@ -22,6 +22,8 @@ public:
     QFont GetCurrentFont();
     bool CheckIfModuleIsEnabled();
     void RefreshModuleState();
+    int GetCurrentFontSize();
+        void ResizeClockToFitWindow();
 signals:
     void signalRefreshClock(const QString &time); // Signal to update elapsed time
 public slots:
@@ -40,7 +42,7 @@ private:
     void closeEvent(QCloseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
-    void ResizeClockToFitWindow();
+
 };
 
 #endif // SYSTEMTIMEMODULE_H

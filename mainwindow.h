@@ -76,6 +76,7 @@ public:
 
     int GetRainbowMode();
     void SetRainbowMode(int index);
+    void ResizeWindowToFitStopwatch();
 
     StopwatchManager::FormatModes GetFormatMode();
     void SetFormatMode(StopwatchManager::FormatModes fm);
@@ -92,7 +93,6 @@ private:
     Ui::MainWindow *ui;
     QPointF oldPosition;
     QFuture<void> stopwatchUpdateRespondThread;
-    void ResizeWindowToFitStopwatch();
     QString FormatTime(int totalSeconds);
 
     QColor stopwatchFontColor;

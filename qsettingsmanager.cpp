@@ -21,6 +21,7 @@ QSettingsManager::QSettingsManager()
         "Stopwatch/StopwatchBackgroundColor",
         "Stopwatch/StopwatchFont",
         "Stopwatch/StopwatchFontColor",
+        "Stopwatch/StopwatchFontSize",
         "Stopwatch/StopwatchPausedFontColor",
         "Stopwatch/StopwatchResetFontColor",
         "Stopwatch/StopwatchBorderColor",
@@ -31,6 +32,7 @@ QSettingsManager::QSettingsManager()
       }
     , SettingsForClockGroup{
         "System-Clock-Module/ClockFont",
+        "System-Clock-Module/ClockFontSize",
         "System-Clock-Module/ClockFontColor",
         "System-Clock-Module/ClockBackgroundColor",
         "System-Clock-Module/IsClockEnabled",
@@ -184,6 +186,22 @@ QString QSettingsManager::FetchStopwatchFont()
     else return val.toString();
 }
 
+int QSettingsManager::FetchStopwatchFontSize()
+{
+    QVariant val = getValue(StopwatchFontSize);
+
+    if (val == false) return 24;
+    else return val.toInt();
+}
+
+int QSettingsManager::FetchClockFontSize()
+{
+    QVariant val = getValue(ClockFontSize);
+
+    if (val == false) return 24;
+    else return val.toInt();
+}
+
 QString QSettingsManager::FetchClockFont()
 {
     QVariant val = getValue(ClockFont);
@@ -191,6 +209,8 @@ QString QSettingsManager::FetchClockFont()
     if (val == false) return StylesheetGenerator::DefaultFont.toString();
     else return val.toString();
 }
+
+
 
 QString QSettingsManager::FetchClockFontColor()
 {

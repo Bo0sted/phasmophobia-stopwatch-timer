@@ -20,6 +20,7 @@ public:
         StopwatchBackgroundColor,
         StopwatchFont,
         StopwatchFontColor,
+        StopwatchFontSize,
         StopwatchPausedFontColor,
         StopwatchResetFontColor,
         StopwatchBorderColor,
@@ -31,6 +32,7 @@ public:
     };
     enum SettingsForClockGroupIndex {
         ClockFont,
+        ClockFontSize,
         ClockFontColor,
         ClockBackgroundColor,
         IsClockEnabled,
@@ -69,7 +71,9 @@ public:
     QString FetchResetStopwatchFontColor();
     QString FetchStopwatchBackground();
     QString FetchStopwatchFont();
+    int FetchStopwatchFontSize();
     QString FetchClockFont();
+    int FetchClockFontSize();
     QString FetchClockFontColor();
     QString FetchStopwatchBackgroundColor();
     QString FetchStopwatchBorderColor();

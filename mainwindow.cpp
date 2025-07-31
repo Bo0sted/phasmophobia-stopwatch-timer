@@ -334,14 +334,9 @@ bool MainWindow::event(QEvent *event)
         if (qsm.ShouldCheckUpdate())
             um.CheckForUpdateAndPromptUser();
 
-        UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
-        SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(uiohm.GetDisplayFromQListOfKeycodes(uiohm.FetchToggleStopwatchHotkey())));
-        QList<int> hotkey = uiohm.FetchToggleStopwatchHotkey();
-        if (!hotkey.isEmpty()) {
-            int mainKey = hotkey.last();
-            qDebug() << "Fetch toggle:" << translateKeycodeToLinuxRawcode(mainKey);
-        }        qDebug() << "Get display: "<< uiohm.GetDisplayFromQListOfKeycodes(uiohm.FetchToggleStopwatchHotkey());
-        UpdateStopwatchFont(qsm.FetchStopwatchFont(),GetCurrentFont().pointSize());
+        UpdateStopwatchFont(qsm.FetchStopwatchFont(),qsm.FetchStopwatchFontSize());
+        //SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(uiohm.GetDisplayFromQListOfKeycodes(uiohm.FetchToggleStopwatchHotkey())));
+        SetStopwatchValue("0:00");
 
         {
             QPair<float, float> lastKnown = qsm.FetchStopwatchLastPosition();
@@ -365,6 +360,7 @@ bool MainWindow::event(QEvent *event)
         sie->setAttribute(Qt::WA_DeleteOnClose);
         sie->setWindowFlags(sie->windowFlags()
                             | Qt::FramelessWindowHint
+                            | Qt::WindowStaysOnTopHint
                             );
         sie->show();
 

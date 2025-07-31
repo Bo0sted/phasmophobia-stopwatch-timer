@@ -44,6 +44,8 @@ void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
     mw->qsm.setValue(QSettingsManager::IsClockEnabled,QString("%1").arg(mw->stm->CheckIfModuleIsEnabled()));
     mw->qsm.setValue(QSettingsManager::StopwatchRainbowModeIndex, QString("%1").arg(ui->rainbowColorComboBox->currentIndex()));
     mw->qsm.setValue(QSettingsManager::StopwatchFormatModeIndex, QString("%1").arg(ui->formatTimeComboBox->currentIndex()));
+    mw->qsm.setValue(QSettingsManager::StopwatchFontSize, QString("%1").arg(mw->GetCurrentStopwatchFontSize()));
+    mw->qsm.setValue(QSettingsManager::ClockFontSize, QString("%1").arg(mw->stm->GetCurrentFontSize()));
 }
 
 void StopwatchInteractiveEditor::mouseMoveEvent(QMouseEvent *event)
@@ -103,6 +105,23 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->ToggleHotkeyRecordPushButton->setFocusPolicy(Qt::NoFocus);
         ui->FontPickerCombo->setFocusPolicy(Qt::NoFocus);
         ui->SettingsTabWidget->setFocusPolicy(Qt::NoFocus);
+
+        connect(ui->FontSizeSlider, &QSlider::valueChanged,
+                this, [this](int value) {
+                QString fontName = mw->GetCurrentFont().family();
+                    mw->UpdateStopwatchFont(fontName, value);
+                    mw->ResizeWindowToFitStopwatch();
+                });
+        connect(ui->ClockFontSizeSlider, &QSlider::valueChanged,
+                this, [this](int value) {
+                    QString fontName = mw->stm->GetCurrentFont().family();
+                    mw->stm->UpdateClockFont(fontName, value);
+                    mw->stm->ResizeClockToFitWindow();
+
+                });
+
+        ui->FontSizeSlider->setSliderPosition(mw->GetCurrentStopwatchFontSize());
+        ui->ClockFontSizeSlider->setSliderPosition(mw->stm->GetCurrentFontSize());
 
     }
 
@@ -254,7 +273,7 @@ void StopwatchInteractiveEditor::on_quitStopwatch_clicked()
 
 void StopwatchInteractiveEditor::on_FontPickerComboClock_currentFontChanged(const QFont &f)
 {
-    mw->stm->UpdateClockFont(f.family(),mw->GetCurrentFont().pointSize());
+    mw->stm->UpdateClockFont(f.family(),mw->stm->GetCurrentFont().pointSize());
 }
 
 

@@ -102,9 +102,9 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->rainbowColorComboBox->setCurrentIndex(mw->GetRainbowMode());
         ui->formatTimeComboBox->setCurrentIndex(mw->GetFormatMode());
 
-        ui->ToggleHotkeyRecordPushButton->setFocusPolicy(Qt::NoFocus);
-        ui->FontPickerCombo->setFocusPolicy(Qt::NoFocus);
-        ui->SettingsTabWidget->setFocusPolicy(Qt::NoFocus);
+        ui->ToggleHotkeyRecordPushButton->setFocusPolicy(Qt::ClickFocus);
+        ui->FontPickerCombo->setFocusPolicy(Qt::ClickFocus);
+        ui->SettingsTabWidget->setFocusPolicy(Qt::ClickFocus);
 
         connect(ui->FontSizeSlider, &QSlider::valueChanged,
                 this, [this](int value) {
@@ -565,6 +565,7 @@ void StopwatchInteractiveEditor::on_ToggleHotkeyRecordPushButton_clicked()
         mw->uiohm.ClearHotkeyAssignState();
 
     ui->ToggleHotkeyRecordPushButton->repaint();
+    ui->HotkeyAssignModeDisplay->setFocus();
 
     // if (mw->uiohm.IsHotkeyAvailable(ui->ToggleTabHotkeyInput->keySequence().toString(),true)) {
     //     QString hotkeyName = ui->ToggleTabHotkeyInput->keySequence().toString();

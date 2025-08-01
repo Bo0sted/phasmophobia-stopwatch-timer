@@ -38,9 +38,9 @@
 - It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. 
  
 ## How to use
-- Press F1 to Toggle timer on/off
-- Press F2 to Reset timer
-- Press F3 Undo reset
+- Press Left Shift + 1 to Toggle timer on/off
+- Press Left Shift + 2 to Reset timer
+- Press Left Shift + 3 Undo reset
 
 ## How to change hotkeys and other settings
 - Right click on Stopwatch window

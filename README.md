@@ -1,14 +1,19 @@
-<img width="1469" height="777" alt="image" src="https://github.com/user-attachments/assets/6a941f6e-9742-4c52-9898-2996d65babe5" />
+<img width="2160" height="1080" alt="github" src="https://github.com/user-attachments/assets/865d6b4e-3861-41fc-b0ec-ac44570871e2" />
 
 # Phasmophobia Stopwatch
 
 ### What is this
-A crossplatform stopwatch overlay window supporting Windows, Linux and macOS* intended to be used while playing [Phasmophobia](https://store.steampowered.com/app/739630/Phasmophobia/). There are a few scenarios within Phasmophobia where tracking time is a huge benefit to the player like timing your smudges, timing various grace periods like the hunt grace period and more. This stopwatch was designed with ease of use in mind. Once launched, it will always stay on top of your game*. Hotkeys are used to control the stopwatch, and will work even if you're in game. The hotkeys are re-assignabnle in settings as well. Speaking of settings, this stopwatch features many customizations including font, font size, font color, font color states, font background, font border, display modes, and color effects with more planned features coming down the pike. This stopwatch also features a clock overlay window, which will output your system time alongside your stopwatch for all the imnmersive fullscreen gamers that don't always see their taskbar time!
+A crossplatform stopwatch overlay window supporting Windows, Linux and macOS intended to be used while playing [Phasmophobia](https://store.steampowered.com/app/739630/Phasmophobia/). There are a few scenarios within Phasmophobia where tracking time is a huge benefit to the player like timing your smudges, timing various grace periods like the hunt grace period and more. This stopwatch was designed with ease of use in mind. Once launched, it will always stay on top of your game. Hotkeys are used to control the stopwatch, and will work even if you're in game. The hotkeys are re-assignabnle in settings as well. Speaking of settings, this stopwatch features many customizations including font, font size, font color, font color states, font background, font border, display modes, and color effects with more planned features coming down the pike. This stopwatch also features a clock overlay window, which will output your system time alongside your stopwatch for all the imnmersive fullscreen gamers that don't always see their taskbar time!
 
-* If you're using Linux, see [this](#known-caveats)
-* If you're using macOS, see [this](#macos-support)
+## Default hotkeys
+- Press Left Shift + 1 to Toggle timer on/off
+- Press Left Shift + 2 to Reset timer
+- Press Left Shift + 3 Undo reset
 
-# Install instructions
+## How to change hotkeys and other settings
+- Right click on Stopwatch window
+
+## Install instructions
 ## Windows
 - Setup installer coming soon...
 ## Linux
@@ -44,14 +49,6 @@ A crossplatform stopwatch overlay window supporting Windows, Linux and macOS* in
 - It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. Numpad keys seem to also process **immediately** on Arch running Zen
 ### Known caveats
 - If you're running Phasmophobia in fullscreen mode then this stopwatch wont be able to overlay the game. This is not an issue with the stopwatch, this is moreso an issue with how Linux works internally with compositors. It is recommended you run Phasmophobia in window mode and set special rules for it within your desktop compositor to achieve a fullscreen borderless mode.
- 
-## How to use
-- Press Left Shift + 1 to Toggle timer on/off
-- Press Left Shift + 2 to Reset timer
-- Press Left Shift + 3 Undo reset
-
-## How to change hotkeys and other settings
-- Right click on Stopwatch window
 
 ## Comprehensive feature list for users
 - 3 functions with assingable hotkeys
@@ -130,6 +127,7 @@ As of right now since there isn't any public release yet, I haven't gotten aroun
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

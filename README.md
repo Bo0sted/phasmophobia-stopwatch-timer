@@ -3,7 +3,7 @@
 # Phasmophobia Stopwatch
 
 ### What is this
-A stopwatch overlay window intended to be used while playing [Phasmophobia](https://store.steampowered.com/app/739630/Phasmophobia/). There are a few scenarios within Phasmophobia where tracking time is a huge benefit to the player for instance timing your smudges, timing various grace periods the hunt grace period and more. This stopwatch is meant to be as easy as possible to use. Once launched, it will always stay on top of your game*. Hotkeys are used to control the stopwatch, and will work even if you're in game. The hotkeys are re-assignabnle in settings as well. Speaking of settings, this stopwatch features many customizations including font, font size, font color, font color states, font background, font border, display modes, and color effects with more planned features coming down the pike. This stopwatch also features a clock overlay window, which will output your system time alongside your stopwatch for all the imnmersive fullscreen gamers that don't always see their taskbar time!
+A crossplatform stopwatch overlay window supporting Windows and Linux intended to be used while playing [Phasmophobia](https://store.steampowered.com/app/739630/Phasmophobia/). There are a few scenarios within Phasmophobia where tracking time is a huge benefit to the player like timing your smudges, timing various grace periods like the hunt grace period and more. This stopwatch was designed with ease of use in mind. Once launched, it will always stay on top of your game*. Hotkeys are used to control the stopwatch, and will work even if you're in game. The hotkeys are re-assignabnle in settings as well. Speaking of settings, this stopwatch features many customizations including font, font size, font color, font color states, font background, font border, display modes, and color effects with more planned features coming down the pike. This stopwatch also features a clock overlay window, which will output your system time alongside your stopwatch for all the imnmersive fullscreen gamers that don't always see their taskbar time!
 
 * If you're using Linux, see [this](#known-caveats)
 
@@ -129,6 +129,7 @@ As of right now since there isn't any public release yet, I haven't gotten aroun
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

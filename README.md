@@ -10,11 +10,11 @@
 - You must be running X11 or something comparable to Xwayland. Please see [caveat for running on Linux](#running-on-linux)
 - After ensuring you have the proper setup, install the necessary tools:
   - **Arch / EndeavourOS / Manjaro**
-    - `sudo pacman -S --needed git cmake base-devel qt6`
+    - `sudo pacman -S --needed git cmake base-devel qt6-base qt6-tools`
   - **Debian/Ubuntu**
     - `sudo apt install git cmake build-essential qt6-base-dev qt6-base-dev-tools -y`
   - **Fedora**
-    - `sudo dnf install git cmake gcc-c++ make qt6-qtbase-devel -y`
+    - `sudo dnf install git cmake gcc-c++ make qt6-qtbase-devel qt6-qttools-devel -y`
 ### Step 1: Clone
 `git clone https://github.com/Bo0sted/CrossplatformStopwatch.git`
 
@@ -124,4 +124,5 @@ As of right now since there isn't any public release yet, I haven't gotten aroun
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 

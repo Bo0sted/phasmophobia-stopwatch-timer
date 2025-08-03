@@ -13,10 +13,11 @@ A crossplatform stopwatch overlay window supporting Windows, Linux and macOS int
 ## How to change hotkeys and other settings
 - Right click on Stopwatch window
 
-## Install instructions
-## Windows
-- Setup installer coming soon...
-## Linux
+## Install on Windows
+Setup installer coming soon...
+
+
+## Install on Linux
 ### Prerequisites: Install build tools and ensure compatibility
 - You must be running X11 or something comparable to Xwayland. Please see [caveat for running on Linux](#running-on-linux)
 - After ensuring you have the proper setup, install the necessary tools:
@@ -49,6 +50,9 @@ A crossplatform stopwatch overlay window supporting Windows, Linux and macOS int
 - It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. Numpad keys seem to also process **immediately** on Arch running Zen
 ### Known caveats
 - If you're running Phasmophobia in fullscreen mode then this stopwatch wont be able to overlay the game. This is not an issue with the stopwatch, this is moreso an issue with how Linux works internally with compositors. It is recommended you run Phasmophobia in window mode and set special rules for it within your desktop compositor to achieve a fullscreen borderless mode.
+
+
+
 
 ## Comprehensive feature list for users
 - 3 functions with assingable hotkeys
@@ -127,6 +131,7 @@ As of right now since there isn't any public release yet, I haven't gotten aroun
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

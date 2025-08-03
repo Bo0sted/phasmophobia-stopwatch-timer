@@ -112,7 +112,7 @@ When launching the app and if an internet connection is available, the stopwatch
   - The ping consists of:
     - The name of your operating system. If you run Linux, this will probably include the name of your distro.
     - Program version.
-    - Your [anonymous](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/qsettingsmanager.cpp#L301) UUID.
+    - Your anonymous [QUUID](https://doc.qt.io/qt-6/quuid.html#details).
     - Your country code. This information is obtained 100% offline by looking at the language of your system.
     - And last but not least a unix timestamp
     - You may verify the contents of the ping yourself by looking at the ping function [itself](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
@@ -122,6 +122,7 @@ The only way to disable them is commenting out this [line](https://github.com/Bo
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

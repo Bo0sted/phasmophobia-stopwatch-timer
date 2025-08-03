@@ -105,11 +105,11 @@ The full text of the license is available here: https://www.gnu.org/licenses/gpl
 By contributing to this project, you agree that your contributions will be licensed under GPL‑3.0.
 For more details, see the full license text here: https://www.gnu.org/licenses/gpl-3.0.en.html
 
-### Transparency about remote capabilities
-When launching the app (and a period of 2 hours has passed since last connection), if an internet connection is available, the stopwatch will attempt exactly two network requests: 
-- First connection is to this website, github.com, and it checks the [version](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/version/version) file for the "official" version of this app.
-- Next connection is to my humble [worker](https://workers.cloudflare.com/) server that collects a generic and anonymous log about your system.
-  - The log consists of:
+### Internet access
+When launching the app and if an internet connection is available, the stopwatch will attempt to make two network requests: 
+- First connection is to Github to check the official version of this app. 
+- Next connection is an anonymous usage ping to my server.
+  - The ping consists of:
     - The name of your operating system. If you run Linux, this will probably include the name of your distro.
     - Program version.
     - Your UUID. This is a randomly generated combination of letters and numbers to distinguish your anonymous log from other people. It is generated when the program starts up and doesn't detect a UUID in your config file.
@@ -118,14 +118,12 @@ When launching the app (and a period of 2 hours has passed since last connection
     - And last but not least a unix timestamp
     - The function that handles this logging can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
 
-### Why the log?
-As somebody who takes my own privacy very seriously I would never try to infringe on the privacy of somebody else. With that being said I am naturally a curious person, and quite frankly, I think it's really interesting to see roughly how many people use my app and from what parts of the world! That is why I designed these logs to be as privacy friendly as possible, and why I am being so transparent about it.
-
-### Can I disable them?
-As of right now since there isn't any public release yet, I haven't gotten around to adding the code that disables it. But once I do make an official release, the functionality will be there. If you're compiling my code for yourself, you may go to this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332), comment it out and the logging functionality will be completely disabled.
+### Can I disable the pinging / update checks?
+Since I have't finalized a release yet, the functionality is not there. But by the time I post an official release the controls will be there. If you're compiling the code for yourself, you may go to this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332), comment it out (by putting "//" in front of the line) and the logging functionality will be completely disabled. 
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

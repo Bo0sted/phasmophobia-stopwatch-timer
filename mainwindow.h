@@ -89,6 +89,7 @@ public slots:
 signals:
     void toggleModuleSignal(bool shouldEnable);
     void toggleEditorSignal(bool shouldOpen);
+    void updateClockRainbowColor(QColor color);
 private:
     Ui::MainWindow *ui;
     QPointF oldPosition;

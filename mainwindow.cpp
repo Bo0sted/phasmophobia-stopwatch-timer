@@ -207,6 +207,7 @@ void MainWindow::SetRainbowMode(int index )
         swm.rainbowModeOn = false;
         swm.rainbowModeBackgroundOn = false;
         ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewStopwatchStylesheet(stopwatchFontColor.name(), stopwatchBackgroundColor.name()));
+        emit updateClockRainbowColor("");
         RefreshStopwatchState(false);
         break;
     }
@@ -378,6 +379,8 @@ bool MainWindow::event(QEvent *event)
         emit toggleEditorSignal(false);
 
         connect(sie, &StopwatchInteractiveEditor::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
+        connect(this, &MainWindow::updateClockRainbowColor, stm, &SystemTimeModule::refreshColorState);
+        connect(&swm, &StopwatchManager::updateClockRainbowColor, stm, &SystemTimeModule::refreshColorState);
         connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
         connect(&swm,&StopwatchManager::updateRainbowColor, this, &MainWindow::updateRainbowColor);
         connect(&swm,&StopwatchManager::updateRainbowBackgroundColor, this, &MainWindow::updateRainbowBackgroundColor);

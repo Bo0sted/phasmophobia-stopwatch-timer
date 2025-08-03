@@ -63,6 +63,8 @@ void StopwatchManager::RainbowModeThread()
                 emit updateRainbowBackgroundColor(color);
             else if (rainbowModeOn)
                 emit updateRainbowColor(color);
+            if (rainbowModeBackgroundOn || rainbowModeOn)
+                emit updateClockRainbowColor(color);
 
             hue += 0.002; // keeps hue variable updated (if used elsewhere)
             if (hue > 1.0) hue -= 1.0;

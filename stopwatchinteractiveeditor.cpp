@@ -82,6 +82,7 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->ResetTabActiveAssignmentLabel->setText(QString("%1").arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchResetStopwatchHotkey())));
         ui->RestoreTabActiveAssignmentLabel->setText(QString("%1").arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchRestoreStopwatchHotkey())));
         ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
+        ui->quitStopwatch->setVisible(false);
         UpdateSystemModuleTogglePushButton();
         ui->primaryColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchFontColor()));
         ui->pausedColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchPausedStopwatchFontColor()));

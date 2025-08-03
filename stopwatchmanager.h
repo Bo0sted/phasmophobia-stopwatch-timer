@@ -30,6 +30,7 @@ signals:
     void updateElapsedTime(const int &time); // Signal to update elapsed time
     void updateRainbowColor(const QColor& color);
     void updateRainbowBackgroundColor(const QColor& color);
+    void updateClockRainbowColor(const QColor& color);
 private:
     MainWindow *mw;
     std::atomic<bool> isDeconstructing;

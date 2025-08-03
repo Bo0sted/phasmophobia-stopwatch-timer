@@ -30,9 +30,12 @@ SystemTimeModule::~SystemTimeModule()
 void SystemTimeModule::showEvent(QShowEvent *event)
 {
     event->accept();
-    QString style = StylesheetGenerator::NewModuleOutputStylesheet(mw->qsm.FetchClockFontColor());
+    systemClockBackgroundColor = "black";
+    systemClockFontColor = mw->qsm.FetchClockFontColor();
+    QString style = StylesheetGenerator::NewModuleOutputStylesheet(systemClockFontColor, systemClockBackgroundColor);
     ui->SystemTimeLabel->setStyleSheet(style);
     UpdateClockFont(mw->qsm.FetchClockFont(), mw->qsm.FetchClockFontSize());
+
 
 }
 
@@ -96,6 +99,12 @@ void SystemTimeModule::UpdateClockFontColor(QColor color)
     ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(color));
 }
 
+void SystemTimeModule::UpdateClockBackgroundColor(QColor color)
+{
+    systemClockBackgroundColor = color;
+    ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(systemClockFontColor,color));
+}
+
 QFont SystemTimeModule::GetCurrentFont()
 {
     return ui->SystemTimeLabel->font();
@@ -127,4 +136,18 @@ void SystemTimeModule::setLoadModule(bool shouldEnable)
 {
     enabled = shouldEnable;
     RefreshModuleState();
+}
+
+void SystemTimeModule::refreshColorState(QColor color)
+{
+    //        ui->rainbowColorComboBox->addItems({"Disabled", "Text", "Background"});
+
+    auto mode = mw->GetRainbowMode();
+    if (mode ==  1)
+        ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(color.name(), systemClockBackgroundColor.name()));
+    else if (mode == 2)
+        ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(systemClockFontColor.name(), color.name(), color.name()));
+    else
+        ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(systemClockFontColor.name(), systemClockBackgroundColor.name()));
+
 }

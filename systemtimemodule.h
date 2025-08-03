@@ -19,6 +19,7 @@ public:
     void RefreshClockThread();
     void UpdateClockFont(QString fontName, int fontSize);
     void UpdateClockFontColor(QColor color);
+    void UpdateClockBackgroundColor(QColor color);
     QFont GetCurrentFont();
     bool CheckIfModuleIsEnabled();
     void RefreshModuleState();
@@ -29,6 +30,7 @@ signals:
 public slots:
     void updateClock(const QString &time);
     void setLoadModule(bool shouldEnable); // Declare the slot
+    void refreshColorState(QColor color);
 private:
     Ui::SystemTimeModule *ui;
     MainWindow *mw;
@@ -37,6 +39,7 @@ private:
     QFuture<void> refreshClockThread;
     bool enabled;
     QColor systemClockFontColor;
+    QColor systemClockBackgroundColor;
 
     void showEvent(QShowEvent *event) override;
     void closeEvent(QCloseEvent *event) override;

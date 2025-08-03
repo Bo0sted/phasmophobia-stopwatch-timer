@@ -44,7 +44,7 @@ Setup installer coming soon...
 ### Important notice about registering hotkeys specifically on Linux:
 - It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. Numpad keys seem to also process **immediately** on Arch running Zen
 ### Known caveats
-- If you're running Phasmophobia in fullscreen mode then this stopwatch wont be able to overlay the game. This is not an issue with the stopwatch, this is moreso an issue with how Linux works internally with compositors. It is recommended you run Phasmophobia in window mode and set special rules for it within your desktop compositor to achieve a fullscreen borderless mode.
+- The stopwatch window wont be able to overlay Phasmophobia while the game is in fullscreen mode. This is because on Linux the [compositor](https://en.wikipedia.org/wiki/Compositing_manager) handles how windows get stacked and in which order. In most cases, the Phasmophobia window will get priority by your compositor and thus the stopwatch window will get stacked behind the game. The best option in this scenario (what I do as well) is turn off fullscreen mode in Phasmophobia and disable the border for your game's window by creating a rule in your compositor. 
 
 
 
@@ -126,6 +126,7 @@ As of right now since there isn't any public release yet, I haven't gotten aroun
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

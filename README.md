@@ -1,20 +1,27 @@
-<img width="1469" height="777" alt="image" src="https://github.com/user-attachments/assets/6a941f6e-9742-4c52-9898-2996d65babe5" />
+<img width="2160" height="1080" alt="github" src="https://github.com/user-attachments/assets/865d6b4e-3861-41fc-b0ec-ac44570871e2" />
 
-# Welcome to Crossplatform Stopwatch
+# Phasmophobia Stopwatch
 
-# Install instructions
-## Windows
-- Setup installer coming soon...
-## Linux
+### What is this
+A crossplatform stopwatch overlay window supporting Windows, Linux and macOS intended to be used while playing [Phasmophobia](https://store.steampowered.com/app/739630/Phasmophobia/). There are a few scenarios within Phasmophobia where tracking time is a huge benefit to the player like timing your smudges, timing various grace periods like the hunt grace period and more. This stopwatch was designed with ease of use in mind. Once launched, it will always stay on top of your game. Hotkeys are used to control the stopwatch, and will work even if you're in game. The hotkeys are re-assignabnle in settings as well. Speaking of settings, this stopwatch features many customizations including font, font size, font color, font color states, font background, font border, display modes, and color effects with more planned features coming down the pike. This stopwatch also features a clock overlay window, which will output your system time alongside your stopwatch for all the imnmersive fullscreen gamers that don't always see their taskbar time!
+
+## Default hotkeys
+- Press Left Shift + 1 to Toggle timer on/off
+- Press Left Shift + 2 to Reset timer
+- Press Left Shift + 3 Undo reset
+
+## How to change hotkeys and other settings
+- Right click on Stopwatch window
+
+## Install on Windows
+Setup installer coming soon...
+
+
+## Install on Linux
 ### Prerequisites: Install build tools and ensure compatibility
 - You must be running X11 or something comparable to Xwayland. Please see [caveat for running on Linux](#running-on-linux)
 - After ensuring you have the proper setup, install the necessary tools:
-  - **Arch / EndeavourOS / Manjaro**
-    - `sudo pacman -S --needed git cmake base-devel qt6`
-  - **Debian/Ubuntu**
-    - `sudo apt install git cmake build-essential qt6-base-dev qt6-base-dev-tools -y`
-  - **Fedora**
-    - `sudo dnf install git cmake gcc-c++ make qt6-qtbase-devel -y`
+`git` `cmake` `qt6-base` `qt6-tools`
 ### Step 1: Clone
 `git clone https://github.com/Bo0sted/CrossplatformStopwatch.git`
 
@@ -35,15 +42,12 @@
 - This project uses libuiohook, which is dependent on the [X11 protocol](https://is.gd/GhPqpn). As a result, your Linux installation must either be running X11 as its display protocol or running Wayland with an X11 compatibility layer on top of it like [Xwayland](https://wiki.archlinux.org/title/Wayland)
   **- Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.**
 ### Important notice about registering hotkeys specifically on Linux:
-- It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. 
- 
-## How to use
-- Press 1 to Toggle timer on/off
-- Press 2 to Reset timer
-- Press 3 Undo reset
+- It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. Numpad keys seem to also process **immediately** on Arch running Zen
+### Known caveats
+- If you're running Phasmophobia in fullscreen mode then this stopwatch wont be able to overlay the game. This is not an issue with the stopwatch, this is moreso an issue with how Linux works internally with compositors. It is recommended you run Phasmophobia in window mode and set special rules for it within your desktop compositor to achieve a fullscreen borderless mode.
 
-## How to change hotkeys and other settings
-- Right click on Stopwatch window
+
+
 
 ## Comprehensive feature list for users
 - 3 functions with assingable hotkeys
@@ -75,8 +79,6 @@
 - Written in pure C++ using the lovely Qt framework to make this app cross platform* (for the most part, see caveats)
 - Multi-threaded design to ensure the time is never delayed and user interface is responsive and fluid.
 - Using libuiohook to handle global hotkeys in a non-blocking fashion. This is a major improvement over QHotkey, which I used in version 1.3 and below. While Qhotkey was super easy and intuitive to use, it came with many limiations like no numpad key support and worst of all it handled keys in an exclusive fashion. Keys would not get passed onto other programs once the stopwatch captured the key.
-
-# Caveats
 
 ### MacOS support
 - This project (should) compile on Mac. It uses the Qt framework and libuiohook, both of which are cross platform. The problem with Mac is I don't personally have one, and in order to release anything related to Mac I need to own one since virtualizing that platform is not really possible. After compiling, the program should run and register hotkeys 100% fine, but the issue is many of the keys that are defined in libuiohook are outdated and no longer correspond with the operating system. That means when you go to register a hotkey, instead of showing the name of the key that's registered, it'll simply show "Unknown". If this is not an issue for you, then all you need to do is compile the code and everything should work fine.
@@ -124,3 +126,11 @@ As of right now since there isn't any public release yet, I haven't gotten aroun
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
+
+
+
+
+
+
+

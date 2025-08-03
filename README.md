@@ -44,7 +44,9 @@ Setup installer coming soon...
 ### Important notice about registering hotkeys specifically on Linux:
 - It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. Numpad keys seem to also process **immediately** on Arch running Zen
 ### Known caveats
-- The stopwatch window wont be able to overlay Phasmophobia while the game is in fullscreen mode. This is because on Linux the [compositor](https://en.wikipedia.org/wiki/Compositing_manager) handles how windows get stacked and in which order. In most cases, the Phasmophobia window will get priority by your compositor and thus the stopwatch window will get stacked behind the game. The best option in this scenario (what I do as well) is turn off fullscreen mode in Phasmophobia and disable the border for your game's window by creating a rule in your compositor. 
+- If Phasmophobia is in fullscreen mode, the stopwatch will always get stacked behind the game thus hiding it from view. This is because on Linux the [compositor](https://en.wikipedia.org/wiki/Compositing_manager) handles how windows get stacked and in which order. Most compositors stack fullscreen windows at the very top, which is why the stopwatch still gets forced out of view by your system despite being programmed not to.
+  - Despite this limitation, most compositors offer a way for users to create special rules for windows. One of these rules is stacking order. By forcing your Phasmophobia window to the bottom of the stack, or forcing the stopwatch window to the front, you can force the stopwatch to always be on top of Phasmophobia.  
+    - <details><summary>Example:</summary><img width="1079" height="882" alt="image" src="https://github.com/user-attachments/assets/96c6f3d9-7088-4d7d-8e82-811ef88c7d76" /></details>
 
 
 
@@ -122,6 +124,7 @@ The only way to disable them is commenting out this [line](https://github.com/Bo
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

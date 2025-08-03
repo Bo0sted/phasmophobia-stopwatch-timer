@@ -112,17 +112,17 @@ When launching the app and if an internet connection is available, the stopwatch
   - The ping consists of:
     - The name of your operating system. If you run Linux, this will probably include the name of your distro.
     - Program version.
-    - Your UUID. This is a randomly generated combination of letters and numbers to distinguish your anonymous log from other people. It is generated when the program starts up and doesn't detect a UUID in your config file.
-      - The code for UUID generation can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/qsettingsmanager.cpp#L281)
+    - Your [anonymous](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/qsettingsmanager.cpp#L281) UUID.
     - Your country code. This information is obtained 100% offline by looking at the language of your system.
     - And last but not least a unix timestamp
-    - The function that handles this logging can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
+    - You may verify the contents of the ping yourself by looking at the ping function [itself](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
 
 ### Can I disable the pinging / update checks?
-Since I have't finalized a release yet, the functionality is not there. But by the time I post an official release the controls will be there. If you're compiling the code for yourself, you may go to this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332), comment it out (by putting "//" in front of the line) and the logging functionality will be completely disabled. 
+The only way to disable them is commenting out this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332) and building the project from source. By the time I publish version 2.0 which marks the end of beta, the option to disable these logs will be there.
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

@@ -47,7 +47,8 @@ bool WarmWelcome::event(QEvent *event)
         QPixmap githubScaledPxmap = githubpxmap.scaled(64, 64, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
         ui->iconViewLabel->setPixmap(scaledPixmap);
         ui->githubIconViewLabel->setPixmap(githubScaledPxmap);
-        ui->githubIconViewLabel->setCursor(QCursor(Qt::PointingHandCursor));
+        ui->githubLabelTransparentPushButton->setCursor(QCursor(Qt::PointingHandCursor));
+        ui->githubLabelTransparentPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, "transparent","transparent"));
         ui->programTitleLabel->setStyleSheet(StylesheetGenerator::DefaultHeader());
         ui->programTitleLabel->setText("Cross Platform Timer");
         ui->sourceCodeHeaderLabel->setText("View source code:");
@@ -60,6 +61,8 @@ bool WarmWelcome::event(QEvent *event)
                                            .arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchResetStopwatchHotkey())));
 
         RefreshVersion();
+        if (mw->um.WasUpdateCheckSuccessful())
+            ui->refreshLatestVersionPushButton->setVisible(false);
 
     }
 
@@ -78,5 +81,18 @@ void WarmWelcome::on_refreshLatestVersionPushButton_clicked()
         RefreshVersion();
     });
     ui->refreshLatestVersionPushButton->setVisible(false);
+}
+
+
+void WarmWelcome::on_pushButton_clicked()
+{
+    mw->um.OpenGithubIssuesInBrowser();
+}
+
+
+
+void WarmWelcome::on_githubLabelTransparentPushButton_clicked()
+{
+    mw->um.OpenGithubInBrowser();
 }
 

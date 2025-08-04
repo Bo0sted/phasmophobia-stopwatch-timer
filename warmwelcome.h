@@ -29,6 +29,8 @@ protected:
     bool event(QEvent *event) override;
 private slots:
     void on_refreshLatestVersionPushButton_clicked();
+    void on_pushButton_clicked();
+    void on_githubLabelTransparentPushButton_clicked();
 };
 
 #endif // WARMWELCOME_H

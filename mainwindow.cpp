@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     uuid(qsm.FetchUUID()),
     lastPingUnix(qsm.FetchLastPingUnix()),
     lastUpdateCheckUnix(qsm.FetchLastUpdateCheckUnix()),
-    latestVersion{"Unknown"},
+    latestVersion{"<br><u>Recent update check performed already.</u>"},
     stopwatchRainbowMode{(qsm.FetchStopwatchRainbowModeIndex())},
     stopwatchFormatMode(qsm.FetchStopwatchFormatMode())
 
@@ -334,6 +334,8 @@ bool MainWindow::event(QEvent *event)
 
         if (qsm.ShouldCheckUpdate())
             um.CheckForUpdateAndPromptUser();
+        else
+            um.SetUpdateCheckSuccessful(true);
 
         UpdateStopwatchFont(qsm.FetchStopwatchFont(),qsm.FetchStopwatchFontSize());
         //SetStopwatchValue(QString("Stopwatch ready... Press %1 to run or right click this window to configure").arg(uiohm.GetDisplayFromQListOfKeycodes(uiohm.FetchToggleStopwatchHotkey())));

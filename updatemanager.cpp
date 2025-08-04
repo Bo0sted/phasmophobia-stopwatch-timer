@@ -16,7 +16,6 @@
 
 UpdateManager::UpdateManager(MainWindow *mwr, QObject *parent)
     : manager(new QNetworkAccessManager(this))
-    , currentVersion{QCoreApplication::applicationVersion()}
     , mw(mwr)
 {
 }
@@ -26,7 +25,9 @@ void UpdateManager::CheckForUpdateAndPromptUser(std::function<void()> onFinished
     QNetworkReply* reply = manager->get(request);
 
     connect(reply, &QNetworkReply::finished, this, [=]() {
+        auto currentVersion = QCoreApplication::applicationVersion();
         if (reply->error() == QNetworkReply::NoError) {
+            wasUpdateCheckSuccessful = true;
             QString latestVersion = QString(reply->readAll()).trimmed();
             qDebug() << "Current version:" << currentVersion;
             qDebug() << "Latest version:" << latestVersion;
@@ -46,6 +47,7 @@ void UpdateManager::CheckForUpdateAndPromptUser(std::function<void()> onFinished
         }
         else {
             qDebug() << "You're up to date.";
+
         }
         mw->SetLastUpdateCheckUnix(QDateTime::currentSecsSinceEpoch());
     } else {
@@ -92,6 +94,21 @@ void UpdateManager::PostAnonymousUsageLog()
 void UpdateManager::OpenGithubInBrowser()
 {
     QDesktopServices::openUrl(QUrl(QString("%1%2").arg(githubBaseUrl).arg("/releases")));
+}
+
+void UpdateManager::OpenGithubIssuesInBrowser()
+{
+    QDesktopServices::openUrl(QUrl(QString("%1%2").arg(githubBaseUrl).arg("/issues")));
+}
+
+bool UpdateManager::WasUpdateCheckSuccessful()
+{
+    return wasUpdateCheckSuccessful;
+}
+
+void UpdateManager::SetUpdateCheckSuccessful(bool successful)
+{
+    wasUpdateCheckSuccessful = successful;
 }
 
 

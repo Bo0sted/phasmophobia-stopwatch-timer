@@ -9,7 +9,6 @@
 int main(int argc, char *argv[])
 {
     // This line of code will force your system compositor to use X11 or a compatibility layer like Xwayland
-    // This obviously does not apply to Win/Mac
     #ifdef Q_OS_UNIX
         qputenv("QT_QPA_PLATFORM", "xcb");
     #endif

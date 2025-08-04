@@ -91,7 +91,7 @@ void UpdateManager::PostAnonymousUsageLog()
 
 void UpdateManager::OpenGithubInBrowser()
 {
-    QDesktopServices::openUrl(QUrl("https://github.com/Bo0sted/CrossplatformStopwatch/releases"));
+    QDesktopServices::openUrl(QUrl(QString("%1%2").arg(githubBaseUrl).arg("/releases")));
 }
 
 

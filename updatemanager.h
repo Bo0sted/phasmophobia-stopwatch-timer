@@ -22,8 +22,8 @@ public:
 private:
     MainWindow *mw;
     QNetworkAccessManager* manager;
-    const QString githubVersionRef = "https://raw.githubusercontent.com/Bo0sted/Phasmophobia-Stopwatch-Timer/refs/heads/master/version/version";
-    const QString githubBaseUrl = "https://github.com/Bo0sted/Phasmophobia-Stopwatch-Timer";
+    const QString githubVersionRef = "https://raw.githubusercontent.com/Bo0sted/phasmophobia-stopwatch-timer/refs/heads/master/version/version";
+    const QString githubBaseUrl = "https://github.com/Bo0sted/phasmophobia-stopwatch-timer";
     const QString cloudflarePingEndpoint = "https://workers-playground-delicate-heart-a0b1.donttrackmepls.workers.dev/ping";
     const QString currentVersion;
     const QString latestVersion;

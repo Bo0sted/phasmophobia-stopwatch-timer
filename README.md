@@ -44,7 +44,9 @@ Setup installer coming soon...
 ### Important notice about registering hotkeys specifically on Linux:
 - It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. Numpad keys seem to also process **immediately** on Arch running Zen
 ### Known caveats
-- The stopwatch window wont be able to overlay Phasmophobia while the game is in fullscreen mode. This is because on Linux the [compositor](https://en.wikipedia.org/wiki/Compositing_manager) handles how windows get stacked and in which order. In most cases, the Phasmophobia window will get priority by your compositor and thus the stopwatch window will get stacked behind the game. The best option in this scenario (what I do as well) is turn off fullscreen mode in Phasmophobia and disable the border for your game's window by creating a rule in your compositor. 
+- The stopwatch wont be able to stay on top of the Phasmophobia window if fullscreen mode is turned on. This is because on Linux, the [compositor](https://en.wikipedia.org/wiki/Compositing_manager) handles how windows get stacked and in which order. Most compositors stack fullscreen windows at the very top, which is why the stopwatch still gets forced out of view by your system despite being programmed not to.
+  - Despite this limitation, most compositors offer a way for users to create special rules for windows. One of these rules is stacking order. By forcing your Phasmophobia window to the bottom of the stack, or forcing the stopwatch window to the front, you can force the stopwatch to always be on top of Phasmophobia.  
+    - <details><summary>Example:</summary><img width="1079" height="882" alt="image" src="https://github.com/user-attachments/assets/96c6f3d9-7088-4d7d-8e82-811ef88c7d76" /></details>
 
 
 
@@ -112,17 +114,23 @@ When launching the app and if an internet connection is available, the stopwatch
   - The ping consists of:
     - The name of your operating system. If you run Linux, this will probably include the name of your distro.
     - Program version.
-    - Your UUID. This is a randomly generated combination of letters and numbers to distinguish your anonymous log from other people. It is generated when the program starts up and doesn't detect a UUID in your config file.
-      - The code for UUID generation can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/qsettingsmanager.cpp#L281)
-    - Your country code. This information is obtained 100% offline by looking at the language of your system.
+    - Your anonymous [QUUID](https://doc.qt.io/qt-6/quuid.html#details).
+    - Your country code. This information is obtained [100% offline](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L77) by looking at the language of your system.
     - And last but not least a unix timestamp
-    - The function that handles this logging can be found [here](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
+    - You may verify the contents of the ping yourself by looking at the ping function [itself](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
 
 ### Can I disable the pinging / update checks?
-Since I have't finalized a release yet, the functionality is not there. But by the time I post an official release the controls will be there. If you're compiling the code for yourself, you may go to this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332), comment it out (by putting "//" in front of the line) and the logging functionality will be completely disabled. 
+The only way to disable them is commenting out this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332) and building the project from source. By the time I publish version 2.0 which marks the end of beta, the option to disable these logs will be there.
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
+
+
+
+
+
+
 
 
 

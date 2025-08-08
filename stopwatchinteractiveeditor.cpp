@@ -18,7 +18,8 @@ StopwatchInteractiveEditor::StopwatchInteractiveEditor(QWidget *parent, MainWind
     : QWidget(parent)
     , ui(new Ui::StopwatchInteractiveEditor)
     , mw{mwr}
-    , open{false}
+    //dummy proof
+    , open{AreAllModulesDisabled() ? true: false}
 {
     ui->setupUi(this);
 }
@@ -42,6 +43,7 @@ void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
     mw->qsm.setValue(QSettingsManager::StopwatchFont,ui->FontPickerCombo->currentText());
     mw->qsm.setValue(QSettingsManager::ClockFont,ui->FontPickerComboClock->currentText());
     mw->qsm.setValue(QSettingsManager::IsClockEnabled,QString("%1").arg(mw->stm->CheckIfModuleIsEnabled()));
+    mw->qsm.setValue(QSettingsManager::IsStopwatchEnabled,QString("%1").arg(mw->CheckIfStopwatchEnabled()));
     mw->qsm.setValue(QSettingsManager::StopwatchRainbowModeIndex, QString("%1").arg(ui->rainbowColorComboBox->currentIndex()));
     mw->qsm.setValue(QSettingsManager::StopwatchFormatModeIndex, QString("%1").arg(ui->formatTimeComboBox->currentIndex()));
     mw->qsm.setValue(QSettingsManager::StopwatchFontSize, QString("%1").arg(mw->GetCurrentStopwatchFontSize()));
@@ -84,6 +86,7 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
         ui->quitStopwatch->setVisible(false);
         UpdateSystemModuleTogglePushButton();
+        UpdateStopwatchModuleTogglePushButton();
         ui->primaryColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchFontColor()));
         ui->pausedColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchPausedStopwatchFontColor()));
         ui->ResetColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchResetStopwatchFontColor()));
@@ -130,6 +133,11 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
 
 }
 
+bool StopwatchInteractiveEditor::AreAllModulesDisabled()
+{
+    return !mw->CheckIfStopwatchEnabled() && !mw->stm->CheckIfModuleIsEnabled();
+}
+
 void StopwatchInteractiveEditor::UpdateSystemModuleTogglePushButton()
 {
     bool check = mw->stm->CheckIfModuleIsEnabled();
@@ -146,6 +154,24 @@ void StopwatchInteractiveEditor::UpdateSystemModuleTogglePushButton()
     //     ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex()));
 
     ui->ToggleSystemModulePushButton->repaint();
+}
+
+void StopwatchInteractiveEditor::UpdateStopwatchModuleTogglePushButton()
+{
+    bool check = mw->CheckIfStopwatchEnabled();
+    ui->ToggleStopwatchPushButton->setText(check ? "Disable Stopwatch Module": "Enable Stopwatch Module");
+
+    int index = ui->SettingsTabWidget->indexOf(ui->StopwatchSettingsTab);
+    ui->SettingsTabWidget->setTabText(index, (check ? "Stopwatch": "Stopwatch (Disabled)"));
+    if (check) ui->SettingsTabWidget->setTabEnabled(index, true);
+    else ui->SettingsTabWidget->setTabEnabled(index, false);
+
+    // if (check)
+    //     ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
+    // else
+    //     ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex()));
+
+    ui->ToggleStopwatchPushButton->repaint();
 }
 
 void StopwatchInteractiveEditor::RefreshOpenState()
@@ -261,6 +287,11 @@ void StopwatchInteractiveEditor::on_FontPickerResetButton_clicked()
 void StopwatchInteractiveEditor::on_closeWindow_clicked()
 {
     setEditorOpen(false);
+
+    if (!open && AreAllModulesDisabled()) {
+        QMessageBox::information(this, "You've disabled all modules", "The program will now be shutting down. Please re-enable a module to utilize the program.");
+        mw->BeginShutdown();
+    }
 }
 
 
@@ -294,6 +325,15 @@ void StopwatchInteractiveEditor::on_ToggleSystemModulePushButton_clicked()
     UpdateSystemModuleTogglePushButton();
 
 }
+
+void StopwatchInteractiveEditor::on_ToggleStopwatchPushButton_clicked()
+{
+    bool clockState = mw->CheckIfStopwatchEnabled();
+
+    emit toggleStopwatchSignal(!clockState);
+    UpdateStopwatchModuleTogglePushButton();
+}
+
 
 
 
@@ -575,3 +615,4 @@ void StopwatchInteractiveEditor::on_ToggleHotkeyRecordPushButton_clicked()
     //     mw->qsm.setValue(QSettingsManager::ToggleKey,hotkeyName);
     // }
 }
+

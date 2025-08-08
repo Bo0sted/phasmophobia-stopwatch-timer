@@ -16,6 +16,7 @@ public:
         ToggleKey,
     };
     enum SettingsForStopwatchGroupIndex {
+        IsStopwatchEnabled,
         LastStopwatchPosition,
         StopwatchBackgroundColor,
         StopwatchFont,
@@ -66,6 +67,7 @@ public:
     const QVariant getValue(enum Logging e);
     const QVariant getValue(QString groupName, QString valueName);
 
+    bool FetchIsStopwatchEnabled();
     QString FetchStopwatchFontColor();
     QString FetchPausedStopwatchFontColor();
     QString FetchResetStopwatchFontColor();

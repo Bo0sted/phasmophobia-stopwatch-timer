@@ -58,8 +58,13 @@ void SystemTimeModule::mouseMoveEvent(QMouseEvent *event)
 
 void SystemTimeModule::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() != Qt::MouseButton::RightButton)
+    auto rawEvent = event;
+    auto button = event->button();
+    if (button != Qt::MouseButton::RightButton)
         oldPosition = event->globalPosition();
+    else if (button == Qt::MouseButton::RightButton) {
+        mw->sie->setVisible(true);
+    }
 }
 
 void SystemTimeModule::ResizeClockToFitWindow()

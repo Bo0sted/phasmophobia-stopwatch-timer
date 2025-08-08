@@ -18,6 +18,7 @@ public:
     ~StopwatchInteractiveEditor();
 
     void UpdateSystemModuleTogglePushButton();
+    void UpdateStopwatchModuleTogglePushButton();
     void RefreshOpenState();
     void RefreshUptimeLabel();
     void SetBorderOptionsVisible(bool visible);
@@ -27,6 +28,7 @@ public:
     int GetActiveTabFromHotkeyGroup();
 signals:
     void toggleModuleSignal(bool shouldEnable);
+    void toggleStopwatchSignal(bool shouldEnable);
 public slots:
     void setEditorOpen(bool shouldOpen);
     void refreshHotkeyDisplays();
@@ -90,6 +92,8 @@ private slots:
 
     void on_ToggleHotkeyRecordPushButton_clicked();
 
+    void on_ToggleStopwatchPushButton_clicked();
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;
@@ -102,6 +106,7 @@ private:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     bool event(QEvent *event) override;
+    bool AreAllModulesDisabled();
 
 };
 

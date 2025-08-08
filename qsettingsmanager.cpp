@@ -17,6 +17,7 @@ QSettingsManager::QSettingsManager()
         "Hotkeys/ToggleOnOff"
           }
     , SettingsForStopwatchGroup{
+        "Stopwatch/IsEnabled",
         "Stopwatch/LastStopwatchPosition",
         "Stopwatch/StopwatchBackgroundColor",
         "Stopwatch/StopwatchFont",
@@ -101,6 +102,14 @@ const QVariant QSettingsManager::getValue(enum SettingsForStopwatchGroupIndex e,
 const QVariant QSettingsManager::getValue(QString groupName, QString valueName)
 {
     return settings.value(QString("%1/%2").arg(groupName, valueName),false);
+}
+
+bool QSettingsManager::FetchIsStopwatchEnabled()
+{
+    QVariant val = getValue(IsStopwatchEnabled, true);
+
+    if (val == -1) return true;
+    else return val.toBool();
 }
 
 QString QSettingsManager::FetchStopwatchFontColor()

@@ -36,7 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     lastUpdateCheckUnix(qsm.FetchLastUpdateCheckUnix()),
     latestVersion{"<br><u>Recent update check performed already.</u>"},
     stopwatchRainbowMode{(qsm.FetchStopwatchRainbowModeIndex())},
-    stopwatchFormatMode(qsm.FetchStopwatchFormatMode())
+    stopwatchFormatMode(qsm.FetchStopwatchFormatMode()),
+    enabled(qsm.FetchIsStopwatchEnabled())
 
 {
     ui->setupUi(this);
@@ -153,6 +154,7 @@ int MainWindow::GetCurrentStopwatchFontSize()
 void MainWindow::BeginShutdown()
 {
     QApplication::quit();
+    this->close();
 }
 
 QString MainWindow::FetchUUID()
@@ -190,6 +192,21 @@ QString MainWindow::FetchLatestVersion()
 void MainWindow::SetLatestVersion(QString version)
 {
     latestVersion = version;
+}
+
+bool MainWindow::CheckIfStopwatchEnabled()
+{
+    return enabled;
+}
+
+void MainWindow::SetEnabled(bool shouldEnable)
+{
+    enabled = shouldEnable;
+
+    if (enabled && !this->isVisible())
+        this->show();
+    else if (!enabled && !this->isVisible())
+        this->hide();
 }
 
 int MainWindow::GetRainbowMode()
@@ -324,6 +341,9 @@ void MainWindow::showEvent(QShowEvent *event)
 {
     QMainWindow::showEvent(event);
 
+    QTimer::singleShot(0, this, [this]() {
+        setLoadStopwatch(enabled);
+    });
 }
 
 bool MainWindow::event(QEvent *event)
@@ -378,9 +398,9 @@ bool MainWindow::event(QEvent *event)
             emit toggleModuleSignal(true);
 
         connect(this, &MainWindow::toggleEditorSignal, sie, &StopwatchInteractiveEditor::setEditorOpen);
-        emit toggleEditorSignal(false);
 
         connect(sie, &StopwatchInteractiveEditor::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
+        connect(sie, &StopwatchInteractiveEditor::toggleStopwatchSignal, this, &MainWindow::setLoadStopwatch);
         connect(this, &MainWindow::updateClockRainbowColor, stm, &SystemTimeModule::refreshColorState);
         connect(&swm, &StopwatchManager::updateClockRainbowColor, stm, &SystemTimeModule::refreshColorState);
         connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
@@ -404,4 +424,13 @@ void MainWindow::updateRainbowColor(const QColor& color) {
 void MainWindow::updateRainbowBackgroundColor(const QColor &color)
 {
     ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewStopwatchStylesheet(stopwatchFontColor.name(), color.name()));
+}
+
+void MainWindow::setLoadStopwatch(bool shouldEnable)
+{
+    enabled = shouldEnable;
+    if (enabled && !this->isVisible())
+        this->setVisible(true);
+    else if (!enabled && this->isVisible())
+        this->setVisible(false);
 }

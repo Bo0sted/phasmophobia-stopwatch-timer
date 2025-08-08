@@ -73,6 +73,8 @@ public:
     void SetLastUpdateCheckUnix(int ts);
     QString FetchLatestVersion();
     void SetLatestVersion(QString version);
+    bool CheckIfStopwatchEnabled();
+    void SetEnabled(bool enabled);
 
     int GetRainbowMode();
     void SetRainbowMode(int index);
@@ -86,6 +88,7 @@ public slots:
     void updateElapsedTime(const int &time);
     void updateRainbowColor(const QColor& color);
     void updateRainbowBackgroundColor(const QColor& color);
+    void setLoadStopwatch(bool enabled);
 signals:
     void toggleModuleSignal(bool shouldEnable);
     void toggleEditorSignal(bool shouldOpen);
@@ -109,6 +112,7 @@ private:
     QString latestVersion;
     int stopwatchRainbowMode;
     StopwatchManager::FormatModes stopwatchFormatMode;
+    bool enabled;
 protected:
     void mouseMoveEvent(QMouseEvent *event)override;
     void mousePressEvent(QMouseEvent *event)override;

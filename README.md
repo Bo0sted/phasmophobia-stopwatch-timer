@@ -89,33 +89,21 @@ Well if its gonna be sitting on your screen all the time it might as well look p
 - This project (should) compile on Mac. It uses the Qt framework and libuiohook, both of which are cross platform. The problem with Mac is I don't personally have one, and in order to release anything related to Mac I need to own one since virtualizing that platform is not really possible. After compiling, the program should run and register hotkeys 100% fine, but the issue is many of the keys that are defined in libuiohook are outdated and no longer correspond with the operating system. That means when you go to register a hotkey, instead of showing the name of the key that's registered, it'll simply show "Unknown". If this is not an issue for you, then all you need to do is compile the code and everything should work fine.
 
 # License
-This project is licensed under the GNU General Public License version 3.0 (GPL‑3.0). It is a copyleft license that ensures the software remains free and open for all users.
+This project is licensed under the **GNU General Public License version 3 (GPL-3.0)**.  
+The GPL-3.0 license is a free software license that allows anyone to use, copy, modify, and distribute this software for any purpose, as long as any derivative works or redistributed versions are also licensed under the same terms. This ensures that the software remains free and open for everyone, and that improvements made by one person can benefit the whole community.
 
-Key terms of GPL‑3.0:
+When you modify or redistribute this software, you must include the same license and provide access to the source code. This protects both the original author’s work and the community of users who rely on it, guaranteeing that software freedom is preserved and that all users can study, share, and improve the project.
 
-    You are free to use, copy, modify, and distribute the software for any purpose, including commercial use.
+By using, modifying, or distributing this software, you agree to comply with the terms of the GPL-3.0 license.  
+For the full license text, please visit [GNU GPL v3 License](https://www.gnu.org/licenses/gpl-3.0.txt).
 
-    If you distribute the software in modified form or as a compiled binary, you must also provide the complete corresponding source code.
-
-    Any distributed version, modified or unmodified, must remain under the GPL‑3.0 license. You cannot relicense it under a proprietary or more restrictive license.
-
-    Contributors grant a patent license for any patents that their contributions might cover.
-
-    The license includes an anti‑tivoization clause, which means that if the software is distributed on hardware that restricts modification, you must still allow users to install and run modified versions.
-
-    Additional restrictions that limit the rights granted by GPL‑3.0 cannot be applied.
-
-The full text of the license is available here: https://www.gnu.org/licenses/gpl-3.0.en.html
-
-By contributing to this project, you agree that your contributions will be licensed under GPL‑3.0.
-For more details, see the full license text here: https://www.gnu.org/licenses/gpl-3.0.en.html
 
 ### Internet access
-When launching the app and if an internet connection is available, the stopwatch will attempt to make two network requests: 
-- First connection is to Github to check the official version of this app. 
-- Next connection is an anonymous usage ping to my server.
+When launching the app for the first time in a while, the app will attempt to make two connections:
+- First connection will be made to this repo to check for a new program version.
+- Next connection is to my server to post an anonymous ping
   - The ping consists of:
-    - The name of your operating system. If you run Linux, this will probably include the name of your distro.
+    - The type operating system you're using (example: "Windows, "macOS", "Linux Mint").
     - Program version.
     - Your anonymous [QUUID](https://doc.qt.io/qt-6/quuid.html#details).
     - Your country code. This information is obtained [100% offline](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L77) by looking at the language of your system.
@@ -127,6 +115,7 @@ The only way to disable them is commenting out this [line](https://github.com/Bo
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

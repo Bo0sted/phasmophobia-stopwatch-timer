@@ -3,7 +3,7 @@
 # Phasmophobia Stopwatch
 
 ### What is this
-A crossplatform stopwatch overlay window supporting Windows, Linux and macOS intended to be used while playing [Phasmophobia](https://store.steampowered.com/app/739630/Phasmophobia/). There are a few scenarios within Phasmophobia where tracking time is a huge benefit to the player like timing your smudges, timing various grace periods like the hunt grace period and more. This stopwatch was designed with ease of use in mind. Once launched, it will always stay on top of your game. Hotkeys are used to control the stopwatch, and will work even if you're in game. The hotkeys are re-assignabnle in settings as well. Speaking of settings, this stopwatch features many customizations including font, font size, font color, font color states, font background, font border, display modes, and color effects with more planned features coming down the pike. This stopwatch also features a clock overlay window, which will output your system time alongside your stopwatch for all the imnmersive fullscreen gamers that don't always see their taskbar time!
+A crossplatform stopwatch overlay window supporting Windows, Linux and macOS intended to be used while playing [Phasmophobia](https://store.steampowered.com/app/739630/Phasmophobia/). There are a few scenarios within Phasmophobia where tracking time is a huge benefit to the player like timing your smudges, timing various grace periods like the hunt grace period and more. This stopwatch was designed with ease of use in mind. Once launched, it will always stay on top of your game. Hotkeys are used to control the stopwatch, and will work even if you're in game. The hotkeys are re-assignable in settings as well. Speaking of settings, this stopwatch features many customizations including font, font size, font color, font color states, font background, font border, display modes, and color effects including gradient support with more planned features coming down the pike. This stopwatch also features a clock overlay window, which will output your system time alongside your stopwatch for all the imnmersive fullscreen gamers that don't always see their taskbar time!
 
 ## Default hotkeys
 - Press Left Shift + 1 to Toggle timer on/off
@@ -117,6 +117,7 @@ The only way to disable them is commenting out this [line](https://github.com/Bo
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

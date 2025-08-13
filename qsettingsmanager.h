@@ -29,6 +29,9 @@ public:
         StopwatchBackgroundEnabled,
         StopwatchRainbowModeIndex,
         StopwatchFormatModeIndex,
+        StopwatchGradientOneColor,
+        StopwatchGradientTwoColor,
+        StopwatchGradientEnabled,
 
     };
     enum SettingsForClockGroupIndex {
@@ -68,9 +71,12 @@ public:
     const QVariant getValue(QString groupName, QString valueName);
 
     bool FetchIsStopwatchEnabled();
+    bool FetchIsGradientEnabled();
     QString FetchStopwatchFontColor();
     QString FetchPausedStopwatchFontColor();
     QString FetchResetStopwatchFontColor();
+    QString FetchGradientOneFontColor();
+    QString FetchGradientTwoFontColor();
     QString FetchStopwatchBackground();
     QString FetchStopwatchFont();
     int FetchStopwatchFontSize();

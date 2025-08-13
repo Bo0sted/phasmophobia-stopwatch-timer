@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include <QLabel>
 #include <QTimer>
+#include <array>
 
 // Forward declaration
 class StopwatchManager;
@@ -60,8 +61,10 @@ public:
     void UpdateStopwatchBackground(QColor color);
     void UpdateStopwatchBorderColor(QColor color);
     void UpdateStopwatchBorderThickness(QString thickness);
+    void SetGradientEnabled(bool enabled);
     void SetBackgroundEnabled(bool enabled);
     bool IsBackgroundEnabled();
+    bool IsGradientEnabled();
     QFont GetCurrentFont();
     QString GetActiveStopwatchStyleSheet();
     int GetCurrentStopwatchFontSize();
@@ -80,9 +83,13 @@ public:
     void SetRainbowMode(int index);
     void ResizeWindowToFitStopwatch();
 
+    std::array<QColor, 2> GetGradientColors();
+
     StopwatchManager::FormatModes GetFormatMode();
     void SetFormatMode(StopwatchManager::FormatModes fm);
     QColor GetBackground();
+
+    void SetGradients(QColor gradientOne, QColor gradientTwo);
 
 public slots:
     void updateElapsedTime(const int &time);
@@ -105,6 +112,9 @@ private:
     QColor stopwatchBackgroundColor;
     QColor stopwatchBorderColor;
     QColor stopwatchBorderThickness;
+    QColor stopwatchGradientOneColor;
+    QColor stopwatchGradientTwoColor;
+    bool gradientEnabled;
     bool backgroundEnabled;
     QString uuid;
     int lastPingUnix;

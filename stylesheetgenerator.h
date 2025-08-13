@@ -25,6 +25,8 @@ public:
     static const QFont DefaultFont;
     static const QString DefaultFontHexColor;
     static const QString DefaultPausedFontHexColor;
+    static const QString DefaultGradientOneFontHexColor;
+    static const QString DefaultGradientTwoFontHexColor;
     static const QVector<QPair<QString,QString>> NiceColors;
     static const QString DefaultWidgetDarkModeBackground;
     static const QString DefaultStopwatchBackground;

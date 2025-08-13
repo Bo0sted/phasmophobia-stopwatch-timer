@@ -93,6 +93,9 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->pushButton_2->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchClockFontColor()));
         ui->backgroundColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchBackgroundColor()));
         ui->borderColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchBorderColor()));
+        ui->gradientOneColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchGradientOneFontColor()));
+        ui->gradientTwoColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchGradientTwoFontColor()));
+        ui->gradientToggleCheckbox->setChecked(mw->qsm.FetchIsGradientEnabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
 
         auto backgroundEnabled = mw->qsm.FetchIsBackgroundEnabled();
         ui->backgroundToggleCheckbox->setChecked(backgroundEnabled ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
@@ -350,7 +353,7 @@ void StopwatchInteractiveEditor::on_pushButton_3_clicked()
 
 void StopwatchInteractiveEditor::on_pushButton_4_clicked()
 {
-    auto color = StylesheetGenerator::DefaultFontHexColor;
+    auto color = mw->FetchStopwatchFontColorAsHex();
     mw->stm->UpdateClockFontColor(color);
     mw->qsm.setValue(QSettingsManager::ClockFontColor,color);
     ui->pushButton_2->setStyleSheet(ui->pushButton_2->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color));
@@ -614,5 +617,45 @@ void StopwatchInteractiveEditor::on_ToggleHotkeyRecordPushButton_clicked()
     //     ui->ToggleTabActiveAssignmentLabel->setText(hotkeyName);
     //     mw->qsm.setValue(QSettingsManager::ToggleKey,hotkeyName);
     // }
+}
+
+
+void StopwatchInteractiveEditor::on_gradientOneColorPickerPushButton_pressed()
+{
+    auto cpd = new ColorPickerDialog();
+    auto val = cpd->exec();
+
+    if (val == QDialog::Accepted) {
+        auto color = cpd->FetchColorSelection();
+        mw->SetGradients(color, mw->GetGradientColors()[1]);
+        mw->qsm.setValue(QSettingsManager::StopwatchGradientOneColor,color.name());
+        mw->RefreshStopwatchState(true);
+        ui->gradientOneColorPickerPushButton->setStyleSheet(ui->gradientOneColorPickerPushButton->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color.name()));
+    }
+}
+
+
+void StopwatchInteractiveEditor::on_gradientTwoColorPickerPushButton_pressed()
+{
+    auto cpd = new ColorPickerDialog();
+    auto val = cpd->exec();
+
+    if (val == QDialog::Accepted) {
+        auto color = cpd->FetchColorSelection();
+        mw->SetGradients(mw->GetGradientColors()[0],color);
+        mw->qsm.setValue(QSettingsManager::StopwatchGradientTwoColor,color.name());
+        mw->RefreshStopwatchState(true);
+        ui->gradientTwoColorPickerPushButton->setStyleSheet(ui->gradientTwoColorPickerPushButton->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color.name()));
+    }
+}
+
+
+void StopwatchInteractiveEditor::on_gradientToggleCheckbox_clicked(bool checked)
+{
+    mw->SetGradientEnabled(checked);
+    mw->qsm.setValue(QSettingsManager::StopwatchGradientEnabled,QString("%1").arg(checked));
+    mw->RefreshStopwatchState(false);
+    // SetBorderOptionsVisible(checked);
+    // SetBackgroundOptionsEnabled(checked);
 }
 

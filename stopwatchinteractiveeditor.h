@@ -94,6 +94,12 @@ private slots:
 
     void on_ToggleStopwatchPushButton_clicked();
 
+    void on_gradientOneColorPickerPushButton_pressed();
+
+    void on_gradientTwoColorPickerPushButton_pressed();
+
+    void on_gradientToggleCheckbox_clicked(bool checked);
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;

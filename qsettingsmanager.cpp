@@ -30,6 +30,9 @@ QSettingsManager::QSettingsManager()
         "Stopwatch/StopwatchBackgroundEnabled",
         "Stopwatch/StopwatchRainbowModeIndex",
         "Stopwatch/StopwatchFormatModeIndex",
+        "Stopwatch/StopwatchGradientOneColor",
+        "Stopwatch/StopwatchGradientTwoColor",
+          "Stopwatch/StopwatchGradientEnabled",
       }
     , SettingsForClockGroup{
         "System-Clock-Module/ClockFont",
@@ -112,6 +115,14 @@ bool QSettingsManager::FetchIsStopwatchEnabled()
     else return val.toBool();
 }
 
+bool QSettingsManager::FetchIsGradientEnabled()
+{
+    QVariant val = getValue(StopwatchGradientEnabled, true);
+
+    if (val == -1) return true;
+    else return val.toBool();
+}
+
 QString QSettingsManager::FetchStopwatchFontColor()
 {
     QVariant val = getValue(StopwatchFontColor);
@@ -133,6 +144,22 @@ QString QSettingsManager::FetchResetStopwatchFontColor()
     QVariant val = getValue(StopwatchResetFontColor);
 
     if (val == false) return StylesheetGenerator::DefaultPausedFontHexColor;
+    else return val.toString();
+}
+
+QString QSettingsManager::FetchGradientOneFontColor()
+{
+    QVariant val = getValue(StopwatchGradientOneColor);
+
+    if (val == false) return StylesheetGenerator::DefaultGradientOneFontHexColor;
+    else return val.toString();
+}
+
+QString QSettingsManager::FetchGradientTwoFontColor()
+{
+    QVariant val = getValue(StopwatchGradientTwoColor);
+
+    if (val == false) return StylesheetGenerator::DefaultGradientTwoFontHexColor;
     else return val.toString();
 }
 

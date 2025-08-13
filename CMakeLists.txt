@@ -51,6 +51,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         uioeventloop.h uioeventloop.cpp
         uiohotkeymanager.h uiohotkeymanager.cpp
         uiokey.h
+        gradientqlabel.h gradientqlabel.cpp
 
 
 

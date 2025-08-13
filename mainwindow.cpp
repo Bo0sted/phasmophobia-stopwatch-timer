@@ -13,6 +13,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QDateTime>
+#include <array>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -29,6 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
     stopwatchBackgroundColor(qsm.FetchStopwatchBackgroundColor()),
     stopwatchBorderColor(qsm.FetchStopwatchBorderColor()),
     stopwatchBorderThickness(qsm.FetchStopwatchBorderWidth()),
+    stopwatchGradientOneColor(qsm.FetchGradientOneFontColor()),
+    stopwatchGradientTwoColor(qsm.FetchGradientTwoFontColor()),
+    gradientEnabled(qsm.FetchIsGradientEnabled()),
     backgroundEnabled(qsm.FetchIsBackgroundEnabled()),
     Uptime(QDateTime::currentMSecsSinceEpoch()),
     uuid(qsm.FetchUUID()),
@@ -92,6 +96,11 @@ void MainWindow::RefreshStopwatchState(bool shouldReset)
         ui->StopwatchLabel->setAttribute(Qt::WA_NoSystemBackground, false);
     }
 
+    ui->StopwatchLabel->setUseGradient(gradientEnabled);
+
+    if (gradientEnabled)
+        ui->StopwatchLabel->setGradientColors(stopwatchGradientOneColor, stopwatchGradientTwoColor);
+
     ui->StopwatchLabel->update();
     ui->StopwatchLabel->repaint();
     ui->StopwatchLabel->show();
@@ -125,14 +134,23 @@ void MainWindow::UpdateStopwatchBorderThickness(QString thickness)
     stopwatchBorderThickness = thickness;
 }
 
-void MainWindow::SetBackgroundEnabled(bool enabled) {
-    backgroundEnabled = enabled;
-
+void MainWindow::SetGradientEnabled(bool enabled)
+{
+    gradientEnabled = enabled;
 }
 
+void MainWindow::SetBackgroundEnabled(bool enabled)
+{
+    backgroundEnabled = enabled;
+}
 
 bool MainWindow::IsBackgroundEnabled() {
     return backgroundEnabled;
+}
+
+bool MainWindow::IsGradientEnabled()
+{
+    return gradientEnabled;
 }
 
 
@@ -259,6 +277,16 @@ QColor MainWindow::GetBackground()
     return stopwatchBackgroundColor;
 }
 
+void MainWindow::SetGradients(QColor gradientOne, QColor gradientTwo)
+{
+    stopwatchGradientOneColor = gradientOne;
+    stopwatchGradientTwoColor = gradientTwo;
+
+    if (gradientEnabled)
+        RefreshStopwatchState(false);
+
+}
+
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
@@ -306,6 +334,11 @@ void MainWindow::ResizeWindowToFitStopwatch()
     // Resize main window explicitly
     this->resize(centralSize.width() + frameWidth,
                  centralSize.height() + frameHeight);
+}
+
+std::array<QColor, 2> MainWindow::GetGradientColors()
+{
+    return {stopwatchGradientOneColor, stopwatchGradientTwoColor};
 }
 
 QString MainWindow::FormatTime(int totalSeconds)
@@ -386,6 +419,7 @@ bool MainWindow::event(QEvent *event)
                             | Qt::WindowStaysOnTopHint
                             );
         sie->show();
+        sie->RefreshOpenState();
 
 
         connect(&uiohm, &UioHotkeyManager::refreshHotkeyDisplays,

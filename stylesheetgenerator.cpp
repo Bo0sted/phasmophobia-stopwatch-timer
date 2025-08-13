@@ -8,6 +8,11 @@
 const QFont StylesheetGenerator::DefaultFont = QFont("DejaVu Sans");
 const QString StylesheetGenerator::DefaultFontHexColor = QString("#42C0FB");
 const QString StylesheetGenerator::DefaultPausedFontHexColor = QString("#BB2A3C");
+
+const QString StylesheetGenerator::DefaultGradientOneFontHexColor = QString("#007FFF");
+const QString StylesheetGenerator::DefaultGradientTwoFontHexColor = QString("#E066FF");
+
+
 const QString StylesheetGenerator::DefaultWidgetDarkModeBackground = QString("#1A1A1A");
 const QString StylesheetGenerator::DefaultStopwatchBackground = QString("black");
 const QString StylesheetGenerator::DefaultStopwatchBorderColor = QString("black");

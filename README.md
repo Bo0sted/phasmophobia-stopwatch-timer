@@ -105,8 +105,10 @@ When launching the app for the first time in a while, the app will attempt to ma
   - The ping consists of:
     - The type operating system you're using (example: "Windows, "macOS", "Linux Mint").
     - Program version.
-    - Your anonymous [QUUID](https://doc.qt.io/qt-6/quuid.html#details). This is a really complex randomly generated number to differentiate one PC from another without knowing any personal information.
-    - Your country code. This information is obtained [100% offline](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L77) by looking at the language of your system.
+    - Your anonymous [QUUID](https://doc.qt.io/qt-6/quuid.html#details).
+      - This is a really complex randomly generated number to differentiate one PC from another without knowing any personal information.
+    - Your country code.
+      - This information is obtained [100% offline](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L77) by looking at the language of your system.
     - And last but not least a unix timestamp
     - You may verify the contents of the ping yourself by looking at the ping function [itself](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
 
@@ -115,6 +117,7 @@ The only way to disable them is commenting out this [line](https://github.com/Bo
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

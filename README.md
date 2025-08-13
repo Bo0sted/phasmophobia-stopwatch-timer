@@ -77,6 +77,9 @@ Setup installer coming soon...
 - Your settings are automatically handled in tbe background. No need to ever save or load any settings.
 - This program remembers window placements. Meaning once you pick a spot for your timer and system clock, the windows will always return to that spot when you launch it the next time.
 
+## Why so many customizations??
+Well if its gonna be sitting on your screen all the time it might as well look pretty, right?
+
 ## Breakdown of the backend
 - Written in pure C++ using the lovely Qt framework to make this app cross platform* (for the most part, see caveats)
 - Multi-threaded design to ensure the time is never delayed and user interface is responsive and fluid.
@@ -124,6 +127,7 @@ The only way to disable them is commenting out this [line](https://github.com/Bo
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

@@ -416,7 +416,7 @@ bool MainWindow::event(QEvent *event)
         sie->setAttribute(Qt::WA_DeleteOnClose);
         sie->setWindowFlags(sie->windowFlags()
                             | Qt::FramelessWindowHint
-                            | Qt::WindowStaysOnTopHint
+                            // | Qt::WindowStaysOnTopHint
                             );
         sie->show();
         sie->RefreshOpenState();

@@ -19,7 +19,6 @@ class UioHotkeyManager;
 
 #include "qsettingsmanager.h"
 #include "stopwatchmanager.h"
-#include "qhotkeymanager.h"
 #include "systemtimemodule.h"
 #include "stopwatchinteractiveeditor.h"
 #include "updatemanager.h"

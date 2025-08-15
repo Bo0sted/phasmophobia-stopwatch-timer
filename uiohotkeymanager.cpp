@@ -247,6 +247,9 @@ void UioHotkeyManager::ResetStopwatch()
 void UioHotkeyManager::RestoreStopwatch()
 {
     mw->swm.elapsedSeconds = totalElapsedSecondsBeforeReset;
+
+    if (mw->swm.pauseStopwatch)
+        mw->swm.pauseStopwatch = false;
 }
 void UioHotkeyManager::BringToForegroundStopwatch()
 {

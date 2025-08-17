@@ -81,7 +81,7 @@ Setup installer coming soon...
 Well if its gonna be sitting on your screen all the time it might as well look pretty, right?
 
 ## Breakdown of the backend
-- Written in pure C++ using the lovely Qt framework to make this app cross platform* (for the most part, see caveats)
+- Written in pure C++ using the lovely Qt framework to make this app cross platform for Windows, Linux and ([limited MacOS support](#macos-support))
 - Multi-threaded design to ensure the time is never delayed and user interface is responsive and fluid.
 - Using libuiohook to handle global hotkeys in a non-blocking fashion. This is a major improvement over QHotkey, which I used in version 1.3 and below. While Qhotkey was super easy and intuitive to use, it came with many limiations like no numpad key support and worst of all it handled keys in an exclusive fashion. Keys would not get passed onto other programs once the stopwatch captured the key.
 
@@ -117,6 +117,7 @@ The only way to disable them is commenting out this [line](https://github.com/Bo
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

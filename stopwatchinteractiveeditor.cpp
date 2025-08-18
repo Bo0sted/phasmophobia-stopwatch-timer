@@ -216,7 +216,11 @@ void StopwatchInteractiveEditor::SetBackgroundOptionsEnabled(bool enabled)
 void StopwatchInteractiveEditor::RefreshToggleHotkeyPushButton()
 {
     auto mode = mw->uiohm.GetHotkeyAssignMode();
+    auto style = StylesheetGenerator::DefaultButtonStyle(12, StylesheetGenerator::DefaultWidgetDarkModeBackground, (mode ? "Red": "White"));
+    ui->ToggleHotkeyRecordPushButton->setStyleSheet(style);
     ui->ToggleHotkeyRecordPushButton->setText(mode ? "Disable" : "Record");
+    ui->ToggleHotkeyRecordPushButton->update();
+    ui->ToggleHotkeyRecordPushButton->repaint();
 }
 
 void StopwatchInteractiveEditor::RefreshToggleHotkeyAssignModeDisplay()
@@ -603,12 +607,10 @@ void StopwatchInteractiveEditor::on_ToggleHotkeyRecordPushButton_clicked()
 {
     auto mode = mw->uiohm.GetHotkeyAssignMode();
     mw->uiohm.SetHotkeyReassignMode(!mode);
-    ui->ToggleHotkeyRecordPushButton->setText(mode ? "Record" : "Disable");
 
-    if (!mode)
-        mw->uiohm.ClearHotkeyAssignState();
+    if (!mode) mw->uiohm.ClearHotkeyAssignState();
 
-    ui->ToggleHotkeyRecordPushButton->repaint();
+    refreshHotkeyDisplays();
     ui->HotkeyAssignModeDisplay->setFocus();
 
     // if (mw->uiohm.IsHotkeyAvailable(ui->ToggleTabHotkeyInput->keySequence().toString(),true)) {

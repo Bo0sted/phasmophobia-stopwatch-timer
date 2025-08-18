@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
+    <width>661</width>
     <height>678</height>
    </rect>
   </property>
@@ -302,7 +302,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>591</width>
+           <width>632</width>
            <height>561</height>
           </rect>
          </property>
@@ -540,7 +540,7 @@
              <widget class="QLabel" name="secondGradientColorPickerPushButton">
               <property name="minimumSize">
                <size>
-                <width>110</width>
+                <width>105</width>
                 <height>0</height>
                </size>
               </property>

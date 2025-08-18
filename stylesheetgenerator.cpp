@@ -91,7 +91,7 @@ const QString StylesheetGenerator::DefaultButtonStyle(int fontSize, QString back
                    "font-size: %1pt;"
                    "font-weight: medium;"
                    "background-color: %2;"
-                   "border-style: outset;"
+                   "border-style: solid;"
                    "border-width: 2px;"
                    "border-radius: 10px;"
                    "border-color: %3;"

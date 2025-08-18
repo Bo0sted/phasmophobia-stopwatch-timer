@@ -42,7 +42,7 @@ Setup installer coming soon...
 - This project uses libuiohook, which is dependent on the [X11 protocol](https://is.gd/GhPqpn). As a result, your Linux installation must either be running X11 as its display protocol or running Wayland with an X11 compatibility layer on top of it like [Xwayland](https://wiki.archlinux.org/title/Wayland)
   **- Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.**
 ### Important notice about registering hotkeys specifically on Linux:
-- It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. Numpad keys seem to also process **immediately** on Arch running Zen
+- It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. Numpad keys seem to also process **immediately** without modifier keys but it may be different on your system.
 ### Known caveats
 - The stopwatch wont be able to stay on top of the Phasmophobia window if fullscreen mode is turned on. This is because on Linux, the [compositor](https://en.wikipedia.org/wiki/Compositing_manager) handles how windows get stacked and in which order. Most compositors stack fullscreen windows at the very top, which is why the stopwatch still gets forced out of view by your system despite being programmed not to.
   - Despite this limitation, most compositors offer a way for users to create special rules for windows. One of these rules is stacking order. By forcing your Phasmophobia window to the bottom of the stack, or forcing the stopwatch window to the front, you can force the stopwatch to always be on top of Phasmophobia.  
@@ -81,7 +81,7 @@ Setup installer coming soon...
 Well if its gonna be sitting on your screen all the time it might as well look pretty, right?
 
 ## Breakdown of the backend
-- Written in pure C++ using the lovely Qt framework to make this app cross platform* (for the most part, see caveats)
+- Written in pure C++ using the lovely Qt framework to make this app cross platform for Windows, Linux and ([limited MacOS support](#macos-support))
 - Multi-threaded design to ensure the time is never delayed and user interface is responsive and fluid.
 - Using libuiohook to handle global hotkeys in a non-blocking fashion. This is a major improvement over QHotkey, which I used in version 1.3 and below. While Qhotkey was super easy and intuitive to use, it came with many limiations like no numpad key support and worst of all it handled keys in an exclusive fashion. Keys would not get passed onto other programs once the stopwatch captured the key.
 
@@ -117,6 +117,8 @@ The only way to disable them is commenting out this [line](https://github.com/Bo
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
+
 
 
 

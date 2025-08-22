@@ -23,8 +23,7 @@ Setup installer coming soon...
 - After ensuring you have the proper setup, install the necessary tools:
 `git` `cmake` `qt6-base` `qt6-tools`
 ### Step 1: Clone
-`git clone https://github.com/Bo0sted/CrossplatformStopwatch.git`
-
+`git clone https://github.com/Bo0sted/phasmophobia-stopwatch-timer.git`
 `cd CrossplatformStopwatch`
 ### Step 2: Create a build folder
 `mkdir build`
@@ -117,6 +116,7 @@ The only way to disable them is commenting out this [line](https://github.com/Bo
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

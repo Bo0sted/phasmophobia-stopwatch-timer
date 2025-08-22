@@ -39,7 +39,7 @@ Setup installer coming soon...
 ## Running on Linux
 ### X11 and its relevance to this app
 - This project uses libuiohook, which is dependent on the [X11 protocol](https://is.gd/GhPqpn). As a result, your Linux installation must either be running X11 as its display protocol or running Wayland with an X11 compatibility layer on top of it like [Xwayland](https://wiki.archlinux.org/title/Wayland)
-  **- Forcing this app to run under Wayland alone without any compatiblity will either prevent the app from launching all together or hotkeys will 100% not work thus rendering the app useless.**
+  **- If you notice your hotkeys are not working, this is a telltale sign that X11 is not being used**
 ### Important notice about registering hotkeys specifically on Linux:
 - It is strongly recommended to use modifier keys when registering a hotkey on Linux. This is because modifier keys (such as Ctrl, Alt, Meta, Shift among others) force X11 to process the hotkey **immediately** instead of queueing it up and processing it as a [passive key grab](https://www.x.org/releases/current/doc/man/man3/XGrabKey.3.xhtml) which happens when no modifiers are used. If you are experiencing any issues with hotkeys not triggering or triggering with a delay while the app is not in focus, please consider registering your hotkeys with a modifier. Numpad keys seem to also process **immediately** without modifier keys but it may be different on your system.
 ### Known caveats
@@ -116,6 +116,7 @@ The only way to disable them is commenting out this [line](https://github.com/Bo
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

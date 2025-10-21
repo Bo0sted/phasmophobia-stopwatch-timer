@@ -3,6 +3,7 @@
 #include "stylesheetgenerator.h"
 
 #include <QMessageBox>
+#include <QClipboard>
 
 ColorPickerDialog::ColorPickerDialog(QWidget *parent)
     : QDialog(parent)
@@ -111,6 +112,14 @@ void ColorPickerDialog::on_hexColorInput_textChanged(const QString &arg1)
         hex = arg1;
      else
         hex.clear();
+
+}
+
+
+void ColorPickerDialog::on_pushButton_clicked()
+{
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    ui->hexColorInput->setText(clipboard->text());
 
 }
 

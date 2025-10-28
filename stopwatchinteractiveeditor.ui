@@ -203,6 +203,13 @@
         </spacer>
        </item>
        <item>
+        <widget class="QPushButton" name="exitProgramButton">
+         <property name="text">
+          <string>Exit Program</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="AboutProgramPushButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">

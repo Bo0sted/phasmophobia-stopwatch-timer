@@ -100,6 +100,10 @@ private slots:
 
     void on_gradientToggleCheckbox_clicked(bool checked);
 
+    void on_pushButton_clicked();
+
+    void on_exitProgramButton_clicked();
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;

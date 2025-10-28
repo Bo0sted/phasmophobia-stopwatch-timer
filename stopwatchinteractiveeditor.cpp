@@ -661,3 +661,12 @@ void StopwatchInteractiveEditor::on_gradientToggleCheckbox_clicked(bool checked)
     // SetBackgroundOptionsEnabled(checked);
 }
 
+
+
+
+
+void StopwatchInteractiveEditor::on_exitProgramButton_clicked()
+{
+    mw->BeginShutdown();
+}
+

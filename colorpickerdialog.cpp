@@ -123,3 +123,9 @@ void ColorPickerDialog::on_pushButton_clicked()
 
 }
 
+
+void ColorPickerDialog::on_pushButton_2_clicked()
+{
+    ui->hexColorInput->clear();
+}
+

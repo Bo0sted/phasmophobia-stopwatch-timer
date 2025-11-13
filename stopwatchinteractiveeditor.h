@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class MainWindow;
+
 #include "mainwindow.h"
 
 namespace Ui {
@@ -99,8 +101,6 @@ private slots:
     void on_gradientTwoColorPickerPushButton_pressed();
 
     void on_gradientToggleCheckbox_clicked(bool checked);
-
-    void on_pushButton_clicked();
 
     void on_exitProgramButton_clicked();
 

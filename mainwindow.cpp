@@ -13,7 +13,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QDateTime>
-#include <array>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -307,6 +307,10 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::MouseButton::RightButton) {
         sie->setVisible(true);
+        sie->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::FramelessWindowHint);
+        sie->show();
+        sie->raise();
+        sie->activateWindow();
         uiohm.UpdateHotkeySignalBlock(true);
     }
 }
@@ -413,11 +417,7 @@ bool MainWindow::event(QEvent *event)
         stm->move(lastKnown.first,lastKnown.second);
 
         sie = new StopwatchInteractiveEditor(nullptr, this);
-        sie->setAttribute(Qt::WA_DeleteOnClose);
-        sie->setWindowFlags(sie->windowFlags()
-                            | Qt::FramelessWindowHint
-                            // | Qt::WindowStaysOnTopHint
-                            );
+        sie->setAttribute(Qt::WA_DeleteOnClose, false);
         sie->show();
         sie->RefreshOpenState();
 

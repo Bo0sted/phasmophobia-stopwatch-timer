@@ -104,12 +104,18 @@ private slots:
 
     void on_exitProgramButton_clicked();
 
+    void on_rainbowColorComboBox_activated(int index);
+
+    void on_formatTimeComboBox_activated(int index);
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;
     QPointF oldPosition;
     bool open;
     bool readyForUserUIchanges = false;
+    bool didWarnUserAboutGradientOverride = false;
+    bool didWarnUserAboutTimeDisplayOnlyChangingDuringActivation = false;
 
     void showEvent(QShowEvent *event) override;
     void closeEvent(QCloseEvent *event) override;

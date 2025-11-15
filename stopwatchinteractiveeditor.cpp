@@ -103,7 +103,7 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         SetBackgroundOptionsEnabled(backgroundEnabled);
 
         ui->rainbowColorComboBox->addItems({"Disabled", "Text", "Background"});
-        ui->formatTimeComboBox->addItems({"Hour:Minute:Second", "Total minutes only", "Total seconds only"});
+        ui->formatTimeComboBox->addItems({"Dynamic Hour:Minute:Second", "Total minutes only", "Total seconds only"});
 
         readyForUserUIchanges = true;
         ui->rainbowColorComboBox->setCurrentIndex(mw->GetRainbowMode());
@@ -524,8 +524,9 @@ void StopwatchInteractiveEditor::on_AboutProgramPushButton_clicked()
 
 void StopwatchInteractiveEditor::on_rainbowColorComboBox_currentIndexChanged(int index)
 {
-    if (readyForUserUIchanges)
+    if (readyForUserUIchanges) {
         mw->SetRainbowMode(index);
+    }
 }
 
 
@@ -668,5 +669,28 @@ void StopwatchInteractiveEditor::on_gradientToggleCheckbox_clicked(bool checked)
 void StopwatchInteractiveEditor::on_exitProgramButton_clicked()
 {
     mw->BeginShutdown();
+}
+
+
+void StopwatchInteractiveEditor::on_rainbowColorComboBox_activated(int index)
+{
+    if (mw->IsGradientEnabled() && !didWarnUserAboutGradientOverride) {
+        QMessageBox::information(this,      // parent widget
+                                 "Warning",   // dialog title
+                                 "Gradient mode overrides this effect. Disable it to see rainbow."); // message text
+
+    didWarnUserAboutGradientOverride = true;
+    }
+}
+
+
+void StopwatchInteractiveEditor::on_formatTimeComboBox_activated(int index)
+{
+    if (mw->swm.pauseStopwatch && !didWarnUserAboutTimeDisplayOnlyChangingDuringActivation) {
+        QMessageBox::information(this,
+                                 "Info",
+                                 "Stopwatch only renders while the stopwatch is running. Please start the stopwatch to see desired effect.");
+         didWarnUserAboutTimeDisplayOnlyChangingDuringActivation = true;
+    }
 }
 

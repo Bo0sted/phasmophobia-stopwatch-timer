@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     #endif
 
     QApplication a(argc, argv);
-    QCoreApplication::setApplicationVersion("1.6");
+    QCoreApplication::setApplicationVersion("1.6.5");
     MainWindow w;
 
     w.setWindowFlag(Qt::WindowStaysOnTopHint, true);

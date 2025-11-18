@@ -76,7 +76,7 @@ void UpdateManager::PostAnonymousUsageLog()
     json["version"] = QCoreApplication::applicationVersion();
     json["uuid"] = mw->qsm.FetchUUID();
     QLocale locale;
-    json["country"] = QLocale::countryToString(locale.country());
+    json["country"] = QLocale::territoryToString(locale.territory());
     json["timestamp"] = QDateTime::currentSecsSinceEpoch();
 
     QJsonDocument doc(json);

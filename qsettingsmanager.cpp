@@ -40,7 +40,8 @@ QSettingsManager::QSettingsManager()
         "System-Clock-Module/ClockFontColor",
         "System-Clock-Module/ClockBackgroundColor",
         "System-Clock-Module/IsClockEnabled",
-        "System-Clock-Module/LastClockPosition"}
+        "System-Clock-Module/LastClockPosition",
+        "System-Clock-Module/IsFontSyncedWithStopwatch"}
     , SettingsForLoggingGroup{
         "Network/UUID",
         "Network/LastPingUnix",
@@ -332,6 +333,14 @@ bool QSettingsManager::ShouldCheckUpdate()
 qint64 QSettingsManager::MinutesToSeconds(int minutes)
 {
     return static_cast<qint64>(minutes) * 60;
+}
+
+bool QSettingsManager::FetchIsClockFontSynced()
+{
+    QVariant val = getValue(IsSyncedFontEnabled);
+
+    if (val == false) return 0;
+    else return val.toInt();
 }
 
 QString QSettingsManager::GenerateUUID()

@@ -41,6 +41,7 @@ public:
         ClockBackgroundColor,
         IsClockEnabled,
         LastClockPosition,
+        IsSyncedFontEnabled,
 
     };
 
@@ -99,6 +100,7 @@ public:
     bool ShouldPostPing();
     bool ShouldCheckUpdate();
     qint64 MinutesToSeconds(int minutes);
+    bool FetchIsClockFontSynced();
 private:
     QSettings settings;
 };

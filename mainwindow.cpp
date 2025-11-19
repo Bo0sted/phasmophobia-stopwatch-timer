@@ -320,7 +320,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     QString spos = QString("%1,%2").arg(this->pos().x()).arg(this->pos().y());
     qsm.setValue(QSettingsManager::LastStopwatchPosition, spos);
     stm->close();
-    sie->close();
+    sie->KermitSuicide();
     event->accept();
 }
 

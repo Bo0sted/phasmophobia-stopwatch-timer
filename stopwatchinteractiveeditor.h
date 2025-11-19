@@ -28,13 +28,19 @@ public:
     void RefreshToggleHotkeyPushButton();
     void RefreshToggleHotkeyAssignModeDisplay();
     int GetActiveTabFromHotkeyGroup();
+    bool IsFontSyncedWithStopwatch();
+    void RefreshUptimeThread();
+    void KermitSuicide();
 signals:
+    void signalRefreshUptime(); // Signal to update elapsed time
     void toggleModuleSignal(bool shouldEnable);
     void toggleStopwatchSignal(bool shouldEnable);
 public slots:
     void setEditorOpen(bool shouldOpen);
     void refreshHotkeyDisplays();
 private slots:
+    void updateUptime();
+
     void on_FontPickerCombo_currentFontChanged(const QFont &f);
 
     void on_FontPickerResetButton_clicked();
@@ -44,8 +50,6 @@ private slots:
     void on_quitStopwatch_clicked();
 
     void on_FontPickerComboClock_currentFontChanged(const QFont &f);
-
-    void on_FontSyncWithStopwatchPushbutton_clicked();
 
     void on_ToggleSystemModulePushButton_clicked();
 
@@ -107,6 +111,9 @@ private slots:
     void on_rainbowColorComboBox_activated(int index);
 
     void on_formatTimeComboBox_activated(int index);
+    void on_syncClockWithStopwatchCheckbox_checkStateChanged(const Qt::CheckState &arg1);
+
+    void on_syncClockWithStopwatchCheckbox_clicked(bool checked);
 
 private:
     Ui::StopwatchInteractiveEditor *ui;
@@ -123,6 +130,8 @@ private:
     void mousePressEvent(QMouseEvent *event) override;
     bool event(QEvent *event) override;
     bool AreAllModulesDisabled();
+
+    QFuture<void> refreshUptimeThread;
 
 };
 

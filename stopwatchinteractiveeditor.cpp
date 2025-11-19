@@ -13,6 +13,7 @@
 #include <QMessageBox>
 #include <QDateTime>
 #include <QString>
+#include <QtConcurrent>
 
 StopwatchInteractiveEditor::StopwatchInteractiveEditor(QWidget *parent, MainWindow *mwr)
     : QWidget(parent)
@@ -20,21 +21,22 @@ StopwatchInteractiveEditor::StopwatchInteractiveEditor(QWidget *parent, MainWind
     , mw{mwr}
     //dummy proof
     , open{AreAllModulesDisabled() ? true: false}
+    , refreshUptimeThread(QtConcurrent::run(&StopwatchInteractiveEditor::RefreshUptimeThread, this))
 {
     ui->setupUi(this);
+    connect(this, &StopwatchInteractiveEditor::signalRefreshUptime, this, &StopwatchInteractiveEditor::updateUptime);
 }
 
 StopwatchInteractiveEditor::~StopwatchInteractiveEditor()
 {
+    refreshUptimeThread.cancel();
+    refreshUptimeThread.waitForFinished();
     delete ui;
 }
 
 void StopwatchInteractiveEditor::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-    RefreshUptimeLabel();
-
-
 }
 
 void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
@@ -130,6 +132,8 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->FontSizeSlider->setSliderPosition(mw->GetCurrentStopwatchFontSize());
         ui->ClockFontSizeSlider->setSliderPosition(mw->stm->GetCurrentFontSize());
 
+        ui->syncClockWithStopwatchCheckbox->setCheckState(mw->qsm.FetchIsClockFontSynced() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+
     }
 
     return QWidget::event(event);
@@ -194,10 +198,13 @@ void StopwatchInteractiveEditor::RefreshUptimeLabel()
     ui->UptimeLabel->setText([&]() {
         qint64 now = QDateTime::currentMSecsSinceEpoch();
         qint64 elapsedMs = now - mw->Uptime;
-        return QString("Uptime ~ %1 hours (%2 minutes)")
-            .arg(QString::number(elapsedMs / 3600000.0, 'f', 2))
-            .arg(elapsedMs / 60000);
+        return QString("Uptime ~ %1:%2:%3")
+            .arg((elapsedMs / 3600000) % 100, 2, 10, QLatin1Char('0'))  // hours in 00
+            .arg((elapsedMs / 60000) % 60, 2, 10, QLatin1Char('0'))     // minutes in 00
+            .arg((elapsedMs / 1000) % 60);                              // seconds as integer
     }());
+
+
 }
 
 void StopwatchInteractiveEditor::SetBorderOptionsVisible(bool visible)
@@ -231,6 +238,11 @@ void StopwatchInteractiveEditor::RefreshToggleHotkeyAssignModeDisplay()
 
 int StopwatchInteractiveEditor::GetActiveTabFromHotkeyGroup() {
     return ui->ToggleHotkeyTabWidget->currentIndex();
+}
+
+bool StopwatchInteractiveEditor::IsFontSyncedWithStopwatch()
+{
+    return ui->syncClockWithStopwatchCheckbox->isChecked();
 }
 
 void StopwatchInteractiveEditor::setEditorOpen(bool shouldOpen)
@@ -271,9 +283,17 @@ void StopwatchInteractiveEditor::refreshHotkeyDisplays()
     RefreshToggleHotkeyPushButton();
 }
 
+void StopwatchInteractiveEditor::updateUptime()
+{
+    RefreshUptimeLabel();
+}
+
 void StopwatchInteractiveEditor::on_FontPickerCombo_currentFontChanged(const QFont &f)
 {
     mw->UpdateStopwatchFont(f.family(),mw->GetCurrentFont().pointSize());
+
+    if (IsFontSyncedWithStopwatch())
+        ui->FontPickerComboClock->setCurrentFont(mw->GetCurrentFont());
 }
 
 
@@ -281,14 +301,6 @@ void StopwatchInteractiveEditor::on_FontPickerResetButton_clicked()
 {
     ui->FontPickerCombo->setCurrentText(StylesheetGenerator::DefaultFont.family());
 }
-
-
-
-
-
-
-
-
 
 
 void StopwatchInteractiveEditor::on_closeWindow_clicked()
@@ -308,19 +320,10 @@ void StopwatchInteractiveEditor::on_quitStopwatch_clicked()
 }
 
 
-
-
 void StopwatchInteractiveEditor::on_FontPickerComboClock_currentFontChanged(const QFont &f)
 {
     mw->stm->UpdateClockFont(f.family(),mw->stm->GetCurrentFont().pointSize());
 }
-
-
-void StopwatchInteractiveEditor::on_FontSyncWithStopwatchPushbutton_clicked()
-{
-    ui->FontPickerComboClock->setCurrentFont(mw->GetCurrentFont());
-}
-
 
 void StopwatchInteractiveEditor::on_ToggleSystemModulePushButton_clicked()
 {
@@ -530,11 +533,6 @@ void StopwatchInteractiveEditor::on_rainbowColorComboBox_currentIndexChanged(int
 }
 
 
-
-
-
-
-
 void StopwatchInteractiveEditor::on_formatTimeComboBox_currentIndexChanged(int index)
 {
     if (readyForUserUIchanges)
@@ -549,11 +547,6 @@ void StopwatchInteractiveEditor::on_backgroundColorResetPushButton_clicked()
     mw->qsm.setValue(QSettingsManager::StopwatchBackgroundColor,color);
     ui->backgroundColorPickerPushButton->setStyleSheet(ui->backgroundColorPickerPushButton->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color));
 }
-
-
-
-
-
 
 
 void StopwatchInteractiveEditor::on_AssignToggleHotkeyPushButton_clicked()
@@ -694,3 +687,36 @@ void StopwatchInteractiveEditor::on_formatTimeComboBox_activated(int index)
     }
 }
 
+
+
+
+void StopwatchInteractiveEditor::on_syncClockWithStopwatchCheckbox_checkStateChanged(const Qt::CheckState &arg1)
+{
+    if (arg1 == Qt::CheckState::Checked) {
+        ui->FontPickerComboClock->setEnabled(false);
+        ui->FontPickerComboClock->setCurrentFont(mw->GetCurrentFont());
+    }
+    else
+        ui->FontPickerComboClock->setEnabled(true);
+}
+
+
+void StopwatchInteractiveEditor::on_syncClockWithStopwatchCheckbox_clicked(bool checked)
+{
+    mw->qsm.setValue(QSettingsManager::IsSyncedFontEnabled,QString("%1").arg(checked));
+}
+
+void StopwatchInteractiveEditor::RefreshUptimeThread() {
+    qDebug() << "Uptime thread initialized";
+    while (!refreshUptimeThread.isCanceled()) {
+        QThread::msleep(1000);
+        emit signalRefreshUptime();
+    }
+    qDebug() << "Exiting uptime thread";
+}
+
+void StopwatchInteractiveEditor::KermitSuicide()
+{
+    refreshUptimeThread.cancel();
+    this->close();
+}

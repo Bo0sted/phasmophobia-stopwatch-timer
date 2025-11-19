@@ -1,6 +1,8 @@
 #ifndef SYSTEMTIMEMODULE_H
 #define SYSTEMTIMEMODULE_H
 
+class MainWindow;
+
 #include "mainwindow.h"
 
 #include <QWidget>
@@ -24,7 +26,7 @@ public:
     bool CheckIfModuleIsEnabled();
     void RefreshModuleState();
     int GetCurrentFontSize();
-        void ResizeClockToFitWindow();
+    void ResizeClockToFitWindow();
 signals:
     void signalRefreshClock(const QString &time); // Signal to update elapsed time
 public slots:

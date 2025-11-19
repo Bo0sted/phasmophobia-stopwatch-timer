@@ -98,24 +98,23 @@ For the full license text, please visit [GNU GPL v3 License](https://www.gnu.org
 
 
 ### Internet access
-When launching the app for the first time in a while, the app will attempt to make two connections:
-- First connection will be made to this repo to check for a new program version.
-- Next connection is to my server to post an anonymous ping
-  - The ping consists of:
-    - The type operating system you're using (example: "Windows, "macOS", "Linux Mint").
-    - Program version.
-    - Your anonymous [QUUID](https://doc.qt.io/qt-6/quuid.html#details).
-      - This is a really complex randomly generated number to differentiate one PC from another without knowing any personal information.
-    - Your country code.
-      - This information is obtained [100% offline](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L77) by looking at the language of your system.
-    - And last but not least a unix timestamp
-    - You may verify the contents of the ping yourself by looking at the ping function [itself](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
+When launching the app for the first time in a while, the app will attempt to make precisely two network requests. The sole reason for these requests is to improve the user experience by automatically checking for a new version, and to get a rough estimate of the number of active users through the use of an anonymous ping. To maintain complete transparency, please read below to get a comprehensive list of everything that is collected and how its used.
+- Firstly, this repo will be checked, to get the latest official version of this program. [Source](https://github.com/Bo0sted/phasmophobia-stopwatch-timer/blob/252d701133dbf81eb04f54e559d0f696acdb945e/updatemanager.cpp#L23)
+- Next, a usage ping is posted to my server.
+  - The generic name of your operating system (example: "Windows, "macOS", "Linux Mint").
+  - Program version.
+  - Your machine's [QUUID](https://doc.qt.io/qt-6/quuid.html#details).
+    - This is a randomly generated & really long number to differentiate one PC from another. QUUIDs are one way, meaning once the number is generated there is no way to extract any information about how it was generated. All that's guaranteed is the number will be unique across different machines. Without your QUUID, I would not be able to tell one PC from another and thus not be able to tell the approximate number of active users. 
+  - Your operating system's [language](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L77)
+  - And last but not least a unix timestamp
+ - You may verify the contents of the ping yourself by looking at the code [itself](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
 
 ### Can I disable the pinging / update checks?
-The only way to disable them is commenting out this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332) and building the project from source. By the time I publish version 2.0 which marks the end of beta, the option to disable these logs will be there.
+Due to the program still being in beta, there is no easy way to do this except for editing the source code and re-building the binary. By the time I publish version 2.0 which marks the end of beta, the option to disable these logs will be there.
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

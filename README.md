@@ -55,6 +55,7 @@ Setup installer coming soon...
   - Toggle on/off, Reset, Undo reset
 - System clock overlay window
   - This is a tiny overlay window that displays your system clock. Just like your stopwatch window, this window will attempt to stay on top of all other windows on your desktop.
+  - Sync mode. Individual settings for the clock such as font can be synced to your stopwatch. Any changes made to the stopwatch while this feature is on will automatically copy the setting over onto the Clock.
 - Assignable hotkeys in settings
   - Note: Left and Right modifiers count as different keys. For example, Left Ctrl and Right Ctrl are two seperate hotkeys despite sharing the same name "Ctrl". Same with left side Meta/Windows key and right side.
   - The following modifier keys are supported:
@@ -73,7 +74,7 @@ Setup installer coming soon...
   - Colors
   - Conditional colors
   - Toggle background on/off
-- Your settings are automatically handled in tbe background. No need to ever save or load any settings.
+- Your settings are automatically handled and loaded in the background. No need to ever save or load any settings.
 - This program remembers window placements. Meaning once you pick a spot for your timer and system clock, the windows will always return to that spot when you launch it the next time.
 
 ## Why so many customizations??
@@ -85,7 +86,7 @@ Well if its gonna be sitting on your screen all the time it might as well look p
 - Using libuiohook to handle global hotkeys in a non-blocking fashion. This is a major improvement over QHotkey, which I used in version 1.3 and below. While Qhotkey was super easy and intuitive to use, it came with many limiations like no numpad key support and worst of all it handled keys in an exclusive fashion. Keys would not get passed onto other programs once the stopwatch captured the key.
 
 ### MacOS support
-- This project (should) compile on Mac. It uses the Qt framework and libuiohook, both of which are cross platform. The problem with Mac is I don't personally have one, and in order to release anything related to Mac I need to own one since virtualizing that platform is not easy. After compiling, the program should run and register hotkeys 100% fine, but the issue is many of the keys that are defined in libuiohook are outdated and no longer correspond with the operating system. That means when you go to register a hotkey, instead of showing the name of the key that's registered, it'll simply show "Unknown". If this is not an issue for you, then all you need to do is compile the code and everything should work fine.
+- This project (should) compile on Mac. It uses the Qt framework and libuiohook, both of which are cross platform. The problem with Mac is I don't personally have one, and in order to release anything related to Mac I need to own one since virtualizing that platform is not easy. After compiling, the program should run and register hotkeys 100% fine, but the issue is many of the keys that are defined in libuiohook are outdated and no longer correspond with modern operating systems. That means when you go to register a hotkey, instead of showing the name of the key that's registered, it'll simply show "Unknown". If this is not an issue for you, then all you need to do is compile the code and everything should work fine.
 
 # License
 This project is licensed under the **GNU General Public License version 3 (GPL-3.0)**.  
@@ -114,6 +115,7 @@ Due to the program still being in beta, there is no easy way to do this except f
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
 
 
 

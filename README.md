@@ -55,6 +55,7 @@ Setup installer coming soon...
   - Toggle on/off, Reset, Undo reset
 - System clock overlay window
   - This is a tiny overlay window that displays your system clock. Just like your stopwatch window, this window will attempt to stay on top of all other windows on your desktop.
+  - Sync mode. Individual settings for the clock such as font can be synced to your stopwatch. Any changes made to the stopwatch while this feature is on will automatically copy the setting over onto the Clock.
 - Assignable hotkeys in settings
   - Note: Left and Right modifiers count as different keys. For example, Left Ctrl and Right Ctrl are two seperate hotkeys despite sharing the same name "Ctrl". Same with left side Meta/Windows key and right side.
   - The following modifier keys are supported:
@@ -73,7 +74,7 @@ Setup installer coming soon...
   - Colors
   - Conditional colors
   - Toggle background on/off
-- Your settings are automatically handled in tbe background. No need to ever save or load any settings.
+- Your settings are automatically handled and loaded in the background. No need to ever save or load any settings.
 - This program remembers window placements. Meaning once you pick a spot for your timer and system clock, the windows will always return to that spot when you launch it the next time.
 
 ## Why so many customizations??
@@ -85,7 +86,7 @@ Well if its gonna be sitting on your screen all the time it might as well look p
 - Using libuiohook to handle global hotkeys in a non-blocking fashion. This is a major improvement over QHotkey, which I used in version 1.3 and below. While Qhotkey was super easy and intuitive to use, it came with many limiations like no numpad key support and worst of all it handled keys in an exclusive fashion. Keys would not get passed onto other programs once the stopwatch captured the key.
 
 ### MacOS support
-- This project (should) compile on Mac. It uses the Qt framework and libuiohook, both of which are cross platform. The problem with Mac is I don't personally have one, and in order to release anything related to Mac I need to own one since virtualizing that platform is not really possible. After compiling, the program should run and register hotkeys 100% fine, but the issue is many of the keys that are defined in libuiohook are outdated and no longer correspond with the operating system. That means when you go to register a hotkey, instead of showing the name of the key that's registered, it'll simply show "Unknown". If this is not an issue for you, then all you need to do is compile the code and everything should work fine.
+- This project (should) compile on Mac. It uses the Qt framework and libuiohook, both of which are cross platform. The problem with Mac is I don't personally have one, and in order to release anything related to Mac I need to own one since virtualizing that platform is not easy. After compiling, the program should run and register hotkeys 100% fine, but the issue is many of the keys that are defined in libuiohook are outdated and no longer correspond with modern operating systems. That means when you go to register a hotkey, instead of showing the name of the key that's registered, it'll simply show "Unknown". If this is not an issue for you, then all you need to do is compile the code and everything should work fine.
 
 # License
 This project is licensed under the **GNU General Public License version 3 (GPL-3.0)**.  
@@ -98,24 +99,25 @@ For the full license text, please visit [GNU GPL v3 License](https://www.gnu.org
 
 
 ### Internet access
-When launching the app for the first time in a while, the app will attempt to make two connections:
-- First connection will be made to this repo to check for a new program version.
-- Next connection is to my server to post an anonymous ping
-  - The ping consists of:
-    - The type operating system you're using (example: "Windows, "macOS", "Linux Mint").
-    - Program version.
-    - Your anonymous [QUUID](https://doc.qt.io/qt-6/quuid.html#details).
-      - This is a really complex randomly generated number to differentiate one PC from another without knowing any personal information.
-    - Your country code.
-      - This information is obtained [100% offline](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L77) by looking at the language of your system.
-    - And last but not least a unix timestamp
-    - You may verify the contents of the ping yourself by looking at the ping function [itself](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
+When launching the app for the first time in a while, the app will attempt to make precisely two network requests. The sole reason for these requests is to improve the user experience by automatically checking for a new version, and to get a rough estimate of the number of active users through the use of an anonymous ping. To maintain complete transparency, please read below to get a comprehensive list of everything that is collected and how its used.
+- Firstly, this repo will be checked, to get the latest official version of this program. [Source](https://github.com/Bo0sted/phasmophobia-stopwatch-timer/blob/252d701133dbf81eb04f54e559d0f696acdb945e/updatemanager.cpp#L23)
+- Next, a usage ping is posted to my server.
+  - The generic name of your operating system (example: "Windows, "macOS", "Linux Mint").
+  - Program version.
+  - Your machine's [QUUID](https://doc.qt.io/qt-6/quuid.html#details).
+    - This is a randomly generated & really long number to differentiate one PC from another. QUUIDs are one way, meaning once the number is generated there is no way to extract any information about how it was generated. All that's guaranteed is the number will be unique across different machines. Without your QUUID, I would not be able to tell one PC from another and thus not be able to tell the approximate number of active users. 
+  - Your operating system's [language](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L77)
+  - And last but not least a unix timestamp
+ - You may verify the contents of the ping yourself by looking at the code [itself](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/updatemanager.cpp#L66)
 
 ### Can I disable the pinging / update checks?
-The only way to disable them is commenting out this [line](https://github.com/Bo0sted/CrossplatformStopwatch/blob/master/mainwindow.cpp#L332) and building the project from source. By the time I publish version 2.0 which marks the end of beta, the option to disable these logs will be there.
+Due to the program still being in beta, there is no easy way to do this except for editing the source code and re-building the binary. By the time I publish version 2.0 which marks the end of beta, the option to disable these logs will be there.
 
 # Credits
 [libuiohook](https://github.com/kwhat/libuiohook)
+
+
+
 
 
 

@@ -307,7 +307,6 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::MouseButton::RightButton) {
         sie->setVisible(true);
-        sie->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::FramelessWindowHint);
         sie->show();
         sie->raise();
         sie->activateWindow();
@@ -418,6 +417,7 @@ bool MainWindow::event(QEvent *event)
 
         sie = new StopwatchInteractiveEditor(nullptr, this);
         sie->setAttribute(Qt::WA_DeleteOnClose, false);
+        sie->setWindowFlags(Qt::ToolTip);
         sie->show();
         sie->RefreshOpenState();
 

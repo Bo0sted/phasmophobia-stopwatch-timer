@@ -305,12 +305,10 @@ void StopwatchInteractiveEditor::on_FontPickerResetButton_clicked()
 
 void StopwatchInteractiveEditor::on_closeWindow_clicked()
 {
-    setEditorOpen(false);
-
-    if (!open && AreAllModulesDisabled()) {
-        QMessageBox::information(this, "You've disabled all modules", "The program will now be shutting down. Please re-enable a module to utilize the program.");
-        mw->BeginShutdown();
+    if (!open) {
+        setEditorOpen(false);
     }
+
 }
 
 
@@ -555,7 +553,7 @@ void StopwatchInteractiveEditor::on_AssignToggleHotkeyPushButton_clicked()
     auto targetHotkey = mw->uiohm.GetHotkeyForCurrentTab();
 
     if (buffer.empty()) {
-        QMessageBox::information(this, "Empty", "No keys were recorded. Please try again!");
+        warnUserOkPrompt("No keys were recorded. Please try again!");
         return;
     }
 
@@ -668,9 +666,7 @@ void StopwatchInteractiveEditor::on_exitProgramButton_clicked()
 void StopwatchInteractiveEditor::on_rainbowColorComboBox_activated(int index)
 {
     if (mw->IsGradientEnabled() && !didWarnUserAboutGradientOverride) {
-        QMessageBox::information(this,      // parent widget
-                                 "Warning",   // dialog title
-                                 "Gradient mode overrides this effect. Disable it to see rainbow."); // message text
+        warnUserOkPrompt("Gradient mode overrides this effect. Disable it to see rainbow.");
 
     didWarnUserAboutGradientOverride = true;
     }
@@ -680,9 +676,7 @@ void StopwatchInteractiveEditor::on_rainbowColorComboBox_activated(int index)
 void StopwatchInteractiveEditor::on_formatTimeComboBox_activated(int index)
 {
     if (mw->swm.pauseStopwatch && !didWarnUserAboutTimeDisplayOnlyChangingDuringActivation) {
-        QMessageBox::information(this,
-                                 "Info",
-                                 "Stopwatch only renders while the stopwatch is running. Please start the stopwatch to see desired effect.");
+        warnUserOkPrompt("Stopwatch only renders while the stopwatch is running. Please start the stopwatch to see desired effect");
          didWarnUserAboutTimeDisplayOnlyChangingDuringActivation = true;
     }
 }
@@ -704,6 +698,17 @@ void StopwatchInteractiveEditor::on_syncClockWithStopwatchCheckbox_checkStateCha
 void StopwatchInteractiveEditor::on_syncClockWithStopwatchCheckbox_clicked(bool checked)
 {
     mw->qsm.setValue(QSettingsManager::IsSyncedFontEnabled,QString("%1").arg(checked));
+}
+
+void StopwatchInteractiveEditor::warnUserOkPrompt(const QString &warning)
+{
+    QMessageBox msgBox(this);
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowTitle("Warning");
+    msgBox.setText(warning);
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setWindowFlags(Qt::Popup | Qt::Window);
+    msgBox.exec();
 }
 
 void StopwatchInteractiveEditor::RefreshUptimeThread() {

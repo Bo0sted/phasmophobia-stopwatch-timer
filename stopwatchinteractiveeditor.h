@@ -115,6 +115,8 @@ private slots:
 
     void on_syncClockWithStopwatchCheckbox_clicked(bool checked);
 
+    void warnUserOkPrompt(const QString &warning);
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;

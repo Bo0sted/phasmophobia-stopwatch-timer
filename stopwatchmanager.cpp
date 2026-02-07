@@ -50,7 +50,7 @@ void StopwatchManager::RainbowModeThread()
     qreal hue = 0.0;
     qreal t = 0.0;
     while (!isDeconstructing) {
-        while ((rainbowModeOn == true || rainbowModeBackgroundOn == true) && !isDeconstructing) {
+        //while ((rainbowModeOn == true || rainbowModeBackgroundOn == true) && !isDeconstructing) {
             // Smooth oscillation values for each RGB channel
             qreal r = 0.5 + 0.5 * std::sin(t);
             qreal g = 0.5 + 0.5 * std::sin(t + 2.094); // +120° phase shift
@@ -63,8 +63,12 @@ void StopwatchManager::RainbowModeThread()
                 emit updateRainbowBackgroundColor(color);
             else if (rainbowModeOn)
                 emit updateRainbowColor(color);
-            if (rainbowModeBackgroundOn || rainbowModeOn)
-                emit updateClockRainbowColor(color);
+
+            if (mw->stm && mw->stm->rainbowModeIndex > 0) {
+                int index = mw->stm->rainbowModeIndex;
+                if (index == 1) emit updateClockRainbowFontColor(color);
+                if (index == 2) emit updateClockRainbowBackgroundColor(color);
+            }
 
             hue += 0.002; // keeps hue variable updated (if used elsewhere)
             if (hue > 1.0) hue -= 1.0;
@@ -72,7 +76,7 @@ void StopwatchManager::RainbowModeThread()
             t += 0.05; // advances the RGB animation smoothly
 
             QThread::msleep(45);
-        }
+       // }
     }
 }
 

@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     qsm{},
+    stm{nullptr},
     swm{this},
     // qhm{this},
     um{this},
@@ -248,7 +249,6 @@ void MainWindow::SetRainbowMode(int index )
         swm.rainbowModeOn = false;
         swm.rainbowModeBackgroundOn = false;
         ui->StopwatchLabel->setStyleSheet(StylesheetGenerator::NewStopwatchStylesheet(stopwatchFontColor.name(), stopwatchBackgroundColor.name()));
-        emit updateClockRainbowColor("");
         RefreshStopwatchState(false);
         break;
     }

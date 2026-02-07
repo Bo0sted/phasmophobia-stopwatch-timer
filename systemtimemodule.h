@@ -28,6 +28,9 @@ public:
     int GetCurrentFontSize();
     void ResizeClockToFitWindow();
     void SetBackgroundEnabled(bool enabled);
+    void UpdateRainbowMode(int index);
+
+    int rainbowModeIndex;
 signals:
     void signalRefreshClock(const QString &time); // Signal to update elapsed time
 public slots:
@@ -35,6 +38,8 @@ public slots:
     void setLoadModule(bool shouldEnable); // Declare the slot
     void refreshColorState(QColor color);
     void refreshBackgroundState();
+    void updateRainbowColor(const QColor& color);
+    void updateRainbowBackgroundColor(const QColor& color);
 private:
     Ui::SystemTimeModule *ui;
     MainWindow *mw;
@@ -51,6 +56,8 @@ private:
     void closeEvent(QCloseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+protected:
+    bool event(QEvent *event) override;
 
 };
 

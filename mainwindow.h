@@ -38,9 +38,9 @@ class MainWindow : public QMainWindow
 
 public:
     QSettingsManager qsm;
+    SystemTimeModule *stm;
     StopwatchManager swm;
     // QHotkeyManager qhm;
-    SystemTimeModule *stm;
     StopwatchInteractiveEditor *sie;
     UpdateManager um;
 private: UioEventLoop uioel;
@@ -99,7 +99,6 @@ public slots:
 signals:
     void toggleModuleSignal(bool shouldEnable);
     void toggleEditorSignal(bool shouldOpen);
-    void updateClockRainbowColor(QColor color);
 private:
     Ui::MainWindow *ui;
     QPointF oldPosition;

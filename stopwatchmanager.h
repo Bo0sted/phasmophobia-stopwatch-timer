@@ -3,9 +3,11 @@
 
 #include <QFuture>
 #include <atomic>
+#include <QString>
 
 // Forward declaration
 class MainWindow;
+class SystemTimeModule;
 
 class StopwatchManager : public QObject
 {
@@ -26,11 +28,13 @@ public:
     ~StopwatchManager();
     void ResetStopwatch();
     std::atomic<int> elapsedSeconds;
+
 signals:
     void updateElapsedTime(const int &time); // Signal to update elapsed time
     void updateRainbowColor(const QColor& color);
     void updateRainbowBackgroundColor(const QColor& color);
-    void updateClockRainbowColor(const QColor& color);
+    void updateClockRainbowFontColor(const QColor& color);
+    void updateClockRainbowBackgroundColor(const QColor& color);
 private:
     MainWindow *mw;
     std::atomic<bool> isDeconstructing;

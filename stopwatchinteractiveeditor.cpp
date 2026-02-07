@@ -36,6 +36,9 @@ StopwatchInteractiveEditor::~StopwatchInteractiveEditor()
 
 void StopwatchInteractiveEditor::showEvent(QShowEvent *event)
 {
+    UpdateSystemModuleTogglePushButton();
+    UpdateStopwatchModuleTogglePushButton();
+
     QWidget::showEvent(event);
 }
 
@@ -44,9 +47,10 @@ void StopwatchInteractiveEditor::closeEvent(QCloseEvent *event)
     event->accept();
     mw->qsm.setValue(QSettingsManager::StopwatchFont,ui->FontPickerCombo->currentText());
     mw->qsm.setValue(QSettingsManager::ClockFont,ui->FontPickerComboClock->currentText());
-    mw->qsm.setValue(QSettingsManager::IsClockEnabled,QString("%1").arg(mw->stm->CheckIfModuleIsEnabled()));
+    mw->qsm.setValue(QSettingsManager::IsClockEnabled, QString("%1").arg(mw->stm->CheckIfModuleIsEnabled()));
     mw->qsm.setValue(QSettingsManager::IsStopwatchEnabled,QString("%1").arg(mw->CheckIfStopwatchEnabled()));
     mw->qsm.setValue(QSettingsManager::StopwatchRainbowModeIndex, QString("%1").arg(ui->rainbowColorComboBox->currentIndex()));
+    mw->qsm.setValue(QSettingsManager::ClockRainbowModeIndex, QString("%1").arg(ui->ClockRainbowModeSelection->currentIndex()));
     mw->qsm.setValue(QSettingsManager::StopwatchFormatModeIndex, QString("%1").arg(ui->formatTimeComboBox->currentIndex()));
     mw->qsm.setValue(QSettingsManager::StopwatchFontSize, QString("%1").arg(mw->GetCurrentStopwatchFontSize()));
     mw->qsm.setValue(QSettingsManager::ClockFontSize, QString("%1").arg(mw->stm->GetCurrentFontSize()));
@@ -81,14 +85,11 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->FontPickerCombo->setCurrentText(mw->GetCurrentFont().family());
         ui->FontPickerComboClock->setCurrentText(mw->stm->GetCurrentFont().family());
         ui->EditorHeaderText->setStyleSheet(StylesheetGenerator::DefaultHeader());
-        ui->CustomizationModulesHeaderText_2->setStyleSheet(StylesheetGenerator::DefaultHeader());
         ui->ToggleTabActiveAssignmentLabel->setText(QString("%1").arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchToggleStopwatchHotkey())));
         ui->ResetTabActiveAssignmentLabel->setText(QString("%1").arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchResetStopwatchHotkey())));
         ui->RestoreTabActiveAssignmentLabel->setText(QString("%1").arg(mw->uiohm.GetDisplayFromQListOfKeycodes(mw->uiohm.FetchRestoreStopwatchHotkey())));
         ui->quitStopwatch->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
         ui->quitStopwatch->setVisible(false);
-        UpdateSystemModuleTogglePushButton();
-        UpdateStopwatchModuleTogglePushButton();
         ui->primaryColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchFontColor()));
         ui->pausedColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchPausedStopwatchFontColor()));
         ui->ResetColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchResetStopwatchFontColor()));
@@ -97,6 +98,10 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->borderColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchStopwatchBorderColor()));
         ui->gradientOneColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchGradientOneFontColor()));
         ui->gradientTwoColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchGradientTwoFontColor()));
+
+        ui->ToggleStopwatchPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12));
+        ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12));
+
         ui->gradientToggleCheckbox->setChecked(mw->qsm.FetchIsGradientEnabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
 
         ui->systemClockBackgroundSelector->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchClockBackgroundColor()));
@@ -109,9 +114,11 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
 
         ui->rainbowColorComboBox->addItems({"Disabled", "Text", "Background"});
         ui->formatTimeComboBox->addItems({"Dynamic Hour:Minute:Second", "Total minutes only", "Total seconds only"});
+        ui->ClockRainbowModeSelection->addItems({"Disabled", "Text", "Background"});
 
         readyForUserUIchanges = true;
         ui->rainbowColorComboBox->setCurrentIndex(mw->GetRainbowMode());
+        ui->ClockRainbowModeSelection->setCurrentIndex(mw->qsm.FetchClockRainbowModeIndex());
         ui->formatTimeComboBox->setCurrentIndex(mw->GetFormatMode());
 
         ui->ToggleHotkeyRecordPushButton->setFocusPolicy(Qt::ClickFocus);
@@ -151,17 +158,17 @@ bool StopwatchInteractiveEditor::AreAllModulesDisabled()
 void StopwatchInteractiveEditor::UpdateSystemModuleTogglePushButton()
 {
     bool check = mw->stm->CheckIfModuleIsEnabled();
-    ui->ToggleSystemModulePushButton->setText(check ? "Disable System Clock Module": "Enable System Clock Module");
+    ui->ToggleSystemModulePushButton->setText(check ? "Turn off System Clock Module": "Turn on System Clock Module");
 
     int index = ui->SettingsTabWidget->indexOf(ui->ClockSettingsTab);
     ui->SettingsTabWidget->setTabText(index, (check ? "Clock": "Clock (Disabled)"));
     if (check) ui->SettingsTabWidget->setTabEnabled(index, true);
     else ui->SettingsTabWidget->setTabEnabled(index, false);
 
-    // if (check)
-    //     ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
-    // else
-    //     ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex()));
+    if (check)
+        ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
+    else
+        ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle());
 
     ui->ToggleSystemModulePushButton->repaint();
 }
@@ -169,17 +176,17 @@ void StopwatchInteractiveEditor::UpdateSystemModuleTogglePushButton()
 void StopwatchInteractiveEditor::UpdateStopwatchModuleTogglePushButton()
 {
     bool check = mw->CheckIfStopwatchEnabled();
-    ui->ToggleStopwatchPushButton->setText(check ? "Disable Stopwatch Module": "Enable Stopwatch Module");
+    ui->ToggleStopwatchPushButton->setText(check ? "Turn off Stopwatch Module": "Turn on Stopwatch Module");
 
     int index = ui->SettingsTabWidget->indexOf(ui->StopwatchSettingsTab);
     ui->SettingsTabWidget->setTabText(index, (check ? "Stopwatch": "Stopwatch (Disabled)"));
     if (check) ui->SettingsTabWidget->setTabEnabled(index, true);
     else ui->SettingsTabWidget->setTabEnabled(index, false);
 
-    // if (check)
-    //     ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
-    // else
-    //     ui->ToggleSystemModulePushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->FetchStopwatchFontColorAsHex()));
+    if (check)
+         ui->ToggleStopwatchPushButton->setStyleSheet(StylesheetGenerator::DefaultDangerButton());
+    else
+         ui->ToggleStopwatchPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle());
 
     ui->ToggleStopwatchPushButton->repaint();
 }
@@ -745,7 +752,6 @@ void StopwatchInteractiveEditor::on_systemClockBackgroundSelector_pressed()
         auto color = cpd->FetchColorSelection();
         mw->stm->UpdateClockBackgroundColor(color);
         mw->qsm.setValue(QSettingsManager::ClockBackgroundColor,color.name());
-        mw->stm->refreshColorState(true);
         ui->systemClockBackgroundSelector->setStyleSheet(ui->systemClockBackgroundSelector->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color.name()));
     }
 }
@@ -769,5 +775,13 @@ void StopwatchInteractiveEditor::on_systemClockBackgroundToggle_checkStateChange
     mw->qsm.setValue(QSettingsManager::ClockBackgroundEnabled,QString("%1").arg(newState));
     mw->stm->refreshBackgroundState();
     SetClockBackgroundOptionsEnabled(newState);
+}
+
+
+void StopwatchInteractiveEditor::on_ClockRainbowModeSelection_currentIndexChanged(int index)
+{
+    if (readyForUserUIchanges) {
+        mw->stm->UpdateRainbowMode(index);
+    }
 }
 

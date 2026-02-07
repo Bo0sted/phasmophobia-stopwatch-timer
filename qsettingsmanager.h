@@ -40,6 +40,7 @@ public:
         ClockFontColor,
         ClockBackgroundColor,
         ClockBackgroundEnabled,
+        ClockRainbowModeIndex,
         IsClockEnabled,
         LastClockPosition,
         IsSyncedFontEnabled,
@@ -90,6 +91,7 @@ public:
     QString FetchStopwatchBorderColor();
     QString FetchStopwatchBorderWidth();
     int FetchStopwatchRainbowModeIndex();
+    int FetchClockRainbowModeIndex();
     enum StopwatchManager::FormatModes FetchStopwatchFormatMode();
     bool FetchIsBackgroundEnabled();
     bool FetchIsClockBackgroundEnabled();

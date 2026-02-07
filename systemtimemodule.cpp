@@ -7,6 +7,9 @@
 #include <QTime>
 #include <QFont>
 
+class MainWindow;
+class StopwatchManager;
+
 SystemTimeModule::SystemTimeModule(QWidget *parent, MainWindow *mwr)
     : QWidget(parent)
     , ui(new Ui::SystemTimeModule)
@@ -18,6 +21,9 @@ SystemTimeModule::SystemTimeModule(QWidget *parent, MainWindow *mwr)
 {
     ui->setupUi(this);
     connect(this, &SystemTimeModule::signalRefreshClock, this, &SystemTimeModule::updateClock);
+    rainbowModeIndex = mw->qsm.FetchClockRainbowModeIndex();
+    connect(&mw->swm,&StopwatchManager::updateClockRainbowBackgroundColor, this, &SystemTimeModule::updateRainbowBackgroundColor);
+    connect(&mw->swm,&StopwatchManager::updateClockRainbowFontColor, this, &SystemTimeModule::updateRainbowColor);
 }
 
 SystemTimeModule::~SystemTimeModule()
@@ -28,10 +34,15 @@ SystemTimeModule::~SystemTimeModule()
     delete ui;
 }
 
+
+bool SystemTimeModule::event(QEvent *event)
+{
+    return QWidget::event(event);
+}
+
 void SystemTimeModule::showEvent(QShowEvent *event)
 {
     event->accept();
-    systemClockBackgroundColor = "black";
     systemClockFontColor = mw->qsm.FetchClockFontColor();
     systemClockBackgroundColor = mw->qsm.FetchClockBackgroundColor();
     refreshBackgroundState();
@@ -153,16 +164,9 @@ void SystemTimeModule::setLoadModule(bool shouldEnable)
 
 void SystemTimeModule::refreshColorState(QColor color)
 {
-    //        ui->rainbowColorComboBox->addItems({"Disabled", "Text", "Background"});
-
-    auto mode = 1;
-    if (mode ==  1)
-        ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(color.name(), systemClockBackgroundColor.name()));
-    else if (mode == 2)
-        ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(systemClockFontColor.name(), color.name(), color.name()));
-    else
-        ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(systemClockFontColor.name(), systemClockBackgroundColor.name()));
-
+    ui->SystemTimeLabel->update();
+    ui->SystemTimeLabel->repaint();
+    ui->SystemTimeLabel->show();
 }
 
 void SystemTimeModule::refreshBackgroundState()
@@ -179,4 +183,21 @@ void SystemTimeModule::refreshBackgroundState()
     ui->SystemTimeLabel->update();
     ui->SystemTimeLabel->repaint();
     ui->SystemTimeLabel->show();
+}
+
+void SystemTimeModule::updateRainbowColor(const QColor &color)
+{
+    ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(color.name(),systemClockBackgroundColor.name()));
+}
+
+void SystemTimeModule::updateRainbowBackgroundColor(const QColor &color)
+{
+    ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(systemClockFontColor.name(), color.name()));
+}
+
+void SystemTimeModule::UpdateRainbowMode(int index) {
+    rainbowModeIndex = index;
+
+    if (rainbowModeIndex == 0)
+        ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(systemClockFontColor.name(), systemClockBackgroundColor.name()));
 }

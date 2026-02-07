@@ -40,6 +40,7 @@ QSettingsManager::QSettingsManager()
         "System-Clock-Module/ClockFontColor",
         "System-Clock-Module/ClockBackgroundColor",
         "System-Clock-Module/ClockBackgroundEnabled",
+        "System-Clock-Module/ClockRainbowModeIndex",
         "System-Clock-Module/IsClockEnabled",
         "System-Clock-Module/LastClockPosition",
         "System-Clock-Module/IsFontSyncedWithStopwatch"}
@@ -192,6 +193,14 @@ QString QSettingsManager::FetchStopwatchBorderWidth()
 int QSettingsManager::FetchStopwatchRainbowModeIndex()
 {
     QVariant val = getValue(StopwatchRainbowModeIndex);
+
+    if (val == false) return 0;
+    else return val.toInt();
+}
+
+int QSettingsManager::FetchClockRainbowModeIndex()
+{
+    QVariant val = getValue(ClockRainbowModeIndex);
 
     if (val == false) return 0;
     else return val.toInt();

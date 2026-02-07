@@ -125,6 +125,8 @@ private slots:
 
     void on_systemClockBackgroundToggle_checkStateChanged(const Qt::CheckState &arg1);
 
+    void on_ClockRainbowModeSelection_currentIndexChanged(int index);
+
 private:
     Ui::StopwatchInteractiveEditor *ui;
     MainWindow *mw;

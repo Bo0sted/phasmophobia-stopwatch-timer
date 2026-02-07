@@ -99,6 +99,9 @@ bool StopwatchInteractiveEditor::event(QEvent *event)
         ui->gradientTwoColorPickerPushButton->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchGradientTwoFontColor()));
         ui->gradientToggleCheckbox->setChecked(mw->qsm.FetchIsGradientEnabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
 
+        ui->systemClockBackgroundSelector->setStyleSheet(StylesheetGenerator::DefaultButtonStyle(12, mw->qsm.FetchClockBackgroundColor()));
+        ui->systemClockBackgroundToggle->setCheckState(mw->qsm.FetchIsClockBackgroundEnabled() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+
         auto backgroundEnabled = mw->qsm.FetchIsBackgroundEnabled();
         ui->backgroundToggleCheckbox->setChecked(backgroundEnabled ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
         SetBorderOptionsVisible(backgroundEnabled);
@@ -219,6 +222,13 @@ void StopwatchInteractiveEditor::SetBackgroundOptionsEnabled(bool enabled)
     ui->backgroundColorPickerPushButton->setEnabled(enabled);
     ui->backgroundColorResetPushButton->setEnabled(enabled);
 }
+
+void StopwatchInteractiveEditor::SetClockBackgroundOptionsEnabled(bool enabled)
+{
+    ui->systemClockBackgroundSelector->setEnabled(enabled);
+    ui->systemClockBackgroundCopyFromStopwatch->setEnabled(enabled);
+}
+
 
 void StopwatchInteractiveEditor::RefreshToggleHotkeyPushButton()
 {
@@ -725,3 +735,39 @@ void StopwatchInteractiveEditor::KermitSuicide()
     refreshUptimeThread.cancel();
     this->close();
 }
+
+void StopwatchInteractiveEditor::on_systemClockBackgroundSelector_pressed()
+{
+    auto cpd = new ColorPickerDialog();
+    auto val = cpd->exec();
+
+    if (val == QDialog::Accepted) {
+        auto color = cpd->FetchColorSelection();
+        mw->stm->UpdateClockBackgroundColor(color);
+        mw->qsm.setValue(QSettingsManager::ClockBackgroundColor,color.name());
+        mw->stm->refreshColorState(true);
+        ui->systemClockBackgroundSelector->setStyleSheet(ui->systemClockBackgroundSelector->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color.name()));
+    }
+}
+
+
+
+void StopwatchInteractiveEditor::on_systemClockBackgroundCopyFromStopwatch_clicked()
+{
+    auto color = mw->FetchStopwatchBackgroundColorAsHex();
+    mw->stm->UpdateClockBackgroundColor(color);
+    mw->qsm.setValue(QSettingsManager::ClockBackgroundColor,color);
+    ui->systemClockBackgroundSelector->setStyleSheet(ui->systemClockBackgroundSelector->styleSheet() + StylesheetGenerator::DefaultButtonStyle(12, color));
+}
+
+
+void StopwatchInteractiveEditor::on_systemClockBackgroundToggle_checkStateChanged(const Qt::CheckState &arg1)
+{
+    auto newState = arg1 == Qt::Checked ? true:false;
+
+    mw->stm->SetBackgroundEnabled(newState);
+    mw->qsm.setValue(QSettingsManager::ClockBackgroundEnabled,QString("%1").arg(newState));
+    mw->stm->refreshBackgroundState();
+    SetClockBackgroundOptionsEnabled(newState);
+}
+

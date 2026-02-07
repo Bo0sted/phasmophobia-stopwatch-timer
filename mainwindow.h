@@ -52,6 +52,7 @@ public:
     void SetStopwatchValue(QString text);
     ~MainWindow();
     QString FetchStopwatchFontColorAsHex();
+    QString FetchStopwatchBackgroundColorAsHex();
     void UpdateStopwatchFont(QString fontName, int fontSize);
     void UpdateStopwatchColor(QColor color);
     void RefreshStopwatchState(bool shouldReset);

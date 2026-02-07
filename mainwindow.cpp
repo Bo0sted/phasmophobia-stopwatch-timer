@@ -14,6 +14,7 @@
 #include <QDir>
 #include <QDateTime>
 #include <QMessageBox>
+#include <QScreen>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -60,6 +61,11 @@ MainWindow::~MainWindow()
 QString MainWindow::FetchStopwatchFontColorAsHex()
 {
     return ui->StopwatchLabel->palette().color(QPalette::WindowText).name();
+}
+
+QString MainWindow::FetchStopwatchBackgroundColorAsHex()
+{
+    return ui->StopwatchLabel->palette().color(QPalette::Window).name();
 }
 
 void MainWindow::UpdateStopwatchFont(QString fontName, int fontSize)
@@ -417,8 +423,15 @@ bool MainWindow::event(QEvent *event)
 
         sie = new StopwatchInteractiveEditor(nullptr, this);
         sie->setAttribute(Qt::WA_DeleteOnClose, false);
-        sie->setWindowFlags(Qt::ToolTip);
-        sie->show();
+        sie->setWindowFlags(Qt::Window | Qt::BypassWindowManagerHint);
+        QScreen *screen = QGuiApplication::primaryScreen();
+        QRect screenGeometry = screen->geometry();
+        // Calculate center position
+        int x = (screenGeometry.width() - sie->width()) / 2;
+        int y = (screenGeometry.height() - sie->height()) / 2;
+        // Move the window
+        sie->move(x, y);
+        // sie->show();
         sie->RefreshOpenState();
 
 
@@ -435,8 +448,8 @@ bool MainWindow::event(QEvent *event)
 
         connect(sie, &StopwatchInteractiveEditor::toggleModuleSignal, stm, &SystemTimeModule::setLoadModule);
         connect(sie, &StopwatchInteractiveEditor::toggleStopwatchSignal, this, &MainWindow::setLoadStopwatch);
-        connect(this, &MainWindow::updateClockRainbowColor, stm, &SystemTimeModule::refreshColorState);
-        connect(&swm, &StopwatchManager::updateClockRainbowColor, stm, &SystemTimeModule::refreshColorState);
+        // connect(this, &MainWindow::updateClockRainbowColor, stm, &SystemTimeModule::refreshColorState);
+        // connect(&swm, &StopwatchManager::updateClockRainbowColor, stm, &SystemTimeModule::refreshColorState);
         connect(&swm, &StopwatchManager::updateElapsedTime, this, &MainWindow::updateElapsedTime);
         connect(&swm,&StopwatchManager::updateRainbowColor, this, &MainWindow::updateRainbowColor);
         connect(&swm,&StopwatchManager::updateRainbowBackgroundColor, this, &MainWindow::updateRainbowBackgroundColor);

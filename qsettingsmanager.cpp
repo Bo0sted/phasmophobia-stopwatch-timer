@@ -39,6 +39,7 @@ QSettingsManager::QSettingsManager()
         "System-Clock-Module/ClockFontSize",
         "System-Clock-Module/ClockFontColor",
         "System-Clock-Module/ClockBackgroundColor",
+        "System-Clock-Module/ClockBackgroundEnabled",
         "System-Clock-Module/IsClockEnabled",
         "System-Clock-Module/LastClockPosition",
         "System-Clock-Module/IsFontSyncedWithStopwatch"}
@@ -213,6 +214,15 @@ bool QSettingsManager::FetchIsBackgroundEnabled()
     else return val.toBool();
 }
 
+bool QSettingsManager::FetchIsClockBackgroundEnabled()
+{
+    QVariant val = getValue(ClockBackgroundEnabled, true);
+
+    if (val == -1) return true;
+    else return val.toBool();
+}
+
+
 
 
 QString QSettingsManager::FetchStopwatchFont()
@@ -252,6 +262,14 @@ QString QSettingsManager::FetchClockFont()
 QString QSettingsManager::FetchClockFontColor()
 {
     QVariant val = getValue(ClockFontColor);
+
+    if (val == false) return StylesheetGenerator::DefaultFontHexColor;
+    else return val.toString();
+}
+
+QString QSettingsManager::FetchClockBackgroundColor()
+{
+    QVariant val = getValue(ClockBackgroundColor);
 
     if (val == false) return StylesheetGenerator::DefaultFontHexColor;
     else return val.toString();

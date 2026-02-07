@@ -25,6 +25,7 @@ public:
     void RefreshUptimeLabel();
     void SetBorderOptionsVisible(bool visible);
     void SetBackgroundOptionsEnabled(bool enabled);
+    void SetClockBackgroundOptionsEnabled(bool enabled);
     void RefreshToggleHotkeyPushButton();
     void RefreshToggleHotkeyAssignModeDisplay();
     int GetActiveTabFromHotkeyGroup();
@@ -116,6 +117,13 @@ private slots:
     void on_syncClockWithStopwatchCheckbox_clicked(bool checked);
 
     void warnUserOkPrompt(const QString &warning);
+
+    void on_systemClockBackgroundSelector_pressed();
+
+
+    void on_systemClockBackgroundCopyFromStopwatch_clicked();
+
+    void on_systemClockBackgroundToggle_checkStateChanged(const Qt::CheckState &arg1);
 
 private:
     Ui::StopwatchInteractiveEditor *ui;

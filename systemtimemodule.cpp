@@ -14,6 +14,7 @@ SystemTimeModule::SystemTimeModule(QWidget *parent, MainWindow *mwr)
     , isDeconstructing{false}
     , enabled{mw->qsm.CheckIfClockEnabled()}
     , refreshClockThread(QtConcurrent::run(&SystemTimeModule::RefreshClockThread, this))
+    , backgroundEnabled(mw->qsm.FetchIsClockBackgroundEnabled())
 {
     ui->setupUi(this);
     connect(this, &SystemTimeModule::signalRefreshClock, this, &SystemTimeModule::updateClock);
@@ -32,6 +33,8 @@ void SystemTimeModule::showEvent(QShowEvent *event)
     event->accept();
     systemClockBackgroundColor = "black";
     systemClockFontColor = mw->qsm.FetchClockFontColor();
+    systemClockBackgroundColor = mw->qsm.FetchClockBackgroundColor();
+    refreshBackgroundState();
     QString style = StylesheetGenerator::NewModuleOutputStylesheet(systemClockFontColor, systemClockBackgroundColor);
     ui->SystemTimeLabel->setStyleSheet(style);
     UpdateClockFont(mw->qsm.FetchClockFont(), mw->qsm.FetchClockFontSize());
@@ -81,6 +84,11 @@ void SystemTimeModule::ResizeClockToFitWindow()
     // Resize main window explicitly
     this->resize(centralSize.width() + frameWidth,
                  centralSize.height() + frameHeight);
+}
+
+void SystemTimeModule::SetBackgroundEnabled(bool enabled)
+{
+    backgroundEnabled = enabled;
 }
 
 void SystemTimeModule::RefreshClockThread()
@@ -147,7 +155,7 @@ void SystemTimeModule::refreshColorState(QColor color)
 {
     //        ui->rainbowColorComboBox->addItems({"Disabled", "Text", "Background"});
 
-    auto mode = mw->GetRainbowMode();
+    auto mode = 1;
     if (mode ==  1)
         ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(color.name(), systemClockBackgroundColor.name()));
     else if (mode == 2)
@@ -155,4 +163,20 @@ void SystemTimeModule::refreshColorState(QColor color)
     else
         ui->SystemTimeLabel->setStyleSheet(StylesheetGenerator::NewModuleOutputStylesheet(systemClockFontColor.name(), systemClockBackgroundColor.name()));
 
+}
+
+void SystemTimeModule::refreshBackgroundState()
+{
+    if (!backgroundEnabled) {
+        ui->SystemTimeLabel->setAttribute(Qt::WA_NoSystemBackground);
+        ui->SystemTimeLabel->setAutoFillBackground(false);
+        ui->SystemTimeLabel->setStyleSheet(QString("%1%2").arg(ui->SystemTimeLabel->styleSheet()).arg("background-color: rgba(0, 0, 0, 0);"));
+    }
+    else {
+        ui->SystemTimeLabel->setAttribute(Qt::WA_NoSystemBackground, false);
+    }
+
+    ui->SystemTimeLabel->update();
+    ui->SystemTimeLabel->repaint();
+    ui->SystemTimeLabel->show();
 }

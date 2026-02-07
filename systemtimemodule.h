@@ -27,12 +27,14 @@ public:
     void RefreshModuleState();
     int GetCurrentFontSize();
     void ResizeClockToFitWindow();
+    void SetBackgroundEnabled(bool enabled);
 signals:
     void signalRefreshClock(const QString &time); // Signal to update elapsed time
 public slots:
     void updateClock(const QString &time);
     void setLoadModule(bool shouldEnable); // Declare the slot
     void refreshColorState(QColor color);
+    void refreshBackgroundState();
 private:
     Ui::SystemTimeModule *ui;
     MainWindow *mw;
@@ -42,6 +44,8 @@ private:
     bool enabled;
     QColor systemClockFontColor;
     QColor systemClockBackgroundColor;
+
+    bool backgroundEnabled;
 
     void showEvent(QShowEvent *event) override;
     void closeEvent(QCloseEvent *event) override;

@@ -188,12 +188,12 @@ void StopwatchInteractiveEditor::RefreshOpenState()
 {
     this->setVisible(open);
 
-    if (open) {
-        mw->uiohm.UpdateHotkeySignalBlock(true);
-    }
-    else {
-        mw->uiohm.UpdateHotkeySignalBlock(false);
-    }
+    // if (open) {
+    //     mw->uiohm.UpdateHotkeySignalBlock(true);
+    // }
+    // else {
+    //     mw->uiohm.UpdateHotkeySignalBlock(false);
+    // }
 }
 
 void StopwatchInteractiveEditor::RefreshUptimeLabel()

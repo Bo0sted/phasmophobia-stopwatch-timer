@@ -423,7 +423,7 @@ bool MainWindow::event(QEvent *event)
 
         sie = new StopwatchInteractiveEditor(nullptr, this);
         sie->setAttribute(Qt::WA_DeleteOnClose, false);
-        sie->setWindowFlags(Qt::Window); //| Qt::BypassWindowManagerHint);
+        sie->setWindowFlags(Qt::Window | Qt::WindowStaysOnTopHint); //| Qt::BypassWindowManagerHint);
         QScreen *screen = QGuiApplication::primaryScreen();
         QRect screenGeometry = screen->geometry();
         // Calculate center position
